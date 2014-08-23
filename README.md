@@ -49,3 +49,6 @@ There are two properties:
 
 * `config` This property overwrites any configurations from the karma configuration file.
 
+# Caveats
+
+At the moment the adapter only works properly with [Jasmine](http://jasmine.github.io/) tests. It should be relatively easy to add other frameworks. This should be done in [karma-vs-reporter](https://github.com/MortenHoustonLudvigsen/karma-vs-reporter). Pull requests are welcome.
