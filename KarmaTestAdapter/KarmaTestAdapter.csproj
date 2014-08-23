@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BB346128-C136-44D1-B9B9-D7D166AE719F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KarmaTestAdapter</RootNamespace>
+    <AssemblyName>KarmaTestAdapter</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Core">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestWindow.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="ProcessRunner">
+      <HintPath>..\packages\ProcessRunner.1.0.4\lib\net40\ProcessRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Commands\KarmaCommand.cs" />
+    <Compile Include="Commands\KarmaDiscoverCommand.cs" />
+    <Compile Include="Commands\KarmaRunCommand.cs" />
+    <Compile Include="HashSetExtensions.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Helpers\ISolutionEventsListener.cs" />
+    <Compile Include="Helpers\ITestFileAddRemoveListener.cs" />
+    <Compile Include="Helpers\ITestFilesUpdateWatcher.cs" />
+    <Compile Include="Helpers\SolutionEventsListener.cs" />
+    <Compile Include="Helpers\SolutionEventsListenerEventArgs.cs" />
+    <Compile Include="Helpers\TestFileAddRemoveListener.cs" />
+    <Compile Include="Helpers\TestFileChangedEventArgs.cs" />
+    <Compile Include="Helpers\TestFilesUpdateWatcher.cs" />
+    <Compile Include="Helpers\VsSolutionHelper.cs" />
+    <Compile Include="KarmaSettings.cs" />
+    <Compile Include="KarmaTestResults\Browser.cs" />
+    <Compile Include="KarmaTestResults\ConsolidatedTestResult.cs" />
+    <Compile Include="KarmaTestResults\File.cs" />
+    <Compile Include="KarmaTestResults\Results.cs" />
+    <Compile Include="KarmaTestResults\Files.cs" />
+    <Compile Include="KarmaTestResults\Item.cs" />
+    <Compile Include="KarmaTestResults\Config.cs" />
+    <Compile Include="KarmaTestResults\Source.cs" />
+    <Compile Include="KarmaTestResults\StringExtensions.cs" />
+    <Compile Include="KarmaTestResults\SuiteResult.cs" />
+    <Compile Include="KarmaTestResults\Suite.cs" />
+    <Compile Include="KarmaTestResults\ResultContainer.cs" />
+    <Compile Include="KarmaTestResults\TestCaseContainer.cs" />
+    <Compile Include="KarmaTestResults\TestResult.cs" />
+    <Compile Include="KarmaTestResults\Test.cs" />
+    <Compile Include="KarmaTestResults\Karma.cs" />
+    <Compile Include="KarmaTestResults\UnknownItem.cs" />
+    <Compile Include="KarmaTestResults\XElementExtensions.cs" />
+    <Compile Include="KarmaReporter.cs" />
+    <Compile Include="Logging\IKarmaLogger.cs" />
+    <Compile Include="Logging\KarmaExtensibilityLogger.cs" />
+    <Compile Include="Logging\KarmaFileLogger.cs" />
+    <Compile Include="Logging\KarmaLogger.cs" />
+    <Compile Include="Logging\KarmaLoggerBase.cs" />
+    <Compile Include="Logging\KarmaTestMessageLogger.cs" />
+    <Compile Include="KarmaTestContainer.cs" />
+    <Compile Include="KarmaTestContainerDiscoverer.cs" />
+    <Compile Include="NullMessageLogger.cs" />
+    <Compile Include="PathUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="KarmaTestDiscoverer.cs" />
+    <Compile Include="KarmaTestExecutor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
