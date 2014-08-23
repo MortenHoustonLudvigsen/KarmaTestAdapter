@@ -21,7 +21,7 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 `npm install karma --save-dev`
 
 * Install the [Karma Visual Studio Reporter](https://github.com/MortenHoustonLudvigsen/karma-vs-reporter):
-`npm install karma-vs-reporter`
+`npm install karma-vs-reporter --save-dev`
 
 # Configuration
 
