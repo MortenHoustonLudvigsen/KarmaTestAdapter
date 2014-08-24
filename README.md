@@ -11,7 +11,9 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 * Registers the file and position of each test, so that the test explorer in Visual Studio can link to the source code for the test.
 
-* Source maps in test files are used to find the position of tests. So if a test is written in Typescript and the compiled javascript file contains a source map the test explorer will link to the typescript file.  
+* Source maps in test files are used to find the position of tests. So if a test is written in Typescript and the compiled javascript file contains a source map the test explorer will link to the typescript file.
+
+* Can run selected tests
 
 # Prerequisites
 

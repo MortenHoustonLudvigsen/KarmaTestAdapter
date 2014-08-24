@@ -75,6 +75,7 @@
     <Compile Include="Helpers\TestFileChangedEventArgs.cs" />
     <Compile Include="Helpers\TestFilesUpdateWatcher.cs" />
     <Compile Include="Helpers\VsSolutionHelper.cs" />
+    <Compile Include="IKarmaTestContainer.cs" />
     <Compile Include="KarmaSettings.cs" />
     <Compile Include="KarmaTestResults\Browser.cs" />
     <Compile Include="KarmaTestResults\ConsolidatedTestResult.cs" />
@@ -108,6 +109,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="KarmaTestDiscoverer.cs" />
     <Compile Include="KarmaTestExecutor.cs" />
+    <Compile Include="VsConfig\Config.cs" />
+    <Compile Include="VsConfig\File.cs" />
+    <Compile Include="VsConfig\Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

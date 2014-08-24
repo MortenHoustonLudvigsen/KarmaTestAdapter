@@ -20,5 +20,18 @@ namespace KarmaTestAdapter.KarmaTestResults
             }
             return null;
         }
+
+        public static bool? ToBool(this string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                bool result;
+                if (bool.TryParse(value, out result))
+                {
+                    return result;
+                }
+            }
+            return null;
+        }
     }
 }

@@ -14,40 +14,60 @@ namespace KarmaTestAdapter.Logging
         public abstract void Clear();
         public abstract void Log(Microsoft.VisualStudio.TestWindow.Extensibility.MessageLevel messageLevel, string message);
 
-        public virtual void Info(string message, params object[] args)
+        public virtual void Info(string message)
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                Log(MessageLevel.Informational, string.Format(message, args));
+                Log(MessageLevel.Informational, message);
+            }
+        }
+
+        public virtual void Info(string message, params object[] args)
+        {
+            Info(string.Format(message, args));
+        }
+
+        public virtual void Warn(string message)
+        {
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                Log(MessageLevel.Warning, message);
             }
         }
 
         public virtual void Warn(string message, params object[] args)
         {
+            Warn(string.Format(message, args));
+        }
+
+        public virtual void Error(string message)
+        {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                Log(MessageLevel.Warning, string.Format(message, args));
+                Log(MessageLevel.Error, message);
             }
         }
 
         public virtual void Error(string message, params object[] args)
         {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                Log(MessageLevel.Error, string.Format(message, args));
-            }
+            Error(string.Format(message, args));
         }
 
-        public virtual void Error(Exception ex, string message = null, params object[] args)
+        public virtual void Error(Exception ex, string message = null)
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                Error("{3}{1}{0}{1}Stack trace:{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace, string.Format(message, args));
+                Error("{3}{1}{0}{1}Stack trace:{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace, message);
             }
             else
             {
                 Error("{0}{1}Stack trace:{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace);
             }
+        }
+
+        public virtual void Error(Exception ex, string message = null, params object[] args)
+        {
+            Error(ex, string.Format(message, args));
         }
 
         protected string FormatMessage(TestMessageLevel level, string message)

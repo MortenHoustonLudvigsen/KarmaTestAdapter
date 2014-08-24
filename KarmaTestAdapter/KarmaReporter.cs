@@ -21,9 +21,9 @@ namespace KarmaTestAdapter
             return new KarmaDiscoverCommand(source, logger).Run();
         }
 
-        public static Karma Run(string source, IKarmaLogger logger)
+        public static Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
         {
-            return new KarmaRunCommand(source, logger).Run();
+            return new KarmaRunCommand(source, vsConfig, logger).Run();
         }
     }
 }

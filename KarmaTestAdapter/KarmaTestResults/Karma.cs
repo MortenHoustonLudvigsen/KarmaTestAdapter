@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,35 @@ namespace KarmaTestAdapter.KarmaTestResults
         public Config KarmaConfig { get { return Children.OfType<Config>().FirstOrDefault(); } }
         public Files Files { get { return Children.OfType<Files>().FirstOrDefault(); } }
         public Results Results { get { return Children.OfType<Results>().FirstOrDefault(); } }
+
+        public IEnumerable<TestCase> GetTestCases(string source)
+        {
+            return Files.AllTests.Select(test => CreateTestCase(test, source));
+        }
+
+        public static TestCase CreateTestCase(Test test, string source)
+        {
+            var testCase = new TestCase(test.FullyQualifiedName, Globals.ExecutorUri, source);
+            testCase.DisplayName = test.DisplayName;
+            testCase.SetPropertyValue(Globals.FileIndexProperty, test.Index);
+            if (test.Source != null)
+            {
+                testCase.CodeFilePath = test.Source.FullPath;
+                if (test.Source.Line.HasValue)
+                {
+                    testCase.LineNumber = test.Source.Line.Value;
+                }
+            }
+            else
+            {
+                testCase.CodeFilePath = test.File.FullPath;
+                if (test.Line.HasValue)
+                {
+                    testCase.LineNumber = test.Line.Value;
+                }
+            }
+            return testCase;
+        }
 
         public IEnumerable<ConsolidatedTestResult> ConsolidateResults()
         {

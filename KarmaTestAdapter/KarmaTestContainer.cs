@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using KarmaTestAdapter.KarmaTestResults;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Microsoft.VisualStudio.TestWindow.Extensibility.Model;
 using System;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace KarmaTestAdapter
 {
-    public class KarmaTestContainer : ITestContainer
+    public class KarmaTestContainer : IKarmaTestContainer
     {
         private readonly DateTime _timeStamp;
         private ITestContainerDiscoverer _discoverer;
@@ -36,6 +37,7 @@ namespace KarmaTestAdapter
 
         public string Source { get; set; }
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
+        public Karma Karma { get; set; }
         public IEnumerable<Guid> DebugEngines { get; set; }
         public FrameworkVersion TargetFramework { get; set; }
         public Architecture TargetPlatform { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace KarmaTestAdapter
 {
     public static class Globals
     {
+        public static readonly TestProperty FileIndexProperty = TestProperty.Register("KarmaTestCaseFileIndex", "Index in file", typeof(int?), typeof(KarmaTestDiscoverer));
+
         /// <summary>
         /// Should logging be done to a file as well as normal logging
         /// </summary>
@@ -20,6 +23,22 @@ namespace KarmaTestAdapter
         public static string LogFilename
         {
             get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.log"); }
+        }
+
+        /// <summary>
+        /// The file for karma output when LogToFile == true
+        /// </summary>
+        public static string OutputFilename
+        {
+            get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.output.xml"); }
+        }
+
+        /// <summary>
+        /// The file for VsConfig when LogToFile == true
+        /// </summary>
+        public static string VsConfigFilename
+        {
+            get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.VsConfig.json"); }
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace KarmaTestAdapter.Commands
         public string Command { get; private set; }
         public string Directory { get; private set; }
         public IKarmaLogger Logger { get; private set; }
-        
+
         protected virtual ProcessOptions GetProcessOptions()
         {
             var karmaVsReporter = FindKarmaVsReporter(Directory);
@@ -48,7 +48,7 @@ namespace KarmaTestAdapter.Commands
 
         public virtual Karma Run()
         {
-            var outputFile = IO.Path.GetTempFileName();
+            var outputFile = Globals.LogToFile ? Globals.OutputFilename : IO.Path.GetTempFileName();
             try
             {
                 var processOptions = GetProcessOptions();
@@ -70,7 +70,10 @@ namespace KarmaTestAdapter.Commands
             }
             finally
             {
-                IO.File.Delete(outputFile);
+                if (!Globals.LogToFile)
+                {
+                    IO.File.Delete(outputFile);
+                }
             }
         }
 

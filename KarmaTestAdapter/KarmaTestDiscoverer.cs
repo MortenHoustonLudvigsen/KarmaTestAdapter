@@ -24,14 +24,14 @@ namespace KarmaTestAdapter
         {
             var karmaLogger = KarmaLogger.Create(messageLogger: logger);
             karmaLogger.Info("DiscoverTests start");
-            foreach (var testcase in GetTests(sources, discoveryContext, karmaLogger))
+            foreach (var testcase in GetTests(sources, karmaLogger))
             {
                 discoverySink.SendTestCase(testcase);
             }
             karmaLogger.Info("DiscoverTests end");
         }
 
-        public static IEnumerable<TestCase> GetTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IKarmaLogger logger)
+        public static IEnumerable<TestCase> GetTests(IEnumerable<string> sources, IKarmaLogger logger)
         {
             try
             {
@@ -47,31 +47,7 @@ namespace KarmaTestAdapter
         public static IEnumerable<TestCase> GetTests(string source, IKarmaLogger logger)
         {
             logger.Info("Source: {0}", source);
-            var karma = KarmaReporter.Discover(source, logger);
-            return karma.Files.AllTests.Select(test => CreateTestCase(test, source));
-        }
-
-        public static TestCase CreateTestCase(Test test, string source)
-        {
-            var testCase = new TestCase(test.FullyQualifiedName, Globals.ExecutorUri, source);
-            testCase.DisplayName = test.DisplayName;
-            if (test.Source != null)
-            {
-                testCase.CodeFilePath = test.Source.FullPath;
-                if (test.Source.Line.HasValue)
-                {
-                    testCase.LineNumber = test.Source.Line.Value;
-                }
-            }
-            else
-            {
-                testCase.CodeFilePath = test.File.FullPath;
-                if (test.Line.HasValue)
-                {
-                    testCase.LineNumber = test.Line.Value;
-                }
-            }
-            return testCase;
+            return KarmaReporter.Discover(source, logger).GetTestCases(source);
         }
     }
 }

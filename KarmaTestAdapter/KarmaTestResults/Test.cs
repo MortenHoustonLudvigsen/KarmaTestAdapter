@@ -18,6 +18,7 @@ namespace KarmaTestAdapter.KarmaTestResults
         public string Framework { get { return Attribute("Framework"); } }
         public int? Line { get { return Attribute("Line").ToInt(); } }
         public int? Column { get { return Attribute("Column").ToInt(); } }
+        public int? Index { get { return Attribute("Index").ToInt(); } }
         public Source Source { get { return Children.OfType<Source>().FirstOrDefault(); } }
         public File File { get { return GetParent<File>(); } }
         public Suite ParentSuite { get { return GetParent<Suite>(); } }
