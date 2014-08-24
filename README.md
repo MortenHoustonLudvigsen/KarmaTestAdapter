@@ -9,7 +9,7 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 * Scans the files from the karma configuration to discover tests.
 
-* Registers the file and position of each test, so that the link from the test explorer in Visual Studio and the test file works.
+* Registers the file and position of each test, so that the test explorer in Visual Studio can link to the source code for the test.
 
 * Source maps in test files are used to find the position of tests. So if a test is written in Typescript and the compiled javascript file contains a source map the test explorer will link to the typescript file.  
 
@@ -17,10 +17,10 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 * Install [NodeJS](http://nodejs.org/)
 
-* Install [Karma](http://karma-runner.github.io/) in your product
+* Install [Karma](http://karma-runner.github.io/) in your project:
 `npm install karma --save-dev`
 
-* Install the [Karma Visual Studio Reporter](https://github.com/MortenHoustonLudvigsen/karma-vs-reporter):
+* Install the [Karma Visual Studio Reporter](https://github.com/MortenHoustonLudvigsen/karma-vs-reporter) in your project:
 `npm install karma-vs-reporter --save-dev`
 
 # Installation
@@ -35,7 +35,7 @@ Install this extension.
 
 Start testing!
 
-If you want Visual Studio to work differently from how Karma is configured (if yoy f.ex. only want to run PhantomJS from VS), you can create a JSON settings file called `karma-vs-reporter.json`. F.ex.:
+If you want Visual Studio to work differently from how Karma is configured (if you f.ex. only want to run PhantomJS from VS), you can create a JSON settings file called `karma-vs-reporter.json`. F.ex.:
 
 ```json
 {
