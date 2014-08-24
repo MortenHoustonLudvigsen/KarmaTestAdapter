@@ -15,7 +15,7 @@ namespace KarmaTestAdapter
         /// <summary>
         /// Should logging be done to a file as well as normal logging
         /// </summary>
-        public const bool LogToFile = false;
+        public static bool LogToFile = true;
 
         /// <summary>
         /// The file to log to

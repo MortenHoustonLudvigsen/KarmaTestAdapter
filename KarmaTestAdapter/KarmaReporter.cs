@@ -16,14 +16,9 @@ namespace KarmaTestAdapter
 {
     public class KarmaReporter
     {
-        public static Karma Discover(string source, IKarmaLogger logger)
-        {
-            return new KarmaDiscoverCommand(source, logger).Run();
-        }
-
-        public static Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
-        {
-            return new KarmaRunCommand(source, vsConfig, logger).Run();
-        }
+        //public static Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
+        //{
+        //    return new KarmaRunCommand(source, vsConfig, logger).Run();
+        //}
     }
 }

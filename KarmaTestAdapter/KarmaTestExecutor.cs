@@ -9,17 +9,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
+using KarmaTestAdapter.Commands;
 
 namespace KarmaTestAdapter
 {
     [ExtensionUri(Globals.ExecutorUriString)]
     public class KarmaTestExecutor : ITestExecutor
     {
+        private KarmaDiscoverCommand _karmaDiscoverCommand;
+        private KarmaRunCommand _karmaRunCommand;
+
         private bool _cancelled;
 
         public void Cancel()
         {
             _cancelled = true;
+            if (_karmaDiscoverCommand != null)
+            {
+                _karmaDiscoverCommand.Cancel();
+            }
+            if (_karmaRunCommand != null)
+            {
+                _karmaRunCommand.Cancel();
+            }
         }
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
@@ -45,7 +57,7 @@ namespace KarmaTestAdapter
         public void RunTests(string source, IEnumerable<TestCase> tests, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             var logger = KarmaLogger.Create(messageLogger: frameworkHandle);
-            var karma = KarmaReporter.Discover(source, logger);
+            var karma = Discover(source, logger);
             VsConfig.Config vsConfig = new VsConfig.Config();
 
             if (tests == null)
@@ -78,7 +90,7 @@ namespace KarmaTestAdapter
 
             var testCases = tests.ToDictionary(t => t.FullyQualifiedName, t => t);
 
-            karma = KarmaReporter.Run(source, vsConfig, logger);
+            karma = Run(source, vsConfig, logger);
             var consolidatedResults = karma.ConsolidateResults();
             var testNames = tests.Select(t => t.FullyQualifiedName).Union(consolidatedResults.Select(r => r.Test.FullyQualifiedName));
 
@@ -108,6 +120,42 @@ namespace KarmaTestAdapter
                     });
                 }
                 frameworkHandle.RecordEnd(result.Test, result.Result.Outcome);
+            }
+        }
+
+        private KarmaTestResults.Karma Discover(string source, IKarmaLogger logger)
+        {
+            logger.Info("Source: {0}", source);
+            if (_karmaDiscoverCommand != null)
+            {
+                throw new Exception("Test discovery already running");
+            }
+            _karmaDiscoverCommand = new KarmaDiscoverCommand(source, logger);
+            try
+            {
+                return _karmaDiscoverCommand.Run();
+            }
+            finally
+            {
+                _karmaDiscoverCommand = null;
+            }
+        }
+
+        private KarmaTestResults.Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
+        {
+            logger.Info("Source: {0}", source);
+            if (_karmaRunCommand != null)
+            {
+                throw new Exception("Karma is already running");
+            }
+            _karmaRunCommand = new KarmaRunCommand(source, vsConfig, logger);
+            try
+            {
+                return _karmaRunCommand.Run();
+            }
+            finally
+            {
+                _karmaRunCommand = null;
             }
         }
 

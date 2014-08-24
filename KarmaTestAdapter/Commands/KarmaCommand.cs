@@ -25,6 +25,8 @@ namespace KarmaTestAdapter.Commands
         public string Directory { get; private set; }
         public IKarmaLogger Logger { get; private set; }
 
+        private Process _process;
+
         protected virtual ProcessOptions GetProcessOptions()
         {
             var karmaVsReporter = FindKarmaVsReporter(Directory);
@@ -35,7 +37,9 @@ namespace KarmaTestAdapter.Commands
 
             var processOptions = new ProcessOptions("node", karmaVsReporter, Command)
             {
-                WorkingDirectory = Directory
+                WorkingDirectory = Directory,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8
             };
 
             if (!string.IsNullOrWhiteSpace(Settings.SettingsFile))
@@ -44,6 +48,19 @@ namespace KarmaTestAdapter.Commands
             }
 
             return processOptions;
+        }
+
+        public void Cancel()
+        {
+            if (_process != null)
+            {
+                _process.Cancel();
+                Logger.Info("{0} cancelled", Command);
+            }
+            else
+            {
+                Logger.Info("Tried to cancell {0}, but it was not running", Command);
+            }
         }
 
         public virtual Karma Run()
@@ -56,11 +73,27 @@ namespace KarmaTestAdapter.Commands
                 processOptions.Add("-o", outputFile);
 
                 Logger.Info(processOptions.CommandLine);
-                var result = Process.Run(processOptions);
-                foreach (var line in result.AllOutputList)
+
+                _process = new Process(processOptions);
+                try
                 {
-                    Logger.Info(line);
+                    _process.StandardOutputRead += (o, e) =>
+                    {
+                        Logger.Info(e.Line);
+                    };
+
+                    _process.StandardErrorRead += (o, e) =>
+                    {
+                        Logger.Info(e.Line);
+                    };
+
+                    _process.Run();
                 }
+                finally
+                {
+                    _process = null;
+                }
+
                 return Karma.Load(outputFile);
             }
             catch (Exception ex)
@@ -75,6 +108,11 @@ namespace KarmaTestAdapter.Commands
                     IO.File.Delete(outputFile);
                 }
             }
+        }
+
+        void process_StandardErrorRead(object sender, ProcessEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private static string FindKarmaVsReporter(string directory)

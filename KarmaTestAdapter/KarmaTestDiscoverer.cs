@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.KarmaTestResults;
+﻿using KarmaTestAdapter.Commands;
+using KarmaTestAdapter.KarmaTestResults;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -20,6 +21,8 @@ namespace KarmaTestAdapter
     [DefaultExecutorUri(Globals.ExecutorUriString)]
     public class KarmaTestDiscoverer : ITestDiscoverer
     {
+        private KarmaDiscoverCommand _karmaDiscoverCommand;
+
         public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             var karmaLogger = KarmaLogger.Create(messageLogger: logger);
@@ -31,7 +34,7 @@ namespace KarmaTestAdapter
             karmaLogger.Info("DiscoverTests end");
         }
 
-        public static IEnumerable<TestCase> GetTests(IEnumerable<string> sources, IKarmaLogger logger)
+        public IEnumerable<TestCase> GetTests(IEnumerable<string> sources, IKarmaLogger logger)
         {
             try
             {
@@ -44,10 +47,22 @@ namespace KarmaTestAdapter
             }
         }
 
-        public static IEnumerable<TestCase> GetTests(string source, IKarmaLogger logger)
+        public IEnumerable<TestCase> GetTests(string source, IKarmaLogger logger)
         {
             logger.Info("Source: {0}", source);
-            return KarmaReporter.Discover(source, logger).GetTestCases(source);
+            if (_karmaDiscoverCommand != null)
+            {
+                throw new Exception("Test discovery already running");
+            }
+            _karmaDiscoverCommand = new KarmaDiscoverCommand(source, logger);
+            try
+            {
+                return _karmaDiscoverCommand.Run().GetTestCases(source);
+            }
+            finally
+            {
+                _karmaDiscoverCommand = null;
+            }
         }
     }
 }
