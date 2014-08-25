@@ -37,7 +37,6 @@ namespace KarmaTestAdapter
             ITestFileAddRemoveListener testFilesAddRemoveListener)
         {
             _logger = KarmaLogger.Create(logger: logger);
-            _logger.Clear();
 
             _serviceProvider = serviceProvider;
             _solutionListener = solutionListener;
@@ -52,8 +51,6 @@ namespace KarmaTestAdapter
             _solutionListener.SolutionUnloaded += SolutionListenerOnSolutionUnloaded;
             _solutionListener.SolutionProjectChanged += OnSolutionProjectChanged;
             _solutionListener.StartListeningForChanges();
-
-            _logger.Info("KarmaTestContainerDiscoverer created");
         }
 
         public event EventHandler TestContainersUpdated;
@@ -67,10 +64,8 @@ namespace KarmaTestAdapter
         {
             get
             {
-                _logger.Info("Get TestContainers");
                 if (_initialContainerSearch)
                 {
-                    _logger.Info("Initial fetch of TestContainers");
                     _cachedContainers.Clear();
                     AddFiles(FindTestFiles());
                     _initialContainerSearch = false;
@@ -78,7 +73,6 @@ namespace KarmaTestAdapter
                 else if (_shouldRefresh)
                 {
                     _shouldRefresh = false;
-                    _logger.Info("Refreshing TestContainers");
                     _cachedContainers = _cachedContainers.Select(c => c.FreshCopy()).ToList();
                 }
                 return _cachedContainers;
@@ -95,14 +89,12 @@ namespace KarmaTestAdapter
 
         private void SolutionListenerOnSolutionLoaded(object sender, EventArgs eventArgs)
         {
-            _logger.Info(string.Format("Solution loaded"));
             _initialContainerSearch = true;
             _shouldRefresh = false;
         }
 
         private void SolutionListenerOnSolutionUnloaded(object sender, EventArgs eventArgs)
         {
-            _logger.Info(string.Format("Solution unloaded"));
             _initialContainerSearch = true;
             _shouldRefresh = false;
             _cachedContainers.Clear();
@@ -112,7 +104,6 @@ namespace KarmaTestAdapter
         {
             if (e != null)
             {
-                _logger.Info(string.Format("Project {0}: {1}", e.ChangedReason, e.Project));
                 if (e.ChangedReason == SolutionChangedReason.Load)
                 {
                     AddFiles(FindTestFiles(e.Project));
@@ -154,8 +145,6 @@ namespace KarmaTestAdapter
         {
             if (e != null)
             {
-                _logger.Info(string.Format("File {0}: {1}", e.ChangedReason, e.File));
-
                 switch (e.ChangedReason)
                 {
                     case TestFileChangedReason.Added:

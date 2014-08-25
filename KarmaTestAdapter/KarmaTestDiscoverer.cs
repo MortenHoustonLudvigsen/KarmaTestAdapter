@@ -50,6 +50,12 @@ namespace KarmaTestAdapter
         public IEnumerable<TestCase> GetTests(string source, IKarmaLogger logger)
         {
             logger.Info("Source: {0}", source);
+            var karma = Discover(source, logger);
+            return karma == null ? Enumerable.Empty<TestCase>() : karma.GetTestCases(source);
+        }
+
+        public Karma Discover(string source, IKarmaLogger logger)
+        {
             if (_karmaDiscoverCommand != null)
             {
                 throw new Exception("Test discovery already running");
@@ -57,7 +63,7 @@ namespace KarmaTestAdapter
             _karmaDiscoverCommand = new KarmaDiscoverCommand(source, logger);
             try
             {
-                return _karmaDiscoverCommand.Run().GetTestCases(source);
+                return _karmaDiscoverCommand.Run();
             }
             finally
             {

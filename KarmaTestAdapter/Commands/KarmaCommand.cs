@@ -44,6 +44,10 @@ namespace KarmaTestAdapter.Commands
 
             if (!string.IsNullOrWhiteSpace(Settings.SettingsFile))
             {
+                if (!IO.File.Exists(Settings.SettingsFile))
+                {
+                    throw new Exception(string.Format("Could not find settings file \"{0}\"", Settings.SettingsFile));
+                }
                 processOptions.Add("-c", Settings.SettingsFile);
             }
 
@@ -59,7 +63,7 @@ namespace KarmaTestAdapter.Commands
             }
             else
             {
-                Logger.Info("Tried to cancell {0}, but it was not running", Command);
+                Logger.Info("Tried to cancel {0}, but it was not running", Command);
             }
         }
 
@@ -98,7 +102,7 @@ namespace KarmaTestAdapter.Commands
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 return null;
             }
             finally

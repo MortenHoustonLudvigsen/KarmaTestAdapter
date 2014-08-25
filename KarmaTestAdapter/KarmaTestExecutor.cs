@@ -58,6 +58,11 @@ namespace KarmaTestAdapter
         {
             var logger = KarmaLogger.Create(messageLogger: frameworkHandle);
             var karma = Discover(source, logger);
+            if (karma == null)
+            {
+                return;
+            }
+
             VsConfig.Config vsConfig = new VsConfig.Config();
 
             if (tests == null)
@@ -91,6 +96,11 @@ namespace KarmaTestAdapter
             var testCases = tests.ToDictionary(t => t.FullyQualifiedName, t => t);
 
             karma = Run(source, vsConfig, logger);
+            if (karma == null)
+            {
+                return;
+            }
+
             var consolidatedResults = karma.ConsolidateResults();
             var testNames = tests.Select(t => t.FullyQualifiedName).Union(consolidatedResults.Select(r => r.Test.FullyQualifiedName));
 
