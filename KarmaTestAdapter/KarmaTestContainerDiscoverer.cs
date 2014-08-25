@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Tasks = System.Threading.Tasks;
 
 namespace KarmaTestAdapter
 {
@@ -19,38 +19,39 @@ namespace KarmaTestAdapter
     public class KarmaTestContainerDiscoverer : ITestContainerDiscoverer
     {
         private IServiceProvider _serviceProvider;
-        private ISolutionEventsListener _solutionListener;
+        private ISolutionListener _solutionListener;
         private ITestFilesUpdateWatcher _testFilesUpdateWatcher;
         private ITestFileAddRemoveListener _testFilesAddRemoveListener;
         private bool _initialContainerSearch = true;
-        private bool _shouldRefresh = false;
         private List<KarmaTestContainer> _cachedContainers = new List<KarmaTestContainer>();
-        private IKarmaLogger _logger;
+        public IKarmaLogger Logger { get; set; }
         private readonly HashSet<string> _files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         [ImportingConstructor]
         public KarmaTestContainerDiscoverer(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
             ILogger logger,
-            ISolutionEventsListener solutionListener,
+            ISolutionListener solutionListener,
             ITestFilesUpdateWatcher testFilesUpdateWatcher,
             ITestFileAddRemoveListener testFilesAddRemoveListener)
         {
-            _logger = KarmaLogger.Create(logger: logger);
+            Logger = KarmaLogger.Create(logger: logger);
 
             _serviceProvider = serviceProvider;
             _solutionListener = solutionListener;
 
             _testFilesUpdateWatcher = testFilesUpdateWatcher;
-            _testFilesUpdateWatcher.FileChangedEvent += OnProjectItemChanged;
+            _testFilesUpdateWatcher.Changed += OnProjectItemChanged;
 
             _testFilesAddRemoveListener = testFilesAddRemoveListener;
-            _testFilesAddRemoveListener.TestFileChanged += OnProjectItemChanged;
-            _testFilesAddRemoveListener.StartListeningForTestFileChanges();
+            _testFilesAddRemoveListener.Changed += OnProjectItemChanged;
+            _testFilesAddRemoveListener.StartListening();
 
             _solutionListener.SolutionUnloaded += SolutionListenerOnSolutionUnloaded;
-            _solutionListener.SolutionProjectChanged += OnSolutionProjectChanged;
-            _solutionListener.StartListeningForChanges();
+            _solutionListener.ProjectChanged += OnSolutionProjectChanged;
+            _solutionListener.StartListening();
+
+            Logger.Info("KarmaTestContainerDiscoverer created");
         }
 
         public event EventHandler TestContainersUpdated;
@@ -67,15 +68,50 @@ namespace KarmaTestAdapter
                 if (_initialContainerSearch)
                 {
                     _cachedContainers.Clear();
+                    WatchProjectDirectories();
                     AddFiles(FindTestFiles());
                     _initialContainerSearch = false;
                 }
-                else if (_shouldRefresh)
-                {
-                    _shouldRefresh = false;
-                    _cachedContainers = _cachedContainers.Select(c => c.FreshCopy()).ToList();
-                }
                 return _cachedContainers;
+            }
+        }
+
+        private void WatchProjectDirectories()
+        {
+            foreach (var project in GetProjects())
+            {
+                _testFilesUpdateWatcher.AddDirectory(project.GetProjectDirectory());
+            }
+        }
+
+        private bool _shouldRefresh = false;
+        private object _refreshLock = new object();
+        private async void RefreshTestContainers()
+        {
+            if (!_initialContainerSearch)
+            {
+                lock (_refreshLock)
+                {
+                    _shouldRefresh = true;
+                }
+                await Tasks.Task.Delay(TimeSpan.FromMilliseconds(500));
+                lock (_refreshLock)
+                {
+                    if (_shouldRefresh)
+                    {
+                        _shouldRefresh = false;
+                        _cachedContainers = _cachedContainers.Select(c => c.FreshCopy()).ToList();
+                        OnTestContainersChanged();
+                    }
+                }
+            }
+        }
+
+        private void DoNotRefreshTestContainers()
+        {
+            lock (_refreshLock)
+            {
+                _shouldRefresh = false;
             }
         }
 
@@ -89,30 +125,33 @@ namespace KarmaTestAdapter
 
         private void SolutionListenerOnSolutionLoaded(object sender, EventArgs eventArgs)
         {
+            DoNotRefreshTestContainers();
             _initialContainerSearch = true;
-            _shouldRefresh = false;
         }
 
         private void SolutionListenerOnSolutionUnloaded(object sender, EventArgs eventArgs)
         {
-            _initialContainerSearch = true;
-            _shouldRefresh = false;
+            DoNotRefreshTestContainers();
+            _testFilesUpdateWatcher.Clear();
             _cachedContainers.Clear();
+            _initialContainerSearch = true;
         }
 
-        private void OnSolutionProjectChanged(object sender, SolutionEventsListenerEventArgs e)
+        private void OnSolutionProjectChanged(object sender, SolutionListenerEventArgs e)
         {
             if (e != null)
             {
                 if (e.ChangedReason == SolutionChangedReason.Load)
                 {
+                    _testFilesUpdateWatcher.AddDirectory(e.Project.GetProjectDirectory());
                     AddFiles(FindTestFiles(e.Project));
-                    _shouldRefresh = true;
+                    RefreshTestContainers();
                 }
                 else if (e.ChangedReason == SolutionChangedReason.Unload)
                 {
+                    _testFilesUpdateWatcher.RemoveDirectory(e.Project.GetProjectDirectory());
                     RemoveFiles(FindTestFiles(e.Project));
-                    _shouldRefresh = true;
+                    RefreshTestContainers();
                 }
             }
 
@@ -158,11 +197,15 @@ namespace KarmaTestAdapter
                         RemoveTestContainer(e.File);
                         break;
                     case TestFileChangedReason.Changed:
+                    case TestFileChangedReason.Saved:
                         AddTestContainerIfTestFile(e.File);
                         break;
                 }
-
-                OnTestContainersChanged();
+                RefreshTestContainers();
+            }
+            else
+            {
+                Logger.Info("OnProjectItemChanged: <unknown>");
             }
         }
 
@@ -183,13 +226,13 @@ namespace KarmaTestAdapter
                     _cachedContainers.Add(new KarmaTestContainer(this, container));
                 }
             }
-            _shouldRefresh = true;
+            RefreshTestContainers();
         }
 
         private void RemoveTestContainersInDirectory(string directory)
         {
             _cachedContainers.RemoveAll(c => PathUtils.IsInDirectory(c.Source, directory));
-            _shouldRefresh = true;
+            RefreshTestContainers();
         }
 
         private void RemoveTestContainer(string file)
@@ -201,15 +244,18 @@ namespace KarmaTestAdapter
             {
                 AddTestContainerIfTestFile(defaultKarmaSettingsFilename);
             }
-            _shouldRefresh = true;
+            RefreshTestContainers();
         }
 
         private IEnumerable<string> FindTestFiles()
         {
-            var solution = (IVsSolution)_serviceProvider.GetService(typeof(SVsSolution));
-            var loadedProjects = solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
+            return GetProjects().SelectMany(p => FindTestFiles(p));
+        }
 
-            return loadedProjects.SelectMany(p => FindTestFiles(p));
+        private IEnumerable<IVsProject> GetProjects()
+        {
+            var solution = (IVsSolution)_serviceProvider.GetService(typeof(SVsSolution));
+            return solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
         }
 
         private IEnumerable<string> FindTestFiles(IVsProject project)
@@ -231,22 +277,24 @@ namespace KarmaTestAdapter
             {
                 if (_testFilesUpdateWatcher != null)
                 {
-                    _testFilesUpdateWatcher.FileChangedEvent -= OnProjectItemChanged;
-                    ((IDisposable)_testFilesUpdateWatcher).Dispose();
+                    _testFilesUpdateWatcher.Changed -= OnProjectItemChanged;
+                    _testFilesUpdateWatcher.Dispose();
                     _testFilesUpdateWatcher = null;
                 }
 
                 if (_testFilesAddRemoveListener != null)
                 {
-                    _testFilesAddRemoveListener.TestFileChanged -= OnProjectItemChanged;
-                    _testFilesAddRemoveListener.StopListeningForTestFileChanges();
+                    _testFilesAddRemoveListener.Changed -= OnProjectItemChanged;
+                    _testFilesAddRemoveListener.StopListening();
+                    _testFilesAddRemoveListener.Dispose();
                     _testFilesAddRemoveListener = null;
                 }
 
                 if (_solutionListener != null)
                 {
-                    _solutionListener.SolutionProjectChanged -= OnSolutionProjectChanged;
-                    _solutionListener.StopListeningForChanges();
+                    _solutionListener.ProjectChanged -= OnSolutionProjectChanged;
+                    _solutionListener.StopListening();
+                    _solutionListener.Dispose();
                     _solutionListener = null;
                 }
             }

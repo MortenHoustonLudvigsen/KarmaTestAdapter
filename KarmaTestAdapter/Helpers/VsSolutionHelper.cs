@@ -28,6 +28,11 @@ namespace KarmaTestAdapter.Helpers
 			}
 		}
 
+        public static string GetProjectDirectory(this IVsProject project)
+        {
+            return Path.GetDirectoryName(project.GetProjectPath());
+        }
+
         public static string GetProjectPath(this IVsProject project)
         {
             string projectPath;

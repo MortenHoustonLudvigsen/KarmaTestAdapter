@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,18 @@ namespace KarmaTestAdapter.KarmaTestResults
         {
         }
 
-        public SuiteResult ParentSuite { get { return GetParent<SuiteResult>(); } }
         public int? Id { get { return Attribute("Id").ToInt(); } }
-        public Browser Browser { get { return GetParent<Browser>(); } }
+
         public TimeSpan Time { get { return TimeSpan.FromMilliseconds(Math.Max(0.5, Attribute("Time").ToInt() ?? 0)); } }
         public TestOutcome Outcome { get { return GetTestOutcome(Attribute("Outcome")); } }
         public IEnumerable<string> Log { get { return Elements("Log").Select(e => e.Value); } }
         public string Message { get { return string.Join(Environment.NewLine, Log); } }
+
+        [JsonIgnore]
+        public SuiteResult ParentSuite { get { return GetParent<SuiteResult>(); } }
+
+        [JsonIgnore]
+        public Browser Browser { get { return GetParent<Browser>(); } }
 
         public string DisplayName
         {

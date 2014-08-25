@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,8 @@ namespace KarmaTestAdapter.KarmaTestResults
 
         public virtual IEnumerable<Suite> Suites { get { return Children.OfType<Suite>(); } }
         public virtual IEnumerable<Test> Tests { get { return Children.OfType<Test>(); } }
+        
+        [JsonIgnore]
         public virtual IEnumerable<Test> AllTests { get { return AllChildren.OfType<Test>(); } }
     }
 }

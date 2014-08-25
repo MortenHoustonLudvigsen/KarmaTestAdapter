@@ -4,8 +4,10 @@ using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,14 +44,13 @@ namespace KarmaTestAdapter
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error(ex.Message);
                 return Enumerable.Empty<TestCase>();
             }
         }
 
         public IEnumerable<TestCase> GetTests(string source, IKarmaLogger logger)
         {
-            logger.Info("Source: {0}", source);
             var karma = Discover(source, logger);
             return karma == null ? Enumerable.Empty<TestCase>() : karma.GetTestCases(source);
         }

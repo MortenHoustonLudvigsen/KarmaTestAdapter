@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using KarmaTestAdapter.Commands;
+using Newtonsoft.Json;
 
 namespace KarmaTestAdapter
 {
@@ -63,54 +64,47 @@ namespace KarmaTestAdapter
                 return;
             }
 
-            VsConfig.Config vsConfig = new VsConfig.Config();
-
             if (tests == null)
             {
                 // Run all tests
-                logger.Info("Running all tests");
                 tests = karma.GetTestCases(source);
             }
-            else
+
+            var testsByName = tests
+                .GroupBy(t => t.DisplayName)
+                .Select(t => new {
+                    DisplayName = t.Key,
+                    Tests = t.Select((tc, i) => new { Test = tc, Index = i })
+                })
+                .SelectMany(t => t.Tests)
+                .GroupBy(t => t.Index);
+
+            foreach (var t in testsByName)
             {
-                logger.Info("Running some tests");
-                var includedWithTests = tests.Select(t => t.CodeFilePath).Distinct();
-                logger.Info("Files: " + string.Join(", ", includedWithTests));
-                vsConfig.files = karma.Files
-                    .Where(f => !f.AllTests.Any() || includedWithTests.Any(fi => f.HasFile(fi)))
-                    .Select(f => new VsConfig.File
-                    {
-                        path = f.Path,
-                        served = f.Served,
-                        included = f.Included,
-                        tests = f.AllTests
-                            .Where(t => tests.Any(tc => tc.FullyQualifiedName == t.FullyQualifiedName))
-                            .Select(t => new VsConfig.Test
-                            {
-                                name = t.Name,
-                                index = t.Index
-                            })
-                    });
+                RunTests(source, t.Select(x => x.Test), karma, frameworkHandle, logger);
             }
+        }
 
-            var testCases = tests.ToDictionary(t => t.FullyQualifiedName, t => t);
-
-            karma = Run(source, vsConfig, logger);
-            if (karma == null)
+        private void RunTests(string source, IEnumerable<TestCase> tests, KarmaTestResults.Karma karma, IFrameworkHandle frameworkHandle, IKarmaLogger logger)
+        {
+            var vsConfig = CreateVsConfig(tests, karma);
+            var runKarma = Run(source, vsConfig, logger);
+            if (runKarma == null)
             {
+                logger.Error("No karma");
                 return;
             }
 
-            var consolidatedResults = karma.ConsolidateResults();
-            var testNames = tests.Select(t => t.FullyQualifiedName).Union(consolidatedResults.Select(r => r.Test.FullyQualifiedName));
+            var consolidatedResults = runKarma.ConsolidateResults(logger);
+            var testNames = tests.Select(t => t.DisplayName).Union(consolidatedResults.Select(r => r.Test.DisplayName));
 
-            var results = from fullyQualifiedName in testNames
+            var results = from displayName in testNames
                           join test in tests
-                            on fullyQualifiedName equals test.FullyQualifiedName
+                            on displayName equals test.DisplayName
                             into test_
                           from test in test_.DefaultIfEmpty()
                           join result in consolidatedResults
-                            on fullyQualifiedName equals result.Test.FullyQualifiedName
+                            on displayName equals result.Test.DisplayName
                             into result_
                           from result in result_.DefaultIfEmpty()
                           select new TestCaseResult(test, result, source);
@@ -133,9 +127,31 @@ namespace KarmaTestAdapter
             }
         }
 
+        private VsConfig.Config CreateVsConfig(IEnumerable<TestCase> tests, KarmaTestResults.Karma karma)
+        {
+            var includedWithTests = tests.Select(t => t.CodeFilePath).Distinct();
+            return new VsConfig.Config
+            {
+                files = karma.Files
+                    .Where(f => !f.AllTests.Any() || includedWithTests.Any(fi => f.HasFile(fi)))
+                    .Select(f => new VsConfig.File
+                    {
+                        path = f.Path,
+                        served = f.Served,
+                        included = f.Included,
+                        tests = f.AllTests
+                            .Where(t => tests.Any(tc => tc.FullyQualifiedName == t.FullyQualifiedName))
+                            .Select(t => new VsConfig.Test
+                            {
+                                name = t.Name,
+                                index = t.Index
+                            })
+                    })
+            };
+        }
+
         private KarmaTestResults.Karma Discover(string source, IKarmaLogger logger)
         {
-            logger.Info("Source: {0}", source);
             if (_karmaDiscoverCommand != null)
             {
                 throw new Exception("Test discovery already running");
@@ -153,7 +169,6 @@ namespace KarmaTestAdapter
 
         private KarmaTestResults.Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
         {
-            logger.Info("Source: {0}", source);
             if (_karmaRunCommand != null)
             {
                 throw new Exception("Karma is already running");

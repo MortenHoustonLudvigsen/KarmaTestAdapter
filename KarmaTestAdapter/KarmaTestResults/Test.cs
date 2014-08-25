@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,11 @@ namespace KarmaTestAdapter.KarmaTestResults
         public int? Column { get { return Attribute("Column").ToInt(); } }
         public int? Index { get { return Attribute("Index").ToInt(); } }
         public Source Source { get { return Children.OfType<Source>().FirstOrDefault(); } }
+
+        [JsonIgnore]
         public File File { get { return GetParent<File>(); } }
+
+        [JsonIgnore]
         public Suite ParentSuite { get { return GetParent<Suite>(); } }
 
         public string DisplayName
@@ -35,7 +40,7 @@ namespace KarmaTestAdapter.KarmaTestResults
         {
             get
             {
-                return File != null ? File.Path + " " + DisplayName : DisplayName;
+                return string.Format("{0}#{1}", Source != null ? Source.FullPath : File.FullPath, Index);
             }
         }
     }

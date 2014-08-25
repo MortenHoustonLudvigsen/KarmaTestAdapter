@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using KarmaTestAdapter.Logging;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,25 +61,26 @@ namespace KarmaTestAdapter.KarmaTestResults
             return testCase;
         }
 
-        public IEnumerable<ConsolidatedTestResult> ConsolidateResults()
+        public IEnumerable<ConsolidatedTestResult> ConsolidateResults(IKarmaLogger logger)
         {
             if (Files == null)
             {
                 return Enumerable.Empty<ConsolidatedTestResult>();
             }
+
             var tests = Files.AllTests.Select(t => new ConsolidatedTestResult(t)).ToList();
 
             if (Results != null)
             {
                 foreach (var browser in Results.Browsers)
                 {
-                    foreach (var result in browser.AllTestResults.Select((r, i) => new { TestResult = r, Index = i }))
+                    foreach (var result in browser.AllTestResults)
                     {
-                        if (result.Index >= tests.Count || result.TestResult.DisplayName != tests[result.Index].Test.DisplayName)
+                        var test = tests.FirstOrDefault(t => t.Test.DisplayName == result.DisplayName);
+                        if (test != null)
                         {
-                            return Enumerable.Empty<ConsolidatedTestResult>();
+                            test.Results.Add(result);
                         }
-                        tests[result.Index].Results.Add(result.TestResult);
                     }
                 }
             }

@@ -9,12 +9,12 @@ namespace KarmaTestAdapter.Helpers
         Unload,
     }
 
-    public class SolutionEventsListenerEventArgs : System.EventArgs
+    public class SolutionListenerEventArgs : System.EventArgs
     {
         public IVsProject Project { get; private set; }
         public SolutionChangedReason ChangedReason { get; private set; }
 
-        public SolutionEventsListenerEventArgs(IVsProject project, SolutionChangedReason reason)
+        public SolutionListenerEventArgs(IVsProject project, SolutionChangedReason reason)
         {
             Project = project;
             ChangedReason = reason;

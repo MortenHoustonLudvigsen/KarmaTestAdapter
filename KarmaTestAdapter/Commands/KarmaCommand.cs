@@ -1,5 +1,6 @@
 ﻿using KarmaTestAdapter.KarmaTestResults;
 using KarmaTestAdapter.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,7 +99,8 @@ namespace KarmaTestAdapter.Commands
                     _process = null;
                 }
 
-                return Karma.Load(outputFile);
+                var karma = Karma.Load(outputFile);
+                return karma;
             }
             catch (Exception ex)
             {

@@ -9,8 +9,11 @@ using KarmaTestAdapter;
 namespace KarmaTestAdapter.Helpers
 {
     [Export(typeof(ITestFileAddRemoveListener))]
-    public sealed class TestFileAddRemoveListener : IVsTrackProjectDocumentsEvents2, IDisposable, ITestFileAddRemoveListener
+    public sealed class TestFileAddRemoveListener : IVsTrackProjectDocumentsEvents2, IVsRunningDocTableEvents, IDisposable, ITestFileAddRemoveListener
     {
+        private IVsRunningDocumentTable _documentTable;
+        private uint _documentTableItemId;
+
         private readonly IVsTrackProjectDocuments2 _projectDocTracker;
         private uint _cookie = VSConstants.VSCOOKIE_NIL;
 
@@ -20,20 +23,33 @@ namespace KarmaTestAdapter.Helpers
             ValidateArg.NotNull(serviceProvider, "serviceProvider");
 
             _projectDocTracker = serviceProvider.GetService(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
+            _documentTable = Package.GetGlobalService(typeof(SVsRunningDocumentTable)) as IVsRunningDocumentTable;
         }
 
-        public event EventHandler<TestFileChangedEventArgs> TestFileChanged;
+        public event EventHandler<TestFileChangedEventArgs> Changed;
+        void OnChanged(object sender, TestFileChangedEventArgs e)
+        {
+            if (Changed != null)
+            {
+                Changed(sender, e);
+            }
+        }
 
-        public void StartListeningForTestFileChanges()
+        public void StartListening()
         {
             if (_projectDocTracker != null)
             {
                 int hr = _projectDocTracker.AdviseTrackProjectDocumentsEvents(this, out _cookie);
                 ErrorHandler.ThrowOnFailure(hr); // do nothing if this fails
             }
+            if (_documentTable != null)
+            {
+                int hr = _documentTable.AdviseRunningDocTableEvents(this, out _documentTableItemId);
+                ErrorHandler.ThrowOnFailure(hr);
+            }
         }
 
-        public void StopListeningForTestFileChanges()
+        public void StopListening()
         {
             if (_cookie != VSConstants.VSCOOKIE_NIL && _projectDocTracker != null)
             {
@@ -41,6 +57,11 @@ namespace KarmaTestAdapter.Helpers
                 ErrorHandler.Succeeded(hr); // do nothing if this fails
 
                 _cookie = VSConstants.VSCOOKIE_NIL;
+            }
+            if (_documentTable != null)
+            {
+                int hr = _documentTable.UnadviseRunningDocTableEvents(_documentTableItemId);
+                ErrorHandler.Succeeded(hr);
             }
         }
 
@@ -61,9 +82,9 @@ namespace KarmaTestAdapter.Helpers
 
                 for (; projItemIndex < endProjectIndex; projItemIndex++)
                 {
-                    if (changedProjects[changeProjIndex] != null && TestFileChanged != null)
+                    if (changedProjects[changeProjIndex] != null)
                     {
-                        TestFileChanged(this, new TestFileChangedEventArgs(changedProjectItems[projItemIndex], reason));
+                        OnChanged(this, new TestFileChangedEventArgs(changedProjectItems[projItemIndex], reason));
                     }
 
                 }
@@ -219,8 +240,52 @@ namespace KarmaTestAdapter.Helpers
         {
             if (disposing)
             {
-                StopListeningForTestFileChanges();
+                StopListening();
             }
         }
+
+        #region IVsRunningDocTableEvents
+
+        public int OnAfterAttributeChange(uint docCookie, uint grfAttribs)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterDocumentWindowHide(uint docCookie, IVsWindowFrame pFrame)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterFirstDocumentLock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterSave(uint docCookie)
+        {
+            uint flags;
+            uint readingLocks;
+            uint edittingLocks;
+            string name;
+            IVsHierarchy hierarchy;
+            uint documentId;
+            IntPtr documentData;
+
+            _documentTable.GetDocumentInfo(docCookie, out flags, out readingLocks, out edittingLocks, out name, out hierarchy, out documentId, out documentData);
+            OnChanged(this, new TestFileChangedEventArgs(name, TestFileChangedReason.Saved));
+            return VSConstants.S_OK;
+        }
+
+        public int OnBeforeDocumentWindowShow(uint docCookie, int fFirstShow, IVsWindowFrame pFrame)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnBeforeLastDocumentUnlock(uint docCookie, uint dwRDTLockType, uint dwReadLocksRemaining, uint dwEditLocksRemaining)
+        {
+            return VSConstants.S_OK;
+        }
+
+        #endregion
     }
 }

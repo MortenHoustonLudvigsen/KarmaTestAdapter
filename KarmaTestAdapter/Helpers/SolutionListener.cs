@@ -8,14 +8,14 @@ using KarmaTestAdapter;
 
 namespace KarmaTestAdapter.Helpers
 {
-    [Export(typeof(ISolutionEventsListener))]
-    public class SolutionEventsListener : IVsSolutionEvents, ISolutionEventsListener
+    [Export(typeof(ISolutionListener))]
+    public class SolutionListener : IVsSolutionEvents, ISolutionListener
     {
         private readonly IVsSolution _solution;
         private uint _cookie = VSConstants.VSCOOKIE_NIL;
 
         [ImportingConstructor]
-        public SolutionEventsListener([Import(typeof(SVsServiceProvider))]IServiceProvider serviceProvider)
+        public SolutionListener([Import(typeof(SVsServiceProvider))]IServiceProvider serviceProvider)
         {
             ValidateArg.NotNull(serviceProvider, "serviceProvider");
             _solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
@@ -24,12 +24,12 @@ namespace KarmaTestAdapter.Helpers
         /// <summary>
         /// Fires an event when a project is opened/closed/loaded/unloaded
         /// </summary>
-        public event EventHandler<SolutionEventsListenerEventArgs> SolutionProjectChanged;
+        public event EventHandler<SolutionListenerEventArgs> ProjectChanged;
 
         public event EventHandler SolutionLoaded;
         public event EventHandler SolutionUnloaded;
 
-        public void StartListeningForChanges()
+        public void StartListening()
         {
             if (_solution != null)
             {
@@ -38,7 +38,7 @@ namespace KarmaTestAdapter.Helpers
             }
         }
 
-        public void StopListeningForChanges()
+        public void StopListening()
         {
             if (_cookie != VSConstants.VSCOOKIE_NIL && _solution != null)
             {
@@ -51,9 +51,9 @@ namespace KarmaTestAdapter.Helpers
 
         public void OnSolutionProjectUpdated(IVsProject project, SolutionChangedReason reason)
         {
-            if (SolutionProjectChanged != null && project != null)
+            if (ProjectChanged != null && project != null)
             {
-                SolutionProjectChanged(this, new SolutionEventsListenerEventArgs(project, reason));
+                ProjectChanged(this, new SolutionListenerEventArgs(project, reason));
             }
         }
 
@@ -143,6 +143,22 @@ namespace KarmaTestAdapter.Helpers
         public int OnQueryUnloadProject(IVsHierarchy pRealHierarchy, ref int pfCancel)
         {
             return VSConstants.S_OK;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // Use SupressFinalize in case a subclass
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StopListening();
+            }
         }
     }
 }

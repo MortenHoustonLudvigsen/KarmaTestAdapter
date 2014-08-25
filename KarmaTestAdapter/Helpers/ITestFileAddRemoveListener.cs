@@ -2,10 +2,10 @@ using System;
 
 namespace KarmaTestAdapter.Helpers
 {
-    public interface ITestFileAddRemoveListener
+    public interface ITestFileAddRemoveListener: IDisposable
     {
-        event EventHandler<TestFileChangedEventArgs> TestFileChanged;
-        void StartListeningForTestFileChanges();
-        void StopListeningForTestFileChanges();
+        event EventHandler<TestFileChangedEventArgs> Changed;
+        void StartListening();
+        void StopListening();
     }
 }

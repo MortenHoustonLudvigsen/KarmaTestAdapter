@@ -1,3 +1,4 @@
+using System;
 namespace KarmaTestAdapter.Helpers
 {
     public enum TestFileChangedReason
@@ -6,6 +7,7 @@ namespace KarmaTestAdapter.Helpers
         Added,
         Removed,
         Changed,
+        Saved,
     }
 
     public class TestFileChangedEventArgs : System.EventArgs

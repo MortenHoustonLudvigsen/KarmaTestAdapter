@@ -1,4 +1,5 @@
 ﻿using KarmaTestAdapter.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,15 +21,21 @@ namespace KarmaTestAdapter.KarmaTestResults
         protected Item(Item parent, XElement element)
         {
             Parent = parent;
-            Element = element;
+            _element = element;
             Children = element.Elements().Select(e => Create(e));
         }
 
-        private XElement Element;
+        private XElement _element;
+
+        [JsonIgnore]
         public Item Parent { get; private set; }
+
+        [JsonIgnore]
         public IEnumerable<Item> Children { get; private set; }
+        
         public virtual string Name { get { return Attribute("Name"); } }
 
+        [JsonIgnore]
         public Karma Root
         {
             get { return GetParent<Karma>(); }
@@ -79,6 +86,7 @@ namespace KarmaTestAdapter.KarmaTestResults
             return Parent.GetParent<T>();
         }
 
+        [JsonIgnore]
         public IEnumerable<Item> AllChildren
         {
             get
@@ -96,22 +104,22 @@ namespace KarmaTestAdapter.KarmaTestResults
 
         protected string Attribute(string name)
         {
-            return Element.GetAttributeValue(name);
+            return _element.GetAttributeValue(name);
         }
 
         protected string ValueOfElement(string name = null)
         {
-            return Element.GetElementValue(name);
+            return _element.GetElementValue(name);
         }
 
         protected IEnumerable<XElement> Elements()
         {
-            return Element.Elements();
+            return _element.Elements();
         }
 
         protected IEnumerable<XElement> Elements(XName name)
         {
-            return Element.Elements(name);
+            return _element.Elements(name);
         }
     }
 }

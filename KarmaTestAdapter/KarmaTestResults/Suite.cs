@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,11 @@ namespace KarmaTestAdapter.KarmaTestResults
         public int? Line { get { return Attribute("Line").ToInt(); } }
         public int? Column { get { return Attribute("Column").ToInt(); } }
         public Source Source { get { return Children.OfType<Source>().FirstOrDefault(); } }
+
+        [JsonIgnore]
         public File File { get { return GetParent<File>(); } }
+
+        [JsonIgnore]
         public Suite ParentSuite { get { return GetParent<Suite>(); } }
 
         public string DisplayName

@@ -42,7 +42,7 @@ namespace KarmaTestAdapter.Commands
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error(ex.Message);
                 return null;
             }
             finally
