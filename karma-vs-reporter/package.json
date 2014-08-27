@@ -1,6 +1,6 @@
 {
   "name": "karma-vs-reporter",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "A Karma plugin. Report results in xml format for a Visual Studio test explorer adapter.",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MortenHoustonLudvigsen/karma-vs-reporter.git"
+    "url": "https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter.git"
   },
   "keywords": [
     "karma-plugin",
