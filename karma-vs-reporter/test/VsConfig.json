@@ -1,0 +1,20 @@
+﻿{
+    "files": [
+        { "path": "node_modules/karma-jasmine/lib/jasmine.js" },
+        { "path": "node_modules/karma-jasmine/lib/adapter.js" },
+        {
+            "path": "testfiles/TestFile2.ts",
+            "served": true,
+            "included": false
+        },
+        {
+            "path": "testfiles/TestFile2.js",
+            "served": true,
+            "included": true,
+            "tests": [
+                { "name": "should be, that 3 + 2 = 4", "index": 47 },
+                { "name": "should be, that 3 + 12 = 23", "index": 388 }
+            ]
+        }
+    ]
+}

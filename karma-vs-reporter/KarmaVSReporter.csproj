@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{96A41FAE-2C77-4386-A93D-F9EFD9A46030}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>KarmaVSReporter</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>63639</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:63639/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="index.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <Content Include="index.js.map">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <None Include="karma-vs-reporter" />
+    <Content Include="package.json" />
+    <Content Include="src\JasminePreprocessor.js">
+      <DependentUpon>JasminePreprocessor.ts</DependentUpon>
+    </Content>
+    <Content Include="src\ParseFiles.js.map">
+      <DependentUpon>ParseFiles.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Preprocessor.js">
+      <DependentUpon>Preprocessor.ts</DependentUpon>
+    </Content>
+    <Content Include="src\VsConfig.js">
+      <DependentUpon>VsConfig.ts</DependentUpon>
+    </Content>
+    <Content Include="test\karma.conf.js" />
+    <Content Include="test\karma.test.conf.js" />
+    <Content Include="test\discover.cmd" />
+    <Content Include="README.md" />
+    <Content Include="test\karma-vs-reporter.test.json" />
+    <Content Include="src\Preprocessor.js.map">
+      <DependentUpon>Preprocessor.ts</DependentUpon>
+    </Content>
+    <Content Include="src\VsConfig.js.map">
+      <DependentUpon>VsConfig.ts</DependentUpon>
+    </Content>
+    <Content Include="test\args.cmd" />
+    <Content Include="src\JasminePreprocessor.js.map">
+      <DependentUpon>JasminePreprocessor.ts</DependentUpon>
+    </Content>
+    <None Include="test\run.cmd" />
+    <Content Include="test\testfiles\Testfile1.js">
+      <DependentUpon>Testfile1.ts</DependentUpon>
+    </Content>
+    <Content Include="test\testfiles\TestFile2.js">
+      <DependentUpon>TestFile2.ts</DependentUpon>
+    </Content>
+    <Content Include="test\testfiles\tsd.json" />
+    <Content Include="test\package.json" />
+    <Content Include="test\init.cmd" />
+    <Content Include="test\testfiles\Testfile1.js.map">
+      <DependentUpon>Testfile1.ts</DependentUpon>
+    </Content>
+    <Content Include="test\testfiles\TestFile2.js.map">
+      <DependentUpon>TestFile2.ts</DependentUpon>
+    </Content>
+    <Content Include="test\VsConfig.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Cli.js">
+      <DependentUpon>Cli.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands.js">
+      <DependentUpon>Commands.ts</DependentUpon>
+    </Content>
+    <Content Include="src\JasmineParser.js">
+      <DependentUpon>JasmineParser.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Javascript.js">
+      <DependentUpon>Javascript.ts</DependentUpon>
+    </Content>
+    <Content Include="src\ParseFiles.js">
+      <DependentUpon>ParseFiles.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Parser.js">
+      <DependentUpon>Parser.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Reporter.js">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Test.js">
+      <DependentUpon>Test.ts</DependentUpon>
+    </Content>
+    <Content Include="src\TestFileParser.js">
+      <DependentUpon>TestFileParser.ts</DependentUpon>
+    </Content>
+    <Content Include="src\TestResults.js">
+      <DependentUpon>TestResults.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Util.js">
+      <DependentUpon>Util.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="index.ts" />
+    <TypeScriptCompile Include="references.d.ts" />
+    <TypeScriptCompile Include="src\Cli.ts" />
+    <TypeScriptCompile Include="src\Commands.ts" />
+    <TypeScriptCompile Include="src\JasmineParser.ts" />
+    <TypeScriptCompile Include="src\JasminePreprocessor.ts" />
+    <TypeScriptCompile Include="src\Javascript.ts" />
+    <TypeScriptCompile Include="src\ParseFiles.ts" />
+    <TypeScriptCompile Include="src\Parser.ts" />
+    <TypeScriptCompile Include="src\Preprocessor.ts" />
+    <TypeScriptCompile Include="src\Reporter.ts" />
+    <TypeScriptCompile Include="src\Test.ts" />
+    <TypeScriptCompile Include="src\TestFileParser.ts" />
+    <TypeScriptCompile Include="src\TestResults.ts" />
+    <TypeScriptCompile Include="src\Util.ts" />
+    <TypeScriptCompile Include="src\VsConfig.ts" />
+    <TypeScriptCompile Include="test\testfiles\references.d.ts" />
+    <TypeScriptCompile Include="test\testfiles\Testfile1.ts" />
+    <TypeScriptCompile Include="test\testfiles\TestFile2.ts" />
+    <TypeScriptCompile Include="test\testfiles\typings\jasmine\jasmine.d.ts" />
+    <TypeScriptCompile Include="test\testfiles\typings\tsd.d.ts" />
+    <TypeScriptCompile Include="typings\ast-traverse\ast-traverse.d.ts" />
+    <TypeScriptCompile Include="typings\esprima\esprima.d.ts" />
+    <TypeScriptCompile Include="typings\jquery\jquery.d.ts" />
+    <TypeScriptCompile Include="typings\lodash\lodash.d.ts" />
+    <TypeScriptCompile Include="typings\node\node.d.ts" />
+    <TypeScriptCompile Include="typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="typings\source-map\source-map.d.ts" />
+    <TypeScriptCompile Include="typings\tsd.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Javascript.js.map">
+      <DependentUpon>Javascript.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Test.js.map">
+      <DependentUpon>Test.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\TestFileParser.js.map">
+      <DependentUpon>TestFileParser.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\JasmineParser.js.map">
+      <DependentUpon>JasmineParser.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Util.js.map">
+      <DependentUpon>Util.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Reporter.js.map">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\TestResults.js.map">
+      <DependentUpon>TestResults.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LICENSE" />
+    <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Commands.js.map">
+      <DependentUpon>Commands.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Parser.js.map">
+      <DependentUpon>Parser.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include=".npmignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Cli.js.map">
+      <DependentUpon>Cli.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

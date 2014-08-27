@@ -1,0 +1,39 @@
+{
+  "name": "karma-vs-reporter",
+  "version": "0.5.4",
+  "description": "A Karma plugin. Report results in xml format for a Visual Studio test explorer adapter.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Morten Houston Ludvigsen <mlu@2ps.dk>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MortenHoustonLudvigsen/karma-vs-reporter.git"
+  },
+  "keywords": [
+    "karma-plugin",
+    "karma-reporter"
+  ],
+  "bin": {
+    "karma-vs-reporter": "karma-vs-reporter"
+  },
+  "dependencies": {
+    "ast-traverse": "^0.1.1",
+    "esprima": "^1.2.2",
+    "extend": "^1.3.0",
+    "lodash": "^2.4.1",
+    "q": "^1.0.1",
+    "source-map": "^0.1.38",
+    "strip-bom": "^1.0.0",
+    "xmlbuilder": "^2.4.3",
+    "yargs": "^1.3.1"
+  },
+  "peerDependencies": {
+    "karma": ">=0.12"
+  },
+  "devDependencies": {
+    "karma": "~0.12.21"
+  }
+}
