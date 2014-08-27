@@ -55,6 +55,10 @@ There are two properties:
 
 * `config` This property overwrites any configurations from the karma configuration file.
 
+# Demo
+
+A very simple demo is available here: [Demo](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/tree/master/Demo) 
+
 # Caveats
 
 At the moment the adapter only works properly with [Jasmine](http://jasmine.github.io/) tests. It should be relatively easy to add other frameworks. Pull requests are welcome.
