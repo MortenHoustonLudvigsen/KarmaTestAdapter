@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
+    <Content Include="test\TypescriptTests.js">
+      <DependentUpon>TypescriptTests.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="karma.conf.js" />
@@ -77,6 +80,11 @@
   <ItemGroup>
     <TypeScriptCompile Include="test\TypescriptTests.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test\TypescriptTests.js.map">
+      <DependentUpon>TypescriptTests.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
