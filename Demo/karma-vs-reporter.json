@@ -1,7 +1,0 @@
-﻿{
-    "config": {
-        "browsers": [
-            "PhantomJS"
-        ]
-    }
-}

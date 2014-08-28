@@ -9,7 +9,7 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 [See a demo video](http://youtu.be/T9wqxOX3OX0)
 
-A very simple demo is available here: [Demo](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/tree/master/Demo) 
+A very simple demo is available here: [Demo](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter-Demo) 
 
 # Features
 
@@ -28,7 +28,7 @@ A very simple demo is available here: [Demo](https://github.com/MortenHoustonLud
 * Install [Karma](http://karma-runner.github.io/) in your project:
 `npm install karma --save-dev`
 
-* Install the [Karma Visual Studio Reporter](https://github.com/MortenHoustonLudvigsen/karma-vs-reporter) in your project (at least version 0.5.3):
+* Install the Karma Visual Studio Reporter in your project (at least version 0.5.3):
 `npm install karma-vs-reporter --save-dev`
 
 # Installation
