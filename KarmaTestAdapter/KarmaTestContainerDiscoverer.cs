@@ -80,8 +80,9 @@ namespace KarmaTestAdapter
         {
             foreach (var project in GetProjects())
             {
-                try { 
-                 _testFilesUpdateWatcher.AddDirectory(project.GetProjectDirectory());
+                try
+                {
+                    _testFilesUpdateWatcher.AddDirectory(project.GetProjectDirectory());
                 }
                 catch (ArgumentNullException)
                 {
