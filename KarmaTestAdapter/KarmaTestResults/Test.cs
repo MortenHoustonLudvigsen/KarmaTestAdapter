@@ -40,7 +40,8 @@ namespace KarmaTestAdapter.KarmaTestResults
         {
             get
             {
-                return string.Format("{0}#{1}", Source != null ? Source.FullPath : File.FullPath, Index);
+                //return string.Format("{0}#{1}", Source != null ? Source.FullPath : File.FullPath, Index);
+                return ParentSuite != null ? ParentSuite.DisplayName + "." + Name.Replace(' ', '_') : Name.Replace(' ', '_');
             }
         }
     }
