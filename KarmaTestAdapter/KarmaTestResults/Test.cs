@@ -40,8 +40,13 @@ namespace KarmaTestAdapter.KarmaTestResults
         {
             get
             {
-                //return string.Format("{0}#{1}", Source != null ? Source.FullPath : File.FullPath, Index);
-                return ParentSuite != null ? ParentSuite.DisplayName + "." + Name.Replace(' ', '_') : Name.Replace(' ', '_');
+                // We need Index in the fully qualified name to differentiate between tests with identical names
+                var fullyQualifiedName = string.Format("{0}#{1}", Name.Replace('.', '-'), Index);
+                if (ParentSuite != null)
+                {
+                    fullyQualifiedName = ParentSuite.FullyQualifiedName + "." + fullyQualifiedName;
+                }
+                return fullyQualifiedName;
             }
         }
     }
