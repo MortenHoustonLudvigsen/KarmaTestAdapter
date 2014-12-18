@@ -72,9 +72,15 @@ namespace KarmaTestAdapter.Commands
             }
         }
 
-        public virtual Karma Run()
+        public Karma Run()
         {
-            var outputFile = Settings.GetOutputFile();
+            var outputDirectory = Settings.GetOutputDirectory(Command);
+            return RunInternal(outputDirectory);
+        }
+
+        protected virtual Karma RunInternal(string outputDirectory)
+        {
+            var outputFile = Settings.GetOutputFile(outputDirectory);
             try
             {
                 var processOptions = GetProcessOptions();

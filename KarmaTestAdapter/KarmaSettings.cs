@@ -38,12 +38,6 @@ namespace KarmaTestAdapter
             }
 
             settings.Directory = Path.GetDirectoryName(path);
-
-            logger.Info("settings.KarmaConfigFile: {0}", settings.KarmaConfigFile);
-            logger.Info("settings.SettingsFile:    {0}", settings.SettingsFile);
-            logger.Info("settings.LogToFile:       {0}", settings.LogToFile);
-            logger.Info("settings.Directory:       {0}", settings.Directory);
-
             return settings;
         }
 
@@ -73,20 +67,53 @@ namespace KarmaTestAdapter
         /// </summary>
         public string LogFilePath { get { return Path.Combine(Directory, Globals.LogFilename); } }
 
+        private int _outputNo = 1;
+        public string GetOutputDirectory(string command)
+        {
+            if (LogToFile)
+            {
+                var parantDirectory = Path.Combine(Directory, Globals.OutputDirectoryName);
+                var outputDirectory = Path.Combine(parantDirectory, string.Format("{0}.{1:00000}", command, _outputNo));
+                while (System.IO.Directory.Exists(outputDirectory))
+                {
+                    _outputNo += 1;
+                    outputDirectory = Path.Combine(parantDirectory, string.Format("{0}.{1:00000}", command, _outputNo));
+                }
+                return outputDirectory;
+            }
+            return null;
+        }
+
         /// <summary>
         /// The file for karma output
         /// </summary>
-        public string GetOutputFile()
+        public string GetOutputFile(string outputDirectory)
         {
-            return LogToFile ? Path.Combine(Directory, Globals.OutputFilename) : Path.GetTempFileName();
+            return GetFilename(outputDirectory, Globals.OutputFilename);
         }
 
         /// <summary>
         /// The file for VsConfig
         /// </summary>
-        public string GetVsConfigFilename()
+        public string GetVsConfigFilename(string outputDirectory)
         {
-            return LogToFile ? Path.Combine(Directory, Globals.VsConfigFilename) : Path.GetTempFileName();
+            return GetFilename(outputDirectory, Globals.VsConfigFilename);
+        }
+
+        private string GetFilename(string outputDirectory, string filename)
+        {
+            if (LogToFile)
+            {
+                if (!System.IO.Directory.Exists(outputDirectory))
+                {
+                    System.IO.Directory.CreateDirectory(outputDirectory);
+                }
+                return Path.Combine(outputDirectory, filename);
+            }
+            else
+            {
+                return Path.GetTempFileName();
+            }
         }
     }
 }

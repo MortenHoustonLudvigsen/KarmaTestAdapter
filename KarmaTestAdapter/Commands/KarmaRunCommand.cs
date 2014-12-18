@@ -32,13 +32,13 @@ namespace KarmaTestAdapter.Commands
             return processOptions;
         }
 
-        public override Karma Run()
+        protected override Karma RunInternal(string outputDirectory)
         {
-            _vsConfigFile = Settings.GetVsConfigFilename();
+            _vsConfigFile = Settings.GetVsConfigFilename(outputDirectory);
             try
             {
                 IO.File.WriteAllText(_vsConfigFile, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
-                return base.Run();
+                return base.RunInternal(outputDirectory);
             }
             catch (Exception ex)
             {

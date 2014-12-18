@@ -18,12 +18,17 @@ namespace KarmaTestAdapter
         public const string LogFilename = "KarmaTestAdapter.log";
 
         /// <summary>
-        /// The file for karma output when Settings.LogToFile == true
+        /// The directory name for karma output when Settings.LogToFile == true
         /// </summary>
-        public const string OutputFilename = "KarmaTestAdapter.output.xml";
+        public const string OutputDirectoryName = "KarmaTestAdapter.Output";
 
         /// <summary>
-        /// The file for VsConfig when Settings.LogToFile == true
+        /// The file name for karma output when Settings.LogToFile == true
+        /// </summary>
+        public const string OutputFilename = "KarmaTestAdapter.xml";
+
+        /// <summary>
+        /// The file name for VsConfig when Settings.LogToFile == true
         /// </summary>
         public const string VsConfigFilename = "KarmaTestAdapter.VsConfig.json";
 
