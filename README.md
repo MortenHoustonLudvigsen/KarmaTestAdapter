@@ -48,6 +48,7 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 ```json
 {
     "karmaConfigFile": "karma.conf.test.js",
+    "LogToFile": true,
     "config": {
         "browsers": [
             "PhantomJS"
