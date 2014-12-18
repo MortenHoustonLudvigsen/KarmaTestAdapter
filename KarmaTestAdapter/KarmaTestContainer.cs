@@ -1,4 +1,5 @@
 ﻿using KarmaTestAdapter.KarmaTestResults;
+using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Microsoft.VisualStudio.TestWindow.Extensibility.Model;
@@ -15,13 +16,15 @@ namespace KarmaTestAdapter
         private readonly DateTime _timeStamp;
         private ITestContainerDiscoverer _discoverer;
 
-        public KarmaTestContainer(ITestContainerDiscoverer discoverer, string source)
-            : this(discoverer, source, Enumerable.Empty<Guid>())
+        public KarmaTestContainer(ITestContainerDiscoverer discoverer, string source, IKarmaLogger logger)
+            : this(discoverer, source, logger, Enumerable.Empty<Guid>())
         { }
 
-        public KarmaTestContainer(ITestContainerDiscoverer discoverer, string source, IEnumerable<Guid> debugEngines)
+        public KarmaTestContainer(ITestContainerDiscoverer discoverer, string source, IKarmaLogger logger, IEnumerable<Guid> debugEngines)
         {
             this.Source = source;
+            this.Logger = logger;
+            this.Settings = KarmaSettings.Read(source, logger);
             this.DebugEngines = debugEngines;
             this._discoverer = discoverer;
             this.TargetFramework = FrameworkVersion.None;
@@ -30,12 +33,14 @@ namespace KarmaTestAdapter
         }
 
         private KarmaTestContainer(KarmaTestContainer copy, DateTime timeStamp)
-            : this(copy._discoverer, copy.Source, copy.DebugEngines)
+            : this(copy._discoverer, copy.Source, copy.Logger, copy.DebugEngines)
         {
             this._timeStamp = timeStamp;
         }
 
         public string Source { get; set; }
+        public IKarmaLogger Logger { get; private set; }
+        public KarmaSettings Settings { get; private set; }
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
         public Karma Karma { get; set; }
         public IEnumerable<Guid> DebugEngines { get; set; }

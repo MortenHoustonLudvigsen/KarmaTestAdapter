@@ -70,24 +70,94 @@ namespace KarmaTestAdapter.Logging
             Error(ex, string.Format(message, args));
         }
 
+        public virtual bool HasLogger(IKarmaLogger logger)
+        {
+            return HasLogger<IKarmaLogger>(l => l == logger);
+        }
+
+        public virtual bool HasLogger(ILogger logger)
+        {
+            return HasLogger<KarmaExtensibilityLogger>(l => l.Logger == logger);
+        }
+
+        public virtual bool HasLogger(IMessageLogger logger)
+        {
+            return HasLogger<KarmaTestMessageLogger>(l => l.Logger == logger);
+        }
+
+        public virtual bool HasLogger(string filename)
+        {
+            return HasLogger<KarmaFileLogger>(l => l.Filename == filename);
+        }
+
+        public virtual bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
+            where TLogger : IKarmaLogger
+        {
+            return false;
+        }
+
         public virtual void AddLogger(IKarmaLogger logger)
         {
-            throw new NotImplementedException();
+            if (logger != null)
+            {
+                AddLogger<IKarmaLogger>(l => l == logger, () => logger);
+            }
         }
 
         public virtual void AddLogger(ILogger logger)
         {
-            throw new NotImplementedException();
+            if (logger != null)
+            {
+                AddLogger<KarmaExtensibilityLogger>(l => l.Logger == logger, () => new KarmaExtensibilityLogger(logger));
+            }
         }
 
         public virtual void AddLogger(IMessageLogger logger)
         {
-            throw new NotImplementedException();
+            if (logger != null)
+            {
+                AddLogger<KarmaTestMessageLogger>(l => l.Logger == logger, () => new KarmaTestMessageLogger(logger));
+            }
         }
 
         public virtual void AddLogger(string filename)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrWhiteSpace(filename))
+            {
+                AddLogger<KarmaFileLogger>(l => l.Filename == filename, () => new KarmaFileLogger(filename));
+            }
+        }
+
+        public virtual void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger)
+            where TLogger : IKarmaLogger
+        {
+            // Do nothing
+        }
+
+        public virtual void RemoveLogger(IKarmaLogger logger)
+        {
+            RemoveLogger<IKarmaLogger>(l => l == logger);
+        }
+
+        public virtual void RemoveLogger(ILogger logger)
+        {
+            RemoveLogger<KarmaExtensibilityLogger>(l => l.Logger == logger);
+        }
+
+        public virtual void RemoveLogger(IMessageLogger logger)
+        {
+            RemoveLogger<KarmaTestMessageLogger>(l => l.Logger == logger);
+        }
+
+        public virtual void RemoveLogger(string filename)
+        {
+            RemoveLogger<KarmaFileLogger>(l => l.Filename == filename);
+        }
+
+        public virtual void RemoveLogger<TLogger>(Func<TLogger, bool> predicate)
+            where TLogger : IKarmaLogger
+        {
+            // Do nothing
         }
 
         protected string FormatMessage(TestMessageLevel level, string message)

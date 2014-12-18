@@ -13,16 +13,12 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaCommand
     {
-        public KarmaCommand(string command, string source, IKarmaLogger logger)
+        public KarmaCommand(string command, string source, KarmaSettings settings, IKarmaLogger logger)
         {
             Command = command;
-            Settings = KarmaSettings.Read(source, logger);
+            Settings = settings;
             Directory = IO.Path.GetDirectoryName(IO.Path.GetFullPath(source));
             Logger = logger;
-            if (Settings.LogToFile)
-            {
-                Logger.AddLogger(Settings.LogFilePath);
-            }
         }
 
         public KarmaSettings Settings { get; private set; }

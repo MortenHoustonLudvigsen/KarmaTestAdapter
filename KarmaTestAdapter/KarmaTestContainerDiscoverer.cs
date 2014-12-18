@@ -93,15 +93,16 @@ namespace KarmaTestAdapter
 
         private bool _shouldRefresh = false;
         private object _refreshLock = new object();
-        private async void RefreshTestContainers()
+        private async void RefreshTestContainers(string reason)
         {
             if (!_initialContainerSearch)
             {
                 lock (_refreshLock)
                 {
                     _shouldRefresh = true;
+                    Logger.Info(reason);
                 }
-                await Tasks.Task.Delay(TimeSpan.FromMilliseconds(500));
+                await Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
                 lock (_refreshLock)
                 {
                     if (_shouldRefresh)
@@ -152,13 +153,13 @@ namespace KarmaTestAdapter
                 {
                     _testFilesUpdateWatcher.AddDirectory(e.Project.GetProjectDirectory());
                     AddFiles(FindTestFiles(e.Project));
-                    RefreshTestContainers();
+                    RefreshTestContainers("Solution loaded");
                 }
                 else if (e.ChangedReason == SolutionChangedReason.Unload)
                 {
                     _testFilesUpdateWatcher.RemoveDirectory(e.Project.GetProjectDirectory());
                     RemoveFiles(FindTestFiles(e.Project));
-                    RefreshTestContainers();
+                    RefreshTestContainers("Solution unloaded");
                 }
             }
 
@@ -196,19 +197,27 @@ namespace KarmaTestAdapter
                     case TestFileChangedReason.Added:
                         _files.Add(e.File);
                         _testFilesUpdateWatcher.AddWatch(e.File);
-                        AddTestContainerIfTestFile(e.File);
+                        if (!AddTestContainerIfTestFile(e.File))
+                        {
+                            RefreshTestContainers(string.Format("File added: {0}", e.File));
+                        }
                         break;
                     case TestFileChangedReason.Removed:
                         _files.Remove(e.File);
                         _testFilesUpdateWatcher.RemoveWatch(e.File);
-                        RemoveTestContainer(e.File);
+                        if (!RemoveTestContainer(e.File))
+                        {
+                            RefreshTestContainers(string.Format("File removed: {0}", e.File));
+                        }
                         break;
                     case TestFileChangedReason.Changed:
                     case TestFileChangedReason.Saved:
-                        AddTestContainerIfTestFile(e.File);
+                        if (!AddTestContainerIfTestFile(e.File))
+                        {
+                            RefreshTestContainers(string.Format("File changed: {0}", e.File));
+                        }
                         break;
                 }
-                RefreshTestContainers();
             }
             else
             {
@@ -216,7 +225,7 @@ namespace KarmaTestAdapter
             }
         }
 
-        private void AddTestContainerIfTestFile(string file)
+        private bool AddTestContainerIfTestFile(string file)
         {
             var directory = Path.GetDirectoryName(file);
             var settingsFilename = Path.Combine(directory, Globals.SettingsFilename);
@@ -230,28 +239,44 @@ namespace KarmaTestAdapter
                 RemoveTestContainersInDirectory(directory);
                 if (File.Exists(container))
                 {
-                    _cachedContainers.Add(new KarmaTestContainer(this, container));
+                    _cachedContainers.Add(new KarmaTestContainer(this, container, Logger));
                 }
+                RefreshTestContainers(string.Format("Test container added: {0}", file));
+                return true;
             }
-            RefreshTestContainers();
+            return false;
         }
 
-        private void RemoveTestContainersInDirectory(string directory)
+        private bool RemoveTestContainersInDirectory(string directory)
         {
-            _cachedContainers.RemoveAll(c => PathUtils.IsInDirectory(c.Source, directory));
-            RefreshTestContainers();
+            return RemoveTestContainers(_cachedContainers.Where(c => PathUtils.IsInDirectory(c.Source, directory)));
         }
 
-        private void RemoveTestContainer(string file)
+        private bool RemoveTestContainer(string file)
         {
-            _cachedContainers.RemoveAll(c => PathUtils.PathsEqual(c.Source, file));
+            var result = RemoveTestContainers(_cachedContainers.Where(c => PathUtils.PathsEqual(c.Source, file)));
             var directory = Path.GetDirectoryName(file);
             var defaultKarmaSettingsFilename = Path.Combine(directory, Globals.SettingsFilename);
             if (PathUtils.PathHasFileName(file, Globals.SettingsFilename) && _files.Contains(defaultKarmaSettingsFilename))
             {
                 AddTestContainerIfTestFile(defaultKarmaSettingsFilename);
             }
-            RefreshTestContainers();
+            return result;
+        }
+
+        private bool RemoveTestContainers(IEnumerable<KarmaTestContainer> containersToRemove)
+        {
+            containersToRemove = containersToRemove.ToList();
+            if (containersToRemove.Any())
+            {
+                foreach (var container in containersToRemove)
+                {
+                    _cachedContainers.Remove(container);
+                    RefreshTestContainers(string.Format("Test container removed: {0}", container.Source));
+                }
+                return true;
+            }
+            return false;
         }
 
         private IEnumerable<string> FindTestFiles()

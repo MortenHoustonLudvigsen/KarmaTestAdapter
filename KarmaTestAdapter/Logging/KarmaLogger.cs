@@ -19,42 +19,43 @@ namespace KarmaTestAdapter.Logging
         }
 
         private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
-        private readonly HashSet<string> _fileLoggers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public KarmaLogger(params IKarmaLogger[] loggers)
         {
             _loggers.ForEach(l => AddLogger(l));
         }
 
-        public override void AddLogger(IKarmaLogger logger)
+        public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
         {
-            if (logger != null)
+            if (_loggers.OfType<TLogger>().Any(predicate))
             {
-                _loggers.Add(logger);
+                return true;
+            }
+            foreach (var logger in _loggers)
+            {
+                if (logger.HasLogger<TLogger>(predicate))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger)
+        {
+            if (!HasLogger(predicate))
+            {
+                _loggers.Add(createLogger());
             }
         }
 
-        public override void AddLogger(ILogger logger)
+        public override void RemoveLogger<TLogger>(Func<TLogger, bool> predicate)
         {
-            if (logger != null)
+            var loggersToRemove = _loggers.OfType<TLogger>().Where(predicate).Cast<IKarmaLogger>().ToList();
+            _loggers.RemoveAll(l => loggersToRemove.Contains(l));
+            foreach (var logger in _loggers)
             {
-                _loggers.Add(new KarmaExtensibilityLogger(logger));
-            }
-        }
-
-        public override void AddLogger(IMessageLogger logger)
-        {
-            if (logger != null)
-            {
-                _loggers.Add(new KarmaTestMessageLogger(logger));
-            }
-        }
-
-        public override void AddLogger(string filename)
-        {
-            if (!string.IsNullOrWhiteSpace(filename) && _fileLoggers.Add(filename))
-            {
-                _loggers.Add(new KarmaFileLogger(filename));
+                logger.RemoveLogger<TLogger>(predicate);
             }
         }
 

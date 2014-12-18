@@ -15,8 +15,8 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaRunCommand : KarmaCommand
     {
-        public KarmaRunCommand(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
-            : base("run", source, logger)
+        public KarmaRunCommand(string source, VsConfig.Config vsConfig, KarmaSettings settings, IKarmaLogger logger)
+            : base("run", source, settings, logger)
         {
             _vsConfig = vsConfig;
         }

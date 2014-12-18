@@ -28,6 +28,7 @@ namespace KarmaTestAdapter
         public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             var karmaLogger = KarmaLogger.Create(messageLogger: logger);
+
             karmaLogger.Info("DiscoverTests start");
             foreach (var testcase in GetTests(sources, karmaLogger))
             {

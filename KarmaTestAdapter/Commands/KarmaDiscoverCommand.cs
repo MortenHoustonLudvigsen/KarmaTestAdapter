@@ -9,8 +9,8 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaDiscoverCommand : KarmaCommand
     {
-        public KarmaDiscoverCommand(string source, IKarmaLogger logger)
-            : base("discover", source, logger)
+        public KarmaDiscoverCommand(string source, KarmaSettings settings, IKarmaLogger logger)
+            : base("discover", source, settings, logger)
         {
         }
     }

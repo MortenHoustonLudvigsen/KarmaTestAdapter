@@ -11,11 +11,11 @@ namespace KarmaTestAdapter.Logging
 {
     public class KarmaFileLogger : KarmaLoggerBase
     {
-        private string _filename;
+        public string Filename { get; private set; }
 
         public KarmaFileLogger(string filename)
         {
-            _filename = filename;
+            Filename = filename;
         }
 
         public override void SendMessage(TestMessageLevel testMessageLevel, string message)
@@ -27,7 +27,7 @@ namespace KarmaTestAdapter.Logging
         {
             try
             {
-                File.Delete(_filename);
+                File.Delete(Filename);
             }
             catch { }
         }
@@ -36,7 +36,7 @@ namespace KarmaTestAdapter.Logging
         {
             try
             {
-                using (var file = File.AppendText(_filename))
+                using (var file = File.AppendText(Filename))
                 {
                     file.WriteLine(FormatMessage(messageLevel, message));
                 }

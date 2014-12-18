@@ -10,12 +10,12 @@ namespace KarmaTestAdapter.Logging
 {
     public class KarmaExtensibilityLogger : KarmaLoggerBase
     {
-        private ILogger _logger;
-
         public KarmaExtensibilityLogger(ILogger logger)
         {
-            _logger = logger;
+            Logger = logger;
         }
+
+        public ILogger Logger { get; private set; }
 
         public override void SendMessage(TestMessageLevel testMessageLevel, string message)
         {
@@ -26,7 +26,7 @@ namespace KarmaTestAdapter.Logging
         {
             try
             {
-                _logger.Clear();
+                Logger.Clear();
             }
             catch { }
         }
@@ -35,7 +35,7 @@ namespace KarmaTestAdapter.Logging
         {
             try
             {
-                _logger.Log(messageLevel, FormatMessage(messageLevel, message));
+                Logger.Log(messageLevel, FormatMessage(messageLevel, message));
             }
             catch { }
         }

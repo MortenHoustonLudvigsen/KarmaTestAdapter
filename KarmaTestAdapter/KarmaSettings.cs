@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter
 {
-    public class KarmaSettings
+    public class KarmaSettings: IDisposable
     {
         public static KarmaSettings Read(string path, IKarmaLogger logger)
         {
@@ -38,6 +38,15 @@ namespace KarmaTestAdapter
             }
 
             settings.Directory = Path.GetDirectoryName(path);
+            settings.Logger = logger;
+            if (settings.LogToFile)
+            {
+                logger.AddLogger(settings.LogFilePath);
+            }
+            else
+            {
+                logger.RemoveLogger(settings.LogFilePath);
+            }
             return settings;
         }
 
@@ -61,6 +70,7 @@ namespace KarmaTestAdapter
         public bool LogToFile { get; set; }
 
         public string Directory { get; private set; }
+        public IKarmaLogger Logger { get; private set; }
 
         /// <summary>
         /// The file to log to when LogToFile == true
@@ -113,6 +123,14 @@ namespace KarmaTestAdapter
             else
             {
                 return Path.GetTempFileName();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Logger != null)
+            {
+                Logger.RemoveLogger(LogFilePath);
             }
         }
     }

@@ -12,18 +12,18 @@ namespace KarmaTestAdapter.Logging
 {
     public class KarmaTestMessageLogger : KarmaLoggerBase
     {
-        private IMessageLogger _logger;
+        public IMessageLogger Logger { get; private set; }
 
         public KarmaTestMessageLogger(IMessageLogger logger)
         {
-            _logger = logger;
+            Logger = logger;
         }
 
         public override void SendMessage(TestMessageLevel testMessageLevel, string message)
         {
             try
             {
-                _logger.SendMessage(testMessageLevel, FormatMessage(testMessageLevel, message));
+                Logger.SendMessage(testMessageLevel, FormatMessage(testMessageLevel, message));
             }
             catch { }
         }
