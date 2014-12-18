@@ -70,6 +70,26 @@ namespace KarmaTestAdapter.Logging
             Error(ex, string.Format(message, args));
         }
 
+        public virtual void AddLogger(IKarmaLogger logger)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddLogger(ILogger logger)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddLogger(IMessageLogger logger)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void AddLogger(string filename)
+        {
+            throw new NotImplementedException();
+        }
+
         protected string FormatMessage(TestMessageLevel level, string message)
         {
             return FormatMessage(GetMessageLevel(level), message);

@@ -15,21 +15,18 @@ namespace KarmaTestAdapter.Logging
             var karmaLogger = new KarmaLogger();
             karmaLogger.AddLogger(logger);
             karmaLogger.AddLogger(messageLogger);
-            if (Globals.LogToFile)
-            {
-                karmaLogger.AddLogger(Globals.LogFilename);
-            }
             return karmaLogger;
         }
 
         private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
+        private readonly HashSet<string> _fileLoggers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         public KarmaLogger(params IKarmaLogger[] loggers)
         {
             _loggers.ForEach(l => AddLogger(l));
         }
 
-        public void AddLogger(IKarmaLogger logger)
+        public override void AddLogger(IKarmaLogger logger)
         {
             if (logger != null)
             {
@@ -37,7 +34,7 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public void AddLogger(ILogger logger)
+        public override void AddLogger(ILogger logger)
         {
             if (logger != null)
             {
@@ -45,7 +42,7 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public void AddLogger(IMessageLogger logger)
+        public override void AddLogger(IMessageLogger logger)
         {
             if (logger != null)
             {
@@ -53,9 +50,9 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public void AddLogger(string filename)
+        public override void AddLogger(string filename)
         {
-            if (!string.IsNullOrWhiteSpace(filename))
+            if (!string.IsNullOrWhiteSpace(filename) && _fileLoggers.Add(filename))
             {
                 _loggers.Add(new KarmaFileLogger(filename));
             }

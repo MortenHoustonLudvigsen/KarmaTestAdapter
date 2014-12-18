@@ -34,7 +34,7 @@ namespace KarmaTestAdapter.Commands
 
         public override Karma Run()
         {
-            _vsConfigFile = Globals.LogToFile ? Globals.VsConfigFilename : IO.Path.GetTempFileName();
+            _vsConfigFile = Settings.GetVsConfigFilename();
             try
             {
                 IO.File.WriteAllText(_vsConfigFile, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
@@ -47,7 +47,7 @@ namespace KarmaTestAdapter.Commands
             }
             finally
             {
-                if (!Globals.LogToFile)
+                if (!Settings.LogToFile)
                 {
                     IO.File.Delete(_vsConfigFile);
                 }

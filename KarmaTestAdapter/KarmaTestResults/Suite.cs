@@ -42,7 +42,7 @@ namespace KarmaTestAdapter.KarmaTestResults
                 var fullyQualifiedName = Name.Replace('.', '-');
                 if (ParentSuite != null)
                 {
-                    fullyQualifiedName = ParentSuite.FullyQualifiedName + "." + fullyQualifiedName;
+                    fullyQualifiedName = ParentSuite.FullyQualifiedName + " / " + fullyQualifiedName;
                 }
                 else
                 {

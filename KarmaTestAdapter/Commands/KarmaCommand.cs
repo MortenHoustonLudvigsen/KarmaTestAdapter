@@ -19,6 +19,10 @@ namespace KarmaTestAdapter.Commands
             Settings = KarmaSettings.Read(source, logger);
             Directory = IO.Path.GetDirectoryName(IO.Path.GetFullPath(source));
             Logger = logger;
+            if (Settings.LogToFile)
+            {
+                Logger.AddLogger(Settings.LogFilePath);
+            }
         }
 
         public KarmaSettings Settings { get; private set; }
@@ -70,7 +74,7 @@ namespace KarmaTestAdapter.Commands
 
         public virtual Karma Run()
         {
-            var outputFile = Globals.LogToFile ? Globals.OutputFilename : IO.Path.GetTempFileName();
+            var outputFile = Settings.GetOutputFile();
             try
             {
                 var processOptions = GetProcessOptions();
@@ -109,7 +113,7 @@ namespace KarmaTestAdapter.Commands
             }
             finally
             {
-                if (!Globals.LogToFile)
+                if (!Settings.LogToFile)
                 {
                     IO.File.Delete(outputFile);
                 }

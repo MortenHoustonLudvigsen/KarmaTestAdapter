@@ -18,5 +18,9 @@ namespace KarmaTestAdapter.Logging
         void Error(string message, params object[] args);
         void Error(Exception ex, string message = null);
         void Error(Exception ex, string message = null, params object[] args);
+        void AddLogger(IKarmaLogger logger);
+        void AddLogger(ILogger logger);
+        void AddLogger(IMessageLogger logger);
+        void AddLogger(string filename);
     }
 }

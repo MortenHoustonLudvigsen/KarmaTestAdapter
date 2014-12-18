@@ -13,51 +13,19 @@ namespace KarmaTestAdapter
         public static readonly TestProperty FileIndexProperty = TestProperty.Register("KarmaTestCaseFileIndex", "Index in file", typeof(int?), typeof(KarmaTestDiscoverer));
 
         /// <summary>
-        /// Should logging be done to a file as well as normal logging
+        /// The file to log to when Settings.LogToFile == true
         /// </summary>
-        public static bool LogToFile = false;
+        public const string LogFilename = "KarmaTestAdapter.log";
 
         /// <summary>
-        /// The file to log to
+        /// The file for karma output when Settings.LogToFile == true
         /// </summary>
-        public static string LogFilename
-        {
-            get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.log"); }
-        }
+        public const string OutputFilename = "KarmaTestAdapter.output.xml";
 
         /// <summary>
-        /// The file for karma output when LogToFile == true
+        /// The file for VsConfig when Settings.LogToFile == true
         /// </summary>
-        public static string OutputFilename
-        {
-            get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.output.xml"); }
-        }
-
-        /// <summary>
-        /// The file for VsConfig when LogToFile == true
-        /// </summary>
-        public static string VsConfigFilename
-        {
-            get { return Path.Combine(HomeDirectory, "KarmaTestAdapter.VsConfig.json"); }
-        }
-
-        /// <summary>
-        /// The current user's home directory
-        /// </summary>
-        public static string HomeDirectory
-        {
-            get
-            {
-                if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
-                {
-                    return Environment.GetEnvironmentVariable("HOME");
-                }
-                else
-                {
-                    return Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
-                }
-            }
-        }
+        public const string VsConfigFilename = "KarmaTestAdapter.VsConfig.json";
 
         /// <summary>
         /// The Uri string used to identify the XmlTestExecutor.
