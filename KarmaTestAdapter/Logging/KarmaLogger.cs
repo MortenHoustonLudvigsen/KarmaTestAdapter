@@ -99,5 +99,14 @@ namespace KarmaTestAdapter.Logging
                 catch { }
             }
         }
+
+        public override void Dispose()
+        {
+            foreach (var logger in _loggers.ToList())
+            {
+                logger.Parent = null;
+            }
+            base.Dispose();
+        }
     }
 }

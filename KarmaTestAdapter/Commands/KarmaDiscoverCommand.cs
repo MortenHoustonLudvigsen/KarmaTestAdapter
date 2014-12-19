@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Logging;
+﻿using KarmaTestAdapter.KarmaTestResults;
+using KarmaTestAdapter.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,23 +10,37 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaDiscoverCommand : KarmaCommand
     {
-        public KarmaDiscoverCommand(string source, IKarmaLogger logger)
-            : base("discover", source, logger)
+        public KarmaDiscoverCommand(string source)
+            : base("discover", source)
         {
         }
 
         public override string Name { get { return "Discover"; } }
 
-        protected override KarmaTestResults.Karma RunInternal(string outputDirectory)
+        public Karma Run(IKarmaLogger logger)
         {
-            Logger.Info("Start ({0})", Source);
-            try
+            using (var commandLogger = new KarmaCommandLogger(logger, this))
+            using (var settings = KarmaSettings.Read(Source, commandLogger))
             {
-                return base.RunInternal(outputDirectory);
-            }
-            finally
-            {
-                Logger.Info("Finished ({0})", Source);
+                var outputDirectory = settings.GetOutputDirectory(Command);
+                using (commandLogger.LogProcess("({0})", Source))
+                using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
+                {
+                    try
+                    {
+                        var processOptions = GetProcessOptions(settings);
+                        processOptions.Add("-o", outputFile.Path);
+                        if (RunCommand(processOptions, commandLogger))
+                        {
+                            return Karma.Load(outputFile.Path);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        commandLogger.Error(ex);
+                    }
+                }
+                return null;
             }
         }
     }

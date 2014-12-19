@@ -15,6 +15,7 @@ module Util {
     export var configFile = path.resolve('karma-vs-reporter.json');
     export var baseDir = process.cwd();
     export var outputFile = 'karma-vs-reporter.xml';
+    export var configOutputFile = 'karma-vs-reporter.config.json';
     export var config = readConfigFile(configFile);
 
     export function readConfigFile(configFile): Config {

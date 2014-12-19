@@ -108,33 +108,17 @@ namespace KarmaTestAdapter
         /// <summary>
         /// The file for karma output
         /// </summary>
-        public string GetOutputFile(string outputDirectory)
+        public KarmaOutputFile GetOutputFile(string outputDirectory)
         {
-            return GetFilename(outputDirectory, Globals.OutputFilename);
+            return new KarmaOutputFile(outputDirectory, Globals.OutputFilename);
         }
 
         /// <summary>
         /// The file for VsConfig
         /// </summary>
-        public string GetVsConfigFilename(string outputDirectory)
+        public KarmaOutputFile GetVsConfigFilename(string outputDirectory)
         {
-            return GetFilename(outputDirectory, Globals.VsConfigFilename);
-        }
-
-        private string GetFilename(string outputDirectory, string filename)
-        {
-            if (!string.IsNullOrWhiteSpace(OutputDirectory))
-            {
-                if (!System.IO.Directory.Exists(outputDirectory))
-                {
-                    System.IO.Directory.CreateDirectory(outputDirectory);
-                }
-                return Path.Combine(outputDirectory, filename);
-            }
-            else
-            {
-                return Path.GetTempFileName();
-            }
+            return new KarmaOutputFile(outputDirectory, Globals.VsConfigFilename);
         }
 
         private string GetFullPath(params string[] paths)

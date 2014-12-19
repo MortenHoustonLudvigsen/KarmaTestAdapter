@@ -60,10 +60,10 @@ namespace KarmaTestAdapter
             {
                 throw new Exception("Test discovery already running");
             }
-            _karmaDiscoverCommand = new KarmaDiscoverCommand(source, logger);
+            _karmaDiscoverCommand = new KarmaDiscoverCommand(source);
             try
             {
-                return _karmaDiscoverCommand.Run();
+                return _karmaDiscoverCommand.Run(logger);
             }
             finally
             {

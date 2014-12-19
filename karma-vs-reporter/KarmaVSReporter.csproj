@@ -87,6 +87,7 @@
     <Content Include="src\JasminePreprocessor.js.map">
       <DependentUpon>JasminePreprocessor.ts</DependentUpon>
     </Content>
+    <Content Include="test\get-config.cmd" />
     <None Include="test\run.cmd" />
     <Content Include="test\testfiles\Testfile1.js">
       <DependentUpon>Testfile1.ts</DependentUpon>

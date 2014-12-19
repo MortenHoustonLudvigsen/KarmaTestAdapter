@@ -33,6 +33,11 @@ namespace KarmaTestAdapter
         public const string VsConfigFilename = "KarmaTestAdapter.VsConfig.json";
 
         /// <summary>
+        /// The file name for karma output when Settings.LogToFile == true
+        /// </summary>
+        public const string ConfigFilename = "KarmaTestAdapter.config.json";
+
+        /// <summary>
         /// The Uri string used to identify the XmlTestExecutor.
         /// </summary>
         public const string ExecutorUriString = "executor://KarmaTestAdapterTestExecutor";

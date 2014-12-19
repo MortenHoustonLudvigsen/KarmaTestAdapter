@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.Logging
 {
-    public abstract class KarmaLoggerBase : IKarmaLogger
+    public abstract class KarmaLoggerBase : IKarmaLogger, IDisposable
     {
         private IKarmaLogger _parent = null;
         public IKarmaLogger Parent
@@ -262,6 +262,10 @@ namespace KarmaTestAdapter.Logging
                 default:
                     return TestMessageLevel.Error;
             }
+        }
+
+        public virtual void Dispose()
+        {
         }
     }
 }

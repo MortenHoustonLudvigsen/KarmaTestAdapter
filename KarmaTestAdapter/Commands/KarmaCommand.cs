@@ -13,25 +13,21 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaCommand
     {
-        public KarmaCommand(string command, string source, IKarmaLogger logger)
+        public KarmaCommand(string command, string source)
         {
             Command = command;
-            Logger = new KarmaCommandLogger(logger, this);
             Source = IO.Path.GetFullPath(source);
-            Settings = KarmaSettings.Read(Source, Logger);
             Directory = IO.Path.GetDirectoryName(Source);
         }
 
         public string Source { get; private set; }
-        public KarmaSettings Settings { get; private set; }
         public string Command { get; private set; }
         public string Directory { get; private set; }
-        public IKarmaLogger Logger { get; private set; }
         public virtual string Name { get { return Command; } }
 
         private Process _process;
 
-        protected virtual ProcessOptions GetProcessOptions()
+        protected ProcessOptions GetProcessOptions(KarmaSettings settings)
         {
             var karmaVsReporter = FindKarmaVsReporter(Directory);
             if (string.IsNullOrWhiteSpace(karmaVsReporter))
@@ -46,59 +42,48 @@ namespace KarmaTestAdapter.Commands
                 StandardErrorEncoding = Encoding.UTF8
             };
 
-            if (!string.IsNullOrWhiteSpace(Settings.SettingsFile))
+            if (!string.IsNullOrWhiteSpace(settings.SettingsFile))
             {
-                if (!IO.File.Exists(Settings.SettingsFile))
+                if (!IO.File.Exists(settings.SettingsFile))
                 {
-                    throw new Exception(string.Format("Could not find settings file \"{0}\"", Settings.SettingsFile));
+                    throw new Exception(string.Format("Could not find settings file \"{0}\"", settings.SettingsFile));
                 }
-                processOptions.Add("-c", Settings.SettingsFile);
+                processOptions.Add("-c", settings.SettingsFile);
             }
 
             return processOptions;
         }
 
-        public void Cancel()
+        public void Cancel(IKarmaLogger logger)
         {
             if (_process != null)
             {
                 _process.Cancel();
-                Logger.Info("{0} cancelled", Command);
+                logger.Info("{0} cancelled", Command);
             }
             else
             {
-                Logger.Info("Tried to cancel {0}, but it was not running", Command);
+                logger.Info("Tried to cancel {0}, but it was not running", Command);
             }
         }
 
-        public Karma Run()
+        protected bool RunCommand(ProcessOptions processOptions, IKarmaLogger logger)
         {
-            var outputDirectory = Settings.GetOutputDirectory(Command);
-            return RunInternal(outputDirectory);
-        }
-
-        protected virtual Karma RunInternal(string outputDirectory)
-        {
-            var outputFile = Settings.GetOutputFile(outputDirectory);
             try
             {
-                var processOptions = GetProcessOptions();
-
-                processOptions.Add("-o", outputFile);
-
-                Logger.Info(processOptions.CommandLine);
+                logger.Info(processOptions.CommandLine);
 
                 _process = new Process(processOptions);
                 try
                 {
                     _process.StandardOutputRead += (o, e) =>
                     {
-                        Logger.Info(e.Line);
+                        logger.Info(e.Line);
                     };
 
                     _process.StandardErrorRead += (o, e) =>
                     {
-                        Logger.Info(e.Line);
+                        logger.Info(e.Line);
                     };
 
                     _process.Run();
@@ -107,22 +92,13 @@ namespace KarmaTestAdapter.Commands
                 {
                     _process = null;
                 }
-
-                var karma = Karma.Load(outputFile);
-                return karma;
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
-                return null;
+                logger.Error(ex);
+                return false;
             }
-            finally
-            {
-                if (!Settings.LogToFile)
-                {
-                    IO.File.Delete(outputFile);
-                }
-            }
+            return true;
         }
 
         void process_StandardErrorRead(object sender, ProcessEventArgs e)

@@ -24,6 +24,9 @@ var Cli;
             case "init":
                 Commands.init(args.configFile);
                 break;
+            case "get-config":
+                Commands.getConfig(args.config, argv.o || Util.configOutputFile);
+                break;
             case "discover":
                 Commands.discover(args.config, args.outputFile);
                 break;

@@ -108,7 +108,7 @@ namespace KarmaTestAdapter
                     if (_shouldRefresh)
                     {
                         _shouldRefresh = false;
-                        _cachedContainers = _cachedContainers.Select(c => c.FreshCopy()).ToList();
+                        _cachedContainers = _cachedContainers.Select(c => c.Refresh()).ToList();
                         OnTestContainersChanged();
                     }
                 }
@@ -192,31 +192,38 @@ namespace KarmaTestAdapter
         {
             if (e != null)
             {
-                switch (e.ChangedReason)
+                try
                 {
-                    case TestFileChangedReason.Added:
-                        _files.Add(e.File);
-                        _testFilesUpdateWatcher.AddWatch(e.File);
-                        if (!AddTestContainerIfTestFile(e.File))
-                        {
-                            RefreshTestContainers(string.Format("File added: {0}", e.File));
-                        }
-                        break;
-                    case TestFileChangedReason.Removed:
-                        _files.Remove(e.File);
-                        _testFilesUpdateWatcher.RemoveWatch(e.File);
-                        if (!RemoveTestContainer(e.File))
-                        {
-                            RefreshTestContainers(string.Format("File removed: {0}", e.File));
-                        }
-                        break;
-                    case TestFileChangedReason.Changed:
-                    case TestFileChangedReason.Saved:
-                        if (!AddTestContainerIfTestFile(e.File))
-                        {
-                            RefreshTestContainers(string.Format("File changed: {0}", e.File));
-                        }
-                        break;
+                    switch (e.ChangedReason)
+                    {
+                        case TestFileChangedReason.Added:
+                            _files.Add(e.File);
+                            _testFilesUpdateWatcher.AddWatch(e.File);
+                            if (!AddTestContainerIfTestFile(e.File) && _cachedContainers.Count(c => c.FileAdded(e.File)) > 0)
+                            {
+                                RefreshTestContainers(string.Format("File added: {0}", e.File));
+                            }
+                            break;
+                        case TestFileChangedReason.Removed:
+                            _files.Remove(e.File);
+                            _testFilesUpdateWatcher.RemoveWatch(e.File);
+                            if (!RemoveTestContainer(e.File) && _cachedContainers.Count(c => c.FileRemoved(e.File)) > 0)
+                            {
+                                RefreshTestContainers(string.Format("File removed: {0}", e.File));
+                            }
+                            break;
+                        case TestFileChangedReason.Changed:
+                        case TestFileChangedReason.Saved:
+                            if (!AddTestContainerIfTestFile(e.File) && _cachedContainers.Count(c => c.FileChanged(e.File)) > 0)
+                            {
+                                RefreshTestContainers(string.Format("File changed: {0}", e.File));
+                            }
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
                 }
             }
             else

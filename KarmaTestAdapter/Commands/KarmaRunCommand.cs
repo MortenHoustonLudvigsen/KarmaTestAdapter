@@ -15,53 +15,44 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaRunCommand : KarmaCommand
     {
-        public KarmaRunCommand(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
-            : base("run", source, logger)
+        public KarmaRunCommand(string source, VsConfig.Config vsConfig)
+            : base("run", source)
         {
             _vsConfig = vsConfig;
         }
 
+        private VsConfig.Config _vsConfig;
+
         public override string Name { get { return "Run"; } }
 
-        private VsConfig.Config _vsConfig;
-        private string _vsConfigFile;
-
-        protected override ProcessOptions GetProcessOptions()
+        public Karma Run(IKarmaLogger logger)
         {
-            var processOptions = base.GetProcessOptions();
-            processOptions.Add("-p", GetFreeTcpPort());
-            processOptions.Add("-v", _vsConfigFile);
-            return processOptions;
-        }
-
-        protected override Karma RunInternal(string outputDirectory)
-        {
-            Logger.Info("Start ({0})", Source);
-            try
+            using (var commandLogger = new KarmaCommandLogger(logger, this))
+            using (var settings = KarmaSettings.Read(Source, commandLogger))
             {
-                _vsConfigFile = Settings.GetVsConfigFilename(outputDirectory);
-                try
+                var outputDirectory = settings.GetOutputDirectory(Command);
+                using (commandLogger.LogProcess("({0})", Source))
+                using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
+                using (var vsConfigFile = new KarmaOutputFile(outputDirectory, Globals.VsConfigFilename))
                 {
-                    IO.File.WriteAllText(_vsConfigFile, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
-                    return base.RunInternal(outputDirectory);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                    return null;
-                }
-                finally
-                {
-                    if (!Settings.LogToFile)
+                    try
                     {
-                        IO.File.Delete(_vsConfigFile);
+                        IO.File.WriteAllText(vsConfigFile.Path, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
+                        var processOptions = GetProcessOptions(settings);
+                        processOptions.Add("-p", GetFreeTcpPort());
+                        processOptions.Add("-o", outputFile.Path);
+                        processOptions.Add("-v", vsConfigFile.Path);
+                        if (RunCommand(processOptions, commandLogger))
+                        {
+                            return Karma.Load(outputFile.Path);
+                        }
                     }
-                    _vsConfigFile = null;
+                    catch (Exception ex)
+                    {
+                        commandLogger.Error(ex);
+                    }
                 }
-            }
-            finally
-            {
-                Logger.Info("Finished ({0})", Source);
+                return null;
             }
         }
 

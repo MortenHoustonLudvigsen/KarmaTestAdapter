@@ -21,17 +21,21 @@ namespace KarmaTestAdapter
         private KarmaRunCommand _karmaRunCommand;
 
         private bool _cancelled;
+        private IKarmaLogger _currentLogger;
 
         public void Cancel()
         {
             _cancelled = true;
-            if (_karmaDiscoverCommand != null)
+            if (_currentLogger != null)
             {
-                _karmaDiscoverCommand.Cancel();
-            }
-            if (_karmaRunCommand != null)
-            {
-                _karmaRunCommand.Cancel();
+                if (_karmaDiscoverCommand != null)
+                {
+                    _karmaDiscoverCommand.Cancel(_currentLogger);
+                }
+                if (_karmaRunCommand != null)
+                {
+                    _karmaRunCommand.Cancel(_currentLogger);
+                }
             }
         }
 
@@ -58,30 +62,39 @@ namespace KarmaTestAdapter
         public void RunTests(string source, IEnumerable<TestCase> tests, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             var logger = KarmaLogger.Create(messageLogger: frameworkHandle);
-            var karma = Discover(source, logger);
-            if (karma == null)
+            _currentLogger = logger;
+            try
             {
-                return;
+                var karma = Discover(source, logger);
+                if (karma == null)
+                {
+                    return;
+                }
+
+                if (tests == null)
+                {
+                    // Run all tests
+                    tests = karma.GetTestCases(source);
+                }
+
+                var testsByName = tests
+                    .GroupBy(t => t.DisplayName)
+                    .Select(t => new
+                    {
+                        DisplayName = t.Key,
+                        Tests = t.Select((tc, i) => new { Test = tc, Index = i })
+                    })
+                    .SelectMany(t => t.Tests)
+                    .GroupBy(t => t.Index);
+
+                foreach (var t in testsByName)
+                {
+                    RunTests(source, t.Select(x => x.Test), karma, frameworkHandle, logger);
+                }
             }
-
-            if (tests == null)
+            finally
             {
-                // Run all tests
-                tests = karma.GetTestCases(source);
-            }
-
-            var testsByName = tests
-                .GroupBy(t => t.DisplayName)
-                .Select(t => new {
-                    DisplayName = t.Key,
-                    Tests = t.Select((tc, i) => new { Test = tc, Index = i })
-                })
-                .SelectMany(t => t.Tests)
-                .GroupBy(t => t.Index);
-
-            foreach (var t in testsByName)
-            {
-                RunTests(source, t.Select(x => x.Test), karma, frameworkHandle, logger);
+                _currentLogger = null;
             }
         }
 
@@ -156,10 +169,10 @@ namespace KarmaTestAdapter
             {
                 throw new Exception("Test discovery already running");
             }
-            _karmaDiscoverCommand = new KarmaDiscoverCommand(source, logger);
+            _karmaDiscoverCommand = new KarmaDiscoverCommand(source);
             try
             {
-                return _karmaDiscoverCommand.Run();
+                return _karmaDiscoverCommand.Run(logger);
             }
             finally
             {
@@ -173,10 +186,10 @@ namespace KarmaTestAdapter
             {
                 throw new Exception("Karma is already running");
             }
-            _karmaRunCommand = new KarmaRunCommand(source, vsConfig, logger);
+            _karmaRunCommand = new KarmaRunCommand(source, vsConfig);
             try
             {
-                return _karmaRunCommand.Run();
+                return _karmaRunCommand.Run(logger);
             }
             finally
             {

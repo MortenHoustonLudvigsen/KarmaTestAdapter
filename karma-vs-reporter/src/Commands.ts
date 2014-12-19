@@ -38,6 +38,11 @@ module Commands {
         return cfg.parseConfig(karmaConfigFile, karmaConfig);
     }
 
+    export function getConfig(config: Util.Config, outputFile: string) {
+        var karmaConfig = getKarmaConfig(config);
+        Util.writeFile(outputFile, JSON.stringify(karmaConfig, undefined, 4));
+    }
+
     export function discover(config: Util.Config, outputFile: string) {
         var di = require('karma/node_modules/di');
         var logger = require("karma/lib/logger");

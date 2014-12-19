@@ -56,6 +56,9 @@
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Minimatch">
+      <HintPath>..\packages\Minimatch.1.1.0.0\lib\portable-net40+sl50+win+wp80\Minimatch.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -75,12 +78,21 @@
   <ItemGroup>
     <Compile Include="Commands\KarmaCommand.cs" />
     <Compile Include="Commands\KarmaDiscoverCommand.cs" />
+    <Compile Include="Commands\KarmaGetConfigCommand.cs" />
     <Compile Include="Commands\KarmaRunCommand.cs" />
+    <Compile Include="Config\KarmaConfig.cs" />
+    <Compile Include="Config\KarmaConfigExclude.cs" />
+    <Compile Include="Config\KarmaConfigFile.cs" />
+    <Compile Include="Config\KarmaConfigFileBase.cs" />
+    <Compile Include="Config\KarmaConfigFileExtensions.cs" />
+    <Compile Include="Glob.cs" />
+    <Compile Include="KarmaOutputFile.cs" />
     <Compile Include="HashSetExtensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Helpers\ISolutionListener.cs" />
     <Compile Include="Helpers\ITestFileAddRemoveListener.cs" />
     <Compile Include="Helpers\ITestFilesUpdateWatcher.cs" />
+    <Compile Include="Helpers\Sha1Utils.cs" />
     <Compile Include="Helpers\SolutionListener.cs" />
     <Compile Include="Helpers\SolutionListenerEventArgs.cs" />
     <Compile Include="Helpers\TestFileAddRemoveListener.cs" />
