@@ -5,6 +5,25 @@ A Visual Studio test explorer adapter for Karma
 
 This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013.
 
+# Changes in version 0.6.0
+
+* Version 0.6.0 needs at least version 0.6.0 of karma-vs-reporter to work
+
+* I have made a number of tweeks to logging
+
+* karma-vs-reporter.json has new optional properties:
+
+  - LogToFile: set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
+
+  - LogDirectory: Where the log file should be saved (if LogToFile is true). If this property is not specified the
+    directory in which karma-vs-reporter.json resides is used.
+
+  - OutputDirectory: Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
+    If you want to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.
+
+* The adapter should no longer try to discover tests when any file is saved. Only files that are included in the karma tests
+  will trigger discovery, and only if they have actually changed (the adapter keeps track of this using a SHA1 hash for each file).
+
 # Demo
 
 [See a demo video](http://youtu.be/T9wqxOX3OX0)
@@ -49,6 +68,8 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 {
     "karmaConfigFile": "karma.conf.test.js",
     "LogToFile": true,
+    "LogDirectory": "KarmaTestAdapter",
+    "OutputDirectory": "KarmaTestAdapter/Output",
     "config": {
         "browsers": [
             "PhantomJS"
