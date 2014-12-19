@@ -78,8 +78,17 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 }
 ```
 
-There are two properties:
+There are five possible properties:
+
 * `karmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
+
+* LogToFile: set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
+
+* LogDirectory: Where the log file should be saved (if LogToFile is true). If this property is not specified the
+  directory in which karma-vs-reporter.json resides is used.
+
+* OutputDirectory: Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
+  If you want to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.
 
 * `config` This property overwrites any configurations from the karma configuration file.
 
