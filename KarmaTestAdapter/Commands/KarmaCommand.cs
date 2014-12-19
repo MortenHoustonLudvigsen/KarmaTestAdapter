@@ -13,18 +13,21 @@ namespace KarmaTestAdapter.Commands
 {
     public class KarmaCommand
     {
-        public KarmaCommand(string command, string source, KarmaSettings settings, IKarmaLogger logger)
+        public KarmaCommand(string command, string source, IKarmaLogger logger)
         {
             Command = command;
-            Settings = settings;
-            Directory = IO.Path.GetDirectoryName(IO.Path.GetFullPath(source));
-            Logger = logger;
+            Logger = new KarmaCommandLogger(logger, this);
+            Source = IO.Path.GetFullPath(source);
+            Settings = KarmaSettings.Read(Source, Logger);
+            Directory = IO.Path.GetDirectoryName(Source);
         }
 
+        public string Source { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public string Command { get; private set; }
         public string Directory { get; private set; }
         public IKarmaLogger Logger { get; private set; }
+        public virtual string Name { get { return Command; } }
 
         private Process _process;
 
@@ -110,7 +113,7 @@ namespace KarmaTestAdapter.Commands
             }
             catch (Exception ex)
             {
-                Logger.Error(ex.Message);
+                Logger.Error(ex);
                 return null;
             }
             finally

@@ -109,6 +109,7 @@
     <Compile Include="KarmaTestResults\XElementExtensions.cs" />
     <Compile Include="KarmaReporter.cs" />
     <Compile Include="Logging\IKarmaLogger.cs" />
+    <Compile Include="Logging\KarmaCommandLogger.cs" />
     <Compile Include="Logging\KarmaExtensibilityLogger.cs" />
     <Compile Include="Logging\KarmaFileLogger.cs" />
     <Compile Include="Logging\KarmaLogger.cs" />

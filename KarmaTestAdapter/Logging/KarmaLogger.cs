@@ -22,7 +22,10 @@ namespace KarmaTestAdapter.Logging
 
         public KarmaLogger(params IKarmaLogger[] loggers)
         {
-            _loggers.ForEach(l => AddLogger(l));
+            foreach (var logger in loggers)
+            {
+                AddLogger(logger);
+            }
         }
 
         public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
@@ -45,7 +48,9 @@ namespace KarmaTestAdapter.Logging
         {
             if (!HasLogger(predicate))
             {
-                _loggers.Add(createLogger());
+                var logger = createLogger();
+                logger.Parent = this;
+                _loggers.Add(logger);
             }
         }
 
@@ -53,9 +58,9 @@ namespace KarmaTestAdapter.Logging
         {
             var loggersToRemove = _loggers.OfType<TLogger>().Where(predicate).Cast<IKarmaLogger>().ToList();
             _loggers.RemoveAll(l => loggersToRemove.Contains(l));
-            foreach (var logger in _loggers)
+            foreach (var logger in loggersToRemove)
             {
-                logger.RemoveLogger<TLogger>(predicate);
+                logger.Parent = null;
             }
         }
 

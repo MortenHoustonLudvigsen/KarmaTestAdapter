@@ -29,12 +29,10 @@ namespace KarmaTestAdapter
         {
             var karmaLogger = KarmaLogger.Create(messageLogger: logger);
 
-            karmaLogger.Info("DiscoverTests start");
             foreach (var testcase in GetTests(sources, karmaLogger))
             {
                 discoverySink.SendTestCase(testcase);
             }
-            karmaLogger.Info("DiscoverTests end");
         }
 
         public IEnumerable<TestCase> GetTests(IEnumerable<string> sources, IKarmaLogger logger)
@@ -45,7 +43,7 @@ namespace KarmaTestAdapter
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message);
+                logger.Error(ex);
                 return Enumerable.Empty<TestCase>();
             }
         }

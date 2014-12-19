@@ -10,6 +10,28 @@ namespace KarmaTestAdapter.Logging
 {
     public abstract class KarmaLoggerBase : IKarmaLogger
     {
+        private IKarmaLogger _parent = null;
+        public IKarmaLogger Parent
+        {
+            get { return _parent; }
+            set
+            {
+                if (value != _parent)
+                {
+                    if (_parent != null)
+                    {
+                        _parent.RemoveLogger(this);
+                    }
+                    _parent = value;
+                }
+            }
+        }
+
+        public virtual string Phase
+        {
+            get { return Parent == null ? null : Parent.Phase; }
+        }
+
         public abstract void SendMessage(Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging.TestMessageLevel testMessageLevel, string message);
         public abstract void Clear();
         public abstract void Log(Microsoft.VisualStudio.TestWindow.Extensibility.MessageLevel messageLevel, string message);
@@ -160,14 +182,33 @@ namespace KarmaTestAdapter.Logging
             // Do nothing
         }
 
-        protected string FormatMessage(TestMessageLevel level, string message)
+        public string FormatMessage(TestMessageLevel level, string message)
         {
             return FormatMessage(GetMessageLevel(level), message);
         }
 
-        protected virtual string FormatMessage(MessageLevel level, string message)
+        public string FormatMessage(MessageLevel level, string message)
         {
-            return string.Format("[karma] [{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}", DateTime.Now, LevelText(level), message);
+            return FormatMessageInternal(level, message);
+        }
+
+        protected string FormatMessage(params string[] parts)
+        {
+            return string.Format("{0} {1}",
+                string.Join(" ", parts.Take(parts.Length - 1).Where(p => !string.IsNullOrWhiteSpace(p)).Select(p => "[" + p + "]")),
+                parts.Last()
+            );
+        }
+
+        protected virtual string FormatMessageInternal(MessageLevel level, string message)
+        {
+            return FormatMessage(
+                "karma",
+                //DateTime.Now.ToString("HH:mm:ss"),
+                Phase,
+                LevelText(level),
+                message
+            );
         }
 
         protected string LevelText(TestMessageLevel level)
@@ -180,7 +221,8 @@ namespace KarmaTestAdapter.Logging
             switch (level)
             {
                 case MessageLevel.Informational:
-                    return "Info";
+                    //return "Info";
+                    return "";
                 case MessageLevel.Warning:
                     return "Warning";
                 case MessageLevel.Error:

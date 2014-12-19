@@ -44,9 +44,15 @@ namespace KarmaTestAdapter.Logging
             catch { }
         }
 
-        protected override string FormatMessage(MessageLevel level, string message)
+        protected override string FormatMessageInternal(MessageLevel level, string message)
         {
-            return string.Format("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}", DateTime.Now, LevelText(level), message);
+            return FormatMessage(
+                DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"),
+                Phase,
+                LevelText(level),
+                message
+            );
+            return string.Format("[karma] [{0:dd.MM.yyyy HH:mm:ss} {1}] {2}", DateTime.Now, LevelText(level), message);
         }
     }
 }

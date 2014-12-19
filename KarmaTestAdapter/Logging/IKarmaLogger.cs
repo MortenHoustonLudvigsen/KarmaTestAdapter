@@ -10,6 +10,8 @@ namespace KarmaTestAdapter.Logging
 {
     public interface IKarmaLogger : IMessageLogger, ILogger
     {
+        IKarmaLogger Parent { get; set; }
+        string Phase { get; }
         void Info(string message);
         void Info(string message, params object[] args);
         void Warn(string message);
@@ -18,6 +20,8 @@ namespace KarmaTestAdapter.Logging
         void Error(string message, params object[] args);
         void Error(Exception ex, string message = null);
         void Error(Exception ex, string message = null, params object[] args);
+        string FormatMessage(TestMessageLevel level, string message);
+        string FormatMessage(MessageLevel level, string message);
         bool HasLogger(IKarmaLogger logger);
         bool HasLogger(ILogger logger);
         bool HasLogger(IMessageLogger logger);
