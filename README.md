@@ -21,13 +21,13 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 * karma-vs-reporter.json has new optional properties:
 
-  - LogToFile: set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
+  - `LogToFile`: set to true, if you want the adapter to write log statements to a log file (named `KarmaTestAdapter.log`)
 
-  - LogDirectory: Where the log file should be saved (if LogToFile is true). If this property is not specified the
-    directory in which karma-vs-reporter.json resides is used.
+  - `LogDirectory`: Where the log file should be saved (if `LogToFile` is true). If this property is not specified the
+    directory in which `karma-vs-reporter.json` resides is used.
 
-  - OutputDirectory: Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
-    If you want to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.
+  - `OutputDirectory`: Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
+    If you want to see these files, you can specify an `OutputDirectory`, in which case the files will not be deleted.
 
 * The adapter should no longer try to discover tests when any file is saved. Only files that are included in the karma tests
   will trigger discovery, and only if they have actually changed (the adapter keeps track of this using a SHA1 hash for each file).
