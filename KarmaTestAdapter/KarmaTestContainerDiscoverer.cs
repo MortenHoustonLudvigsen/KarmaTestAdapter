@@ -23,7 +23,7 @@ namespace KarmaTestAdapter
         private ITestFilesUpdateWatcher _testFilesUpdateWatcher;
         private ITestFileAddRemoveListener _testFilesAddRemoveListener;
         private bool _initialContainerSearch = true;
-        private List<KarmaTestContainer> _cachedContainers = new List<KarmaTestContainer>();
+        private KarmaTestContainerList _containers = new KarmaTestContainerList();
         public IKarmaLogger Logger { get; set; }
         private readonly HashSet<string> _files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -67,12 +67,12 @@ namespace KarmaTestAdapter
             {
                 if (_initialContainerSearch)
                 {
-                    _cachedContainers.Clear();
+                    _containers.Clear();
                     WatchProjectDirectories();
                     AddFiles(FindTestFiles());
                     _initialContainerSearch = false;
                 }
-                return _cachedContainers;
+                return _containers;
             }
         }
 
@@ -93,7 +93,7 @@ namespace KarmaTestAdapter
 
         private bool _shouldRefresh = false;
         private object _refreshLock = new object();
-        private async void RefreshTestContainers(string reason)
+        private void RefreshTestContainers(string reason)
         {
             if (!_initialContainerSearch)
             {
@@ -102,16 +102,17 @@ namespace KarmaTestAdapter
                     _shouldRefresh = true;
                     Logger.Info(reason);
                 }
-                await Tasks.Task.Delay(TimeSpan.FromMilliseconds(2000));
-                lock (_refreshLock)
-                {
-                    if (_shouldRefresh)
+                Tasks.Task.Delay(TimeSpan.FromMilliseconds(500)).ContinueWith(t => {
+                    lock (_refreshLock)
                     {
-                        _shouldRefresh = false;
-                        _cachedContainers = _cachedContainers.Select(c => c.Refresh()).ToList();
-                        OnTestContainersChanged();
+                        if (_shouldRefresh)
+                        {
+                            _shouldRefresh = false;
+                            _containers.Refresh();
+                            OnTestContainersChanged();
+                        }
                     }
-                }
+                });
             }
         }
 
@@ -141,7 +142,7 @@ namespace KarmaTestAdapter
         {
             DoNotRefreshTestContainers();
             _testFilesUpdateWatcher.Clear();
-            _cachedContainers.Clear();
+            _containers.Clear();
             _initialContainerSearch = true;
         }
 
@@ -199,7 +200,7 @@ namespace KarmaTestAdapter
                         case TestFileChangedReason.Added:
                             _files.Add(e.File);
                             _testFilesUpdateWatcher.AddWatch(e.File);
-                            if (!AddTestContainerIfTestFile(e.File) && _cachedContainers.Count(c => c.FileAdded(e.File)) > 0)
+                            if (!AddTestContainerIfTestFile(e.File) && _containers.Count(c => c.FileAdded(e.File)) > 0)
                             {
                                 RefreshTestContainers(string.Format("File added: {0}", e.File));
                             }
@@ -207,14 +208,14 @@ namespace KarmaTestAdapter
                         case TestFileChangedReason.Removed:
                             _files.Remove(e.File);
                             _testFilesUpdateWatcher.RemoveWatch(e.File);
-                            if (!RemoveTestContainer(e.File) && _cachedContainers.Count(c => c.FileRemoved(e.File)) > 0)
+                            if (!RemoveTestContainer(e.File) && _containers.Count(c => c.FileRemoved(e.File)) > 0)
                             {
                                 RefreshTestContainers(string.Format("File removed: {0}", e.File));
                             }
                             break;
                         case TestFileChangedReason.Changed:
                         case TestFileChangedReason.Saved:
-                            if (!AddTestContainerIfTestFile(e.File) && _cachedContainers.Count(c => c.FileChanged(e.File)) > 0)
+                            if (!AddTestContainerIfTestFile(e.File) && _containers.Count(c => c.FileChanged(e.File)) > 0)
                             {
                                 RefreshTestContainers(string.Format("File changed: {0}", e.File));
                             }
@@ -236,17 +237,17 @@ namespace KarmaTestAdapter
         {
             var directory = Path.GetDirectoryName(file);
             var settingsFilename = Path.Combine(directory, Globals.SettingsFilename);
-            var container = "";
+            var source = "";
             if (PathUtils.PathsEqual(file, settingsFilename) || PathUtils.PathHasFileName(file, Globals.KarmaSettingsFilename) && !_files.Contains(settingsFilename))
             {
-                container = file;
+                source = file;
             }
-            if (!string.IsNullOrWhiteSpace(container))
+            if (!string.IsNullOrWhiteSpace(source))
             {
                 RemoveTestContainersInDirectory(directory);
-                if (File.Exists(container))
+                if (File.Exists(source))
                 {
-                    _cachedContainers.Add(new KarmaTestContainer(this, container, Logger));
+                    _containers.Add(new KarmaTestContainer(this, source, Logger));
                 }
                 RefreshTestContainers(string.Format("Test container added: {0}", file));
                 return true;
@@ -256,17 +257,17 @@ namespace KarmaTestAdapter
 
         private bool RemoveTestContainersInDirectory(string directory)
         {
-            return RemoveTestContainers(_cachedContainers.Where(c => PathUtils.IsInDirectory(c.Source, directory)));
+            return RemoveTestContainers(_containers.Where(c => PathUtils.IsInDirectory(c.Source, directory)));
         }
 
         private bool RemoveTestContainer(string file)
         {
-            var result = RemoveTestContainers(_cachedContainers.Where(c => PathUtils.PathsEqual(c.Source, file)));
+            var result = RemoveTestContainers(_containers.Where(c => PathUtils.PathsEqual(c.Source, file)));
             var directory = Path.GetDirectoryName(file);
-            var defaultKarmaSettingsFilename = Path.Combine(directory, Globals.SettingsFilename);
-            if (PathUtils.PathHasFileName(file, Globals.SettingsFilename) && _files.Contains(defaultKarmaSettingsFilename))
+            var settingsFilename = Path.Combine(directory, Globals.SettingsFilename);
+            if (PathUtils.PathHasFileName(file, Globals.SettingsFilename) && _files.Contains(settingsFilename))
             {
-                AddTestContainerIfTestFile(defaultKarmaSettingsFilename);
+                AddTestContainerIfTestFile(settingsFilename);
             }
             return result;
         }
@@ -278,7 +279,7 @@ namespace KarmaTestAdapter
             {
                 foreach (var container in containersToRemove)
                 {
-                    _cachedContainers.Remove(container);
+                    _containers.Remove(container);
                     RefreshTestContainers(string.Format("Test container removed: {0}", container.Source));
                 }
                 return true;
@@ -310,10 +311,22 @@ namespace KarmaTestAdapter
             GC.SuppressFinalize(this);
         }
 
+        // Flag: Has Dispose already been called? 
+        private bool _disposed = false;
+
         protected virtual void Dispose(bool disposing)
         {
+            if (_disposed)
+                return;
+
             if (disposing)
             {
+                if (_containers != null)
+                {
+                    _containers.Dispose();
+                    _containers = null;
+                }
+
                 if (_testFilesUpdateWatcher != null)
                 {
                     _testFilesUpdateWatcher.Changed -= OnProjectItemChanged;
@@ -337,6 +350,13 @@ namespace KarmaTestAdapter
                     _solutionListener = null;
                 }
             }
+
+            _disposed = true;
+        }
+
+        ~KarmaTestContainerDiscoverer()
+        {
+            Dispose(false);
         }
     }
 }

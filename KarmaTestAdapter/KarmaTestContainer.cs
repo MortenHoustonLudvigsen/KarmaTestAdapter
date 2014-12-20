@@ -15,7 +15,7 @@ using System.Text;
 
 namespace KarmaTestAdapter
 {
-    public class KarmaTestContainer : IKarmaTestContainer
+    public class KarmaTestContainer : IKarmaTestContainer, IDisposable
     {
         private readonly DateTime _timeStamp;
         private ITestContainerDiscoverer _discoverer;
@@ -29,7 +29,7 @@ namespace KarmaTestAdapter
         {
             this.Source = source;
             this.Logger = logger;
-            this.Settings = KarmaSettings.Read(source, logger);
+            this.Settings = KarmaSettings.Read(Source, Logger);
             this.DebugEngines = debugEngines;
             this._discoverer = discoverer;
             this.TargetFramework = FrameworkVersion.None;
@@ -41,6 +41,8 @@ namespace KarmaTestAdapter
             {
                 this._files = GetFiles();
             }
+            SetCurrentHash(Settings.SettingsFile);
+            SetCurrentHash(Settings.KarmaConfigFile);
         }
 
         private KarmaTestContainer(KarmaTestContainer copy, DateTime timeStamp)
@@ -62,7 +64,30 @@ namespace KarmaTestAdapter
 
         private Dictionary<string, string> GetFiles()
         {
-            return Config.GetFiles().ToDictionary(f => f, f => Sha1Utils.GetHash(f), StringComparer.InvariantCultureIgnoreCase);
+            return Config.GetFiles().ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
+        }
+
+        private bool SetCurrentHash(string file)
+        {
+            if (!string.IsNullOrWhiteSpace(file))
+            {
+                var currentHash = GetCurrentHash(file);
+                if (System.IO.File.Exists(file))
+                {
+                    var newHash = Sha1Utils.GetHash(file, currentHash);
+                    if (newHash != currentHash)
+                    {
+                        _files[file] = newHash;
+                        return true;
+                    }
+                }
+                else
+                {
+                    _files.Remove(file);
+                    return currentHash != null;
+                }
+            }
+            return false;
         }
 
         private string GetCurrentHash(string file)
@@ -85,10 +110,8 @@ namespace KarmaTestAdapter
             if (_files.ContainsKey(file) || Config.HasFile(file))
             {
                 // The file belongs to this container
-                var newHash = Sha1Utils.GetHash(file);
-                if (newHash != GetCurrentHash(file))
+                if (SetCurrentHash(file))
                 {
-                    _files[file] = newHash;
                     ShouldRefresh = true;
                     return true;
                 }
@@ -142,22 +165,54 @@ namespace KarmaTestAdapter
 
         public ITestContainer Snapshot()
         {
+            Dispose(true);
             return new KarmaTestContainer(this, _timeStamp);
         }
 
         public KarmaTestContainer Refresh()
         {
-            return ShouldRefresh ? new KarmaTestContainer(this, DateTime.Now) : this;
-        }
-
-        public KarmaTestContainer FreshCopy()
-        {
-            return new KarmaTestContainer(this, DateTime.Now);
+            if (ShouldRefresh)
+            {
+                Dispose(true);
+                return new KarmaTestContainer(this, DateTime.Now);
+            }
+            return this;
         }
 
         public override string ToString()
         {
             return this.ExecutorUri.ToString() + "/" + this.Source;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            // Use SupressFinalize in case a subclass
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        // Flag: Has Dispose already been called? 
+        private bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                if (Settings != null)
+                {
+                    Settings.Dispose();
+                    Settings = null;
+                }
+            }
+        }
+
+        ~KarmaTestContainer()
+        {
+            Dispose(false);
         }
     }
 }

@@ -19,5 +19,34 @@ namespace KarmaTestAdapter.Helpers
                 return string.Join("", sha1.ComputeHash(bs).Select(b => b.ToString("x2")));
             }
         }
+
+        public static string GetHash(string path, string currentHash)
+        {
+            try
+            {
+                return GetHash(path, 5, 10).Result;
+            }
+            catch (IOException)
+            {
+                return currentHash;
+            }
+        }
+
+        private async static Task<string> GetHash(string path, int attempts, int retryDelay)
+        {
+            try
+            {
+                return GetHash(path);
+            }
+            catch (IOException ex)
+            {
+                if (attempts <= 0)
+                {
+                    throw ex;
+                }
+            }
+            await Task.Delay(TimeSpan.FromMilliseconds(retryDelay));
+            return GetHash(path, attempts - 1, retryDelay).Result;
+        }
     }
 }

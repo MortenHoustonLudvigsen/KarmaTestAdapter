@@ -25,7 +25,11 @@ namespace KarmaTestAdapter.Config
 
         public IEnumerable<string> GetFiles()
         {
-            return Files.SelectMany(f => f.GetFiles()).Except(ExcludedFiles.SelectMany(f => f.GetFiles())).Distinct().ToList();
+            return Files
+                .SelectMany(f => f.GetFiles())
+                .Except(ExcludedFiles.SelectMany(f => f.GetFiles()), StringComparer.OrdinalIgnoreCase)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         public bool HasFile(string file)

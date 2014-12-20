@@ -32,11 +32,21 @@ namespace KarmaTestAdapter
             {
                 settings = new KarmaSettings
                 {
-                    KarmaConfigFile = Path.GetFileName(path)
+                    KarmaConfigFile = path
                 };
             }
 
             settings.Directory = Path.GetDirectoryName(path);
+
+            if (string.IsNullOrWhiteSpace(settings.KarmaConfigFile))
+            {
+                settings.KarmaConfigFile = Path.Combine(settings.Directory, Globals.KarmaSettingsFilename);
+            }
+            else
+            {
+                settings.KarmaConfigFile = settings.GetFullPath(settings.KarmaConfigFile);
+            }
+
             if (string.IsNullOrWhiteSpace(settings.LogDirectory))
             {
                 settings.LogDirectory = settings.Directory;

@@ -12,16 +12,16 @@ namespace KarmaTestAdapter.Config
         public string Pattern { get; set; }
 
         private Minimatcher _matcher = null;
-        public Minimatcher Matcher { get { return _matcher ?? new Minimatcher(Pattern.ToLowerInvariant()); } }
+        public Minimatcher Matcher { get { return _matcher ?? new Minimatcher(Pattern, new Options { NoCase = true }); } }
 
         public bool IsMatch(string file)
         {
-            return Matcher.IsMatch(file.ToLowerInvariant().Replace('\\', '/'));
+            return Matcher.IsMatch(file.Replace('\\', '/'));
         }
 
         public IEnumerable<string> GetFiles()
         {
-            return Glob.Glob.ExpandNames(Pattern).Select(f => f.ToLowerInvariant());
+            return Glob.Glob.ExpandNames(Pattern, ignoreCase: true);
         }
     }
 }

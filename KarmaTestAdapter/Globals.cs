@@ -53,7 +53,7 @@ namespace KarmaTestAdapter
         public const string SettingsFilename = @"karma-vs-reporter.json";
 
         /// <summary>
-        /// The file name to log to
+        /// The standard file name for the karma configuration file
         /// </summary>
         public const string KarmaSettingsFilename = @"karma.conf.js";
 

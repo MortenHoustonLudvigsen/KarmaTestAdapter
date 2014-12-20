@@ -101,6 +101,7 @@
     <Compile Include="Helpers\VsSolutionHelper.cs" />
     <Compile Include="IKarmaTestContainer.cs" />
     <Compile Include="KarmaSettings.cs" />
+    <Compile Include="KarmaTestContainerList.cs" />
     <Compile Include="KarmaTestResults\Browser.cs" />
     <Compile Include="KarmaTestResults\ConsolidatedTestResult.cs" />
     <Compile Include="KarmaTestResults\File.cs" />
