@@ -5,7 +5,15 @@ A Visual Studio test explorer adapter for Karma
 
 This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013.
 
-# Changes in version 0.6.0
+# Changes
+
+## Version 0.6.1
+
+* More improvements to logging
+
+* Tests are discovered when the karma configuration file changes (normally `karma.conf.js`), even when `karma-vs-reporter.json` is used.
+
+## Version 0.6.0
 
 * Version 0.6.0 needs at least version 0.6.0 of karma-vs-reporter to work
 
