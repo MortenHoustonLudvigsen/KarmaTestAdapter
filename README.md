@@ -81,6 +81,8 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 ## Version 0.6.3
 
+### Bug fixes
+
 * Fixed: If `LogToFile` is true and `LogDirectory` is empty in `karma-vs-reporter.json` the adapter fails with the following message: `The path is not of a legal form.`.
 
 ## Version 0.6.2
