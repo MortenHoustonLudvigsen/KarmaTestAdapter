@@ -55,7 +55,7 @@ namespace KarmaTestAdapter
         /// <summary>
         /// The standard file name for the karma configuration file
         /// </summary>
-        public const string KarmaSettingsFilename = @"karma.conf.js";
+        public const string KarmaConfigFilename = @"karma.conf.js";
 
         /// <summary>
         /// Known file extensions

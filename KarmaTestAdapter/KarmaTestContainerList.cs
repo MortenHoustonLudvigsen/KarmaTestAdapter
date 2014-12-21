@@ -6,13 +6,19 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter
 {
-    // TODO: Dispose containers
     public class KarmaTestContainerList : IEnumerable<KarmaTestContainer>, IDisposable
     {
-        private List<KarmaTestContainer> _containers = new List<KarmaTestContainer>();
-
-        public void Add(KarmaTestContainer container)
+        public KarmaTestContainerList(KarmaTestContainerDiscoverer discoverer)
         {
+            Discoverer = discoverer;
+        }
+
+        private List<KarmaTestContainer> _containers = new List<KarmaTestContainer>();
+        public KarmaTestContainerDiscoverer Discoverer { get; private set; }
+
+        public void CreateContainer(string source)
+        {
+            var container = new KarmaTestContainer(this, source, Discoverer.Logger);
             _containers.Add(container);
         }
 
@@ -26,11 +32,6 @@ namespace KarmaTestAdapter
         {
             _containers.ForEach(c => c.Dispose());
             _containers.Clear();
-        }
-
-        public void Refresh()
-        {
-            _containers = _containers.Select(c => c.Refresh()).ToList();
         }
 
         public IEnumerator<KarmaTestContainer> GetEnumerator()

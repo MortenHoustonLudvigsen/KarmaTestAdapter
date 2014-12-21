@@ -35,20 +35,16 @@ namespace KarmaTestAdapter.Commands
                 throw new Exception("Could not find node module karma-vs-reporter");
             }
 
-            var processOptions = new ProcessOptions("node", karmaVsReporter, Command)
+            var processOptions = new ProcessOptions("node", PathUtils.GetRelativePath(Directory, karmaVsReporter, true), Command)
             {
                 WorkingDirectory = Directory,
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8
             };
 
-            if (!string.IsNullOrWhiteSpace(settings.SettingsFile))
+            if (IO.File.Exists(settings.SettingsFile))
             {
-                if (!IO.File.Exists(settings.SettingsFile))
-                {
-                    throw new Exception(string.Format("Could not find settings file \"{0}\"", settings.SettingsFile));
-                }
-                processOptions.Add("-c", settings.SettingsFile);
+                processOptions.AddFileOption("-c", settings.SettingsFile);
             }
 
             return processOptions;

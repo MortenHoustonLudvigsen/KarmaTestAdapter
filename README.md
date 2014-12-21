@@ -7,6 +7,10 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 # Changes
 
+## Version 0.6.2
+
+* Changes to tests files that are not included in a project will now trigger test discovery.
+
 ## Version 0.6.1
 
 * More improvements to logging

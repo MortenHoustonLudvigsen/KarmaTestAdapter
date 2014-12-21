@@ -28,6 +28,18 @@ namespace KarmaTestAdapter.Helpers
 			}
 		}
 
+        public static string GetSolutionDirectory(this IVsSolution solution)
+        {
+            string solutionDir;
+            string solutionFile;
+            string userOpsFile;
+            if (solution.GetSolutionInfo(out solutionDir, out solutionFile, out userOpsFile) == VSConstants.S_OK)
+            {
+                return solutionDir;
+            }
+            return null;
+        }
+
         public static string GetProjectDirectory(this IVsProject project)
         {
             return Path.GetDirectoryName(project.GetProjectPath());

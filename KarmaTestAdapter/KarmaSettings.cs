@@ -12,85 +12,73 @@ namespace KarmaTestAdapter
 {
     public class KarmaSettings: IDisposable
     {
-        public static KarmaSettings Read(string path, IKarmaLogger logger)
+        public KarmaSettings(string source, IKarmaLogger logger)
         {
-            KarmaSettings settings = null;
-
-            if (PathUtils.PathHasFileName(path, Globals.SettingsFilename) && File.Exists(path))
+            Source = source;
+            Logger = logger;
+            Directory = Path.GetDirectoryName(source);
+            if (PathUtils.PathHasFileName(source, Globals.SettingsFilename) && File.Exists(source))
             {
-                try
-                {
-                    settings = JsonConvert.DeserializeObject<KarmaSettings>(File.ReadAllText(path, Encoding.UTF8));
-                    settings.SettingsFile = path;
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex);
-                }
+                JsonConvert.PopulateObject(File.ReadAllText(source, Encoding.UTF8), this);
+                SettingsFile = source;
+                KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
             }
             else
             {
-                settings = new KarmaSettings
-                {
-                    KarmaConfigFile = path
-                };
+                SettingsFile = GetFullPath(Globals.SettingsFilename);
+                KarmaConfigFile = source;
             }
-
-            settings.Directory = Path.GetDirectoryName(path);
-
-            if (string.IsNullOrWhiteSpace(settings.KarmaConfigFile))
+            LogDirectory = GetFullPath(LogDirectory ?? "");
+            OutputDirectory = !string.IsNullOrWhiteSpace(OutputDirectory) ? OutputDirectory : null;
+            if (LogToFile)
             {
-                settings.KarmaConfigFile = Path.Combine(settings.Directory, Globals.KarmaSettingsFilename);
+                logger.AddLogger(LogFilePath);
             }
-            else
-            {
-                settings.KarmaConfigFile = settings.GetFullPath(settings.KarmaConfigFile);
-            }
-
-            if (string.IsNullOrWhiteSpace(settings.LogDirectory))
-            {
-                settings.LogDirectory = settings.Directory;
-            }
-            if (string.IsNullOrWhiteSpace(settings.OutputDirectory))
-            {
-                settings.OutputDirectory = null;
-            }
-            settings.Logger = logger;
-            if (settings.LogToFile)
-            {
-                logger.AddLogger(settings.LogFilePath);
-            }
-            else
-            {
-                logger.RemoveLogger(settings.LogFilePath);
-            }
-            return settings;
         }
 
-        private KarmaSettings()
-        {
-            KarmaConfigFile = null;
-        }
+        /// <summary>
+        /// The source file of the settings - can be either an adapter settings file (named <c>karma-vs-reporter.json</c>) or a
+        /// Karma configuration file (default name <c>karma.conf.js</c>)
+        /// </summary>
+        [JsonIgnore]
+        public string Source { get; private set; }
 
-        private string _karmaConfigFile;
-        public string KarmaConfigFile
-        {
-            get { return _karmaConfigFile; }
-            set { _karmaConfigFile = string.IsNullOrWhiteSpace(value) ? Globals.KarmaSettingsFilename : value; }
-        }
+        [JsonIgnore]
+        public IKarmaLogger Logger { get; private set; }
 
-        public string SettingsFile { get; set; }
+        /// <summary>
+        /// The path of the adapter settings file
+        /// </summary>
+        [JsonIgnore]
+        public string SettingsFile { get; private set; }
+
+        /// <summary>
+        /// Directory of the settings file
+        /// </summary>
+        [JsonIgnore]
+        public string Directory { get; private set; }
+
+        /// <summary>
+        /// The Karma configuration file
+        /// </summary>
+        public string KarmaConfigFile { get; set; }
 
         /// <summary>
         /// Should logging be done to a file as well as normal logging
         /// </summary>
         public bool LogToFile { get; set; }
 
-        public string Directory { get; private set; }
+        /// <summary>
+        /// Where the log file should be saved (if LogToFile is true). If this property is not specified the directory in which
+        /// karma-vs-reporter.json resides is used.
+        /// </summary>
         public string LogDirectory { get; set; }
-        public string OutputDirectory { get; set; }
 
-        public IKarmaLogger Logger { get; private set; }
+        /// <summary>
+        /// Normally the adapter communicates with Karma using temporary files. These files are deleted immediately. If you want
+        /// to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.
+        /// </summary>
+        public string OutputDirectory { get; set; }
 
         /// <summary>
         /// The file to log to when LogToFile == true

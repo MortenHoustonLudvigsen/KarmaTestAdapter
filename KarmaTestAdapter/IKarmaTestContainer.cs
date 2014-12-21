@@ -10,6 +10,7 @@ namespace KarmaTestAdapter
 {
     public interface IKarmaTestContainer : ITestContainer
     {
-        Karma Karma { get; set; }
+        DateTime TimeStamp { get; }
+        KarmaTestContainerDiscoverer KarmaTestContainerDiscoverer { get; }
     }
 }

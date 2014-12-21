@@ -11,11 +11,10 @@ namespace KarmaTestAdapter.Config
 {
     public class KarmaConfig
     {
-        public static KarmaConfig Read(string path)
+        public KarmaConfig(string path)
         {
-            var config = JsonConvert.DeserializeObject<KarmaConfig>(File.ReadAllText(path, Encoding.UTF8));
-            config.ExcludedFiles = config.Exclude.Select(p => new KarmaConfigExclude { Pattern = p }).ToList();
-            return config;
+            JsonConvert.PopulateObject(File.ReadAllText(path, Encoding.UTF8), this);
+            ExcludedFiles = Exclude.Select(p => new KarmaConfigExclude { Pattern = p }).ToList();
         }
 
         public KarmaConfigFile[] Files { get; set; }

@@ -28,7 +28,7 @@ namespace KarmaTestAdapter.Commands
         public Karma Run(IKarmaLogger logger)
         {
             using (var commandLogger = new KarmaCommandLogger(logger, this))
-            using (var settings = KarmaSettings.Read(Source, commandLogger))
+            using (var settings = new KarmaSettings(Source, commandLogger))
             {
                 var outputDirectory = settings.GetOutputDirectory(Command);
                 using (commandLogger.LogProcess("({0})", Source))
@@ -40,8 +40,8 @@ namespace KarmaTestAdapter.Commands
                         IO.File.WriteAllText(vsConfigFile.Path, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
                         var processOptions = GetProcessOptions(settings);
                         processOptions.Add("-p", GetFreeTcpPort());
-                        processOptions.Add("-o", outputFile.Path);
-                        processOptions.Add("-v", vsConfigFile.Path);
+                        processOptions.AddFileOption("-o", outputFile.Path);
+                        processOptions.AddFileOption("-v", vsConfigFile.Path);
                         if (RunCommand(processOptions, commandLogger))
                         {
                             return Karma.Load(outputFile.Path);

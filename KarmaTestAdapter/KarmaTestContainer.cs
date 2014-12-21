@@ -15,26 +15,23 @@ using System.Text;
 
 namespace KarmaTestAdapter
 {
-    public class KarmaTestContainer : IKarmaTestContainer, IDisposable
+    public class KarmaTestContainer : KarmaTestContainerBase
     {
-        private readonly DateTime _timeStamp;
-        private ITestContainerDiscoverer _discoverer;
+        private KarmaTestContainerList _containerList;
         private Dictionary<string, string> _files = new Dictionary<string, string>();
+        private IEnumerable<KarmaFileWatcher> _fileWatchers;
 
-        public KarmaTestContainer(ITestContainerDiscoverer discoverer, string source, IKarmaLogger logger)
-            : this(discoverer, source, logger, Enumerable.Empty<Guid>(), null, null)
+        public KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger)
+            : this(containerList, source, logger, null, null)
         { }
 
-        private KarmaTestContainer(ITestContainerDiscoverer discoverer, string source, IKarmaLogger logger, IEnumerable<Guid> debugEngines, KarmaConfig config, Dictionary<string, string> files)
+        private KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger, KarmaConfig config, Dictionary<string, string> files, DateTime? timeStamp = null)
+            : base(containerList.Discoverer, source, timeStamp ?? DateTime.Now)
         {
-            this.Source = source;
+            logger.Info("KarmaTestContainer.Create");
             this.Logger = logger;
-            this.Settings = KarmaSettings.Read(Source, Logger);
-            this.DebugEngines = debugEngines;
-            this._discoverer = discoverer;
-            this.TargetFramework = FrameworkVersion.None;
-            this.TargetPlatform = Architecture.AnyCPU;
-            this._timeStamp = DateTime.Now;
+            this.Settings = new KarmaSettings(Source, Logger);
+            this._containerList = containerList;
             this.Config = config ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
             this._files = files;
             if (this._files == null || this._files.Count == 0)
@@ -43,176 +40,194 @@ namespace KarmaTestAdapter
             }
             SetCurrentHash(Settings.SettingsFile);
             SetCurrentHash(Settings.KarmaConfigFile);
+            _fileWatchers = GetFileWatchers().Where(w => w != null).ToList();
         }
 
         private KarmaTestContainer(KarmaTestContainer copy, DateTime timeStamp)
-            : this(copy._discoverer, copy.Source, copy.Logger, copy.DebugEngines, copy.Config, copy._files)
+            : this(copy._containerList, copy.Source, copy.Logger, copy.Config, copy._files)
         {
-            this._timeStamp = timeStamp;
         }
 
-        public string Source { get; set; }
         public IKarmaLogger Logger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
         public Karma Karma { get; set; }
-        public IEnumerable<Guid> DebugEngines { get; set; }
-        public FrameworkVersion TargetFramework { get; set; }
-        public Architecture TargetPlatform { get; set; }
         public KarmaConfig Config { get; private set; }
-        public bool ShouldRefresh { get; private set; }
+        public string BaseDirectory { get { return KarmaTestContainerDiscoverer.BaseDirectory; } }
 
         private Dictionary<string, string> GetFiles()
         {
             return Config.GetFiles().ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
         }
 
-        private bool SetCurrentHash(string file)
+        private IEnumerable<KarmaFileWatcher> GetFileWatchers()
+        {
+            yield return CreateFileWatcher(Settings.SettingsFile);
+            yield return CreateFileWatcher(Settings.KarmaConfigFile);
+            foreach (var filter in Config.Files.GroupBy(f => f.FileFilter, StringComparer.OrdinalIgnoreCase))
+            {
+                var dirs = filter.Select(f => f.Directory);
+                foreach (var dir in dirs.Where(d1 => !dirs.Any(d2 => !string.Equals(d1, d2, StringComparison.OrdinalIgnoreCase) && d1.StartsWith(d2, StringComparison.OrdinalIgnoreCase))).Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    yield return CreateFileWatcher(dir, filter.Key, true);
+                }
+            }
+        }
+
+        private KarmaFileWatcher CreateFileWatcher(string file)
         {
             if (!string.IsNullOrWhiteSpace(file))
             {
-                var currentHash = GetCurrentHash(file);
-                if (System.IO.File.Exists(file))
+                return CreateFileWatcher(Path.GetDirectoryName(file), Path.GetFileName(file), false);
+            }
+            return null;
+        }
+
+        private KarmaFileWatcher CreateFileWatcher(string directory, string filter, bool includeSubdirectories)
+        {
+            var watcher = new KarmaFileWatcher(directory, filter, includeSubdirectories);
+            watcher.Changed += FileWatcherChanged;
+            Logger.Info(@"Watching '{0}'", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching, true));
+            return watcher;
+        }
+
+        private void FileWatcherChanged(object sender, TestFileChangedEventArgs e)
+        {
+            switch (e.ChangedReason)
+            {
+                case TestFileChangedReason.Added:
+                    FileAdded(e.File);
+                    break;
+                case TestFileChangedReason.Changed:
+                case TestFileChangedReason.Saved:
+                    FileChanged(e.File);
+                    break;
+                case TestFileChangedReason.Removed:
+                    FileRemoved(e.File);
+                    break;
+            }
+        }
+
+        private object _fileChangeLock = new object();
+        private bool SetCurrentHash(string file)
+        {
+            lock (_fileChangeLock)
+            {
+                if (!string.IsNullOrWhiteSpace(file))
                 {
-                    var newHash = Sha1Utils.GetHash(file, currentHash);
-                    if (newHash != currentHash)
+                    var currentHash = GetCurrentHash(file);
+                    if (System.IO.File.Exists(file))
                     {
-                        _files[file] = newHash;
-                        return true;
+                        var newHash = Sha1Utils.GetHash(file, currentHash);
+                        if (newHash != currentHash)
+                        {
+                            _files[file] = newHash;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        _files.Remove(file);
+                        return currentHash != null;
                     }
                 }
-                else
-                {
-                    _files.Remove(file);
-                    return currentHash != null;
-                }
+                return false;
             }
-            return false;
         }
 
         private string GetCurrentHash(string file)
         {
-            string hash;
-            if (_files.TryGetValue(file, out hash))
+            lock (_fileChangeLock)
             {
-                return hash;
+                string hash;
+                if (_files.TryGetValue(file, out hash))
+                {
+                    return hash;
+                }
+                return null;
             }
-            return null;
         }
 
         public bool FileAdded(string file)
         {
-            return FileChanged(file);
+            return FileChanged(file, string.Format("File added:   {0}", file), f => SetCurrentHash(f) || true);
         }
 
         public bool FileChanged(string file)
         {
-            if (_files.ContainsKey(file) || Config.HasFile(file))
-            {
-                // The file belongs to this container
-                if (SetCurrentHash(file))
-                {
-                    ShouldRefresh = true;
-                    return true;
-                }
-            }
-            return false;
+            return FileChanged(file, string.Format("File changed: {0}", file), f => SetCurrentHash(f));
         }
 
         public bool FileRemoved(string file)
         {
-            if (_files.ContainsKey(file) || Config.HasFile(file))
+            return FileChanged(file, string.Format("File removed: {0}", file), f => _files.Remove(f) || true);
+        }
+
+        public bool FileChanged(string file, string reason, Func<string, bool> hasChanged)
+        {
+            lock (_fileChangeLock)
             {
-                // The file belongs to this container
-                _files.Remove(file);
-                ShouldRefresh = true;
-                return true;
+                if (_files.ContainsKey(file) || Config.HasFile(file) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
+                {
+                    // The file belongs to this container
+                    if (hasChanged(file))
+                    {
+                        TimeStamp = DateTime.Now;
+                        if (PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
+                        {
+                            if (System.IO.File.Exists(Settings.Source))
+                            {
+                                KarmaTestContainerDiscoverer.AddTestContainerIfTestFile(Settings.Source);
+                            }
+                            else
+                            {
+                                KarmaTestContainerDiscoverer.RemoveTestContainer(Settings.Source);
+                            }
+                        }
+                        else
+                        {
+                            KarmaTestContainerDiscoverer.RefreshTestContainers(reason);
+                        }
+                        return true;
+                    }
+                }
+                return false;
             }
-            return false;
         }
 
-        public int CompareTo(ITestContainer other)
-        {
-            var testContainer = other as KarmaTestContainer;
-            if (testContainer == null)
-            {
-                return -1;
-            }
-
-            var result = String.Compare(this.Source, testContainer.Source, StringComparison.OrdinalIgnoreCase);
-            if (result != 0)
-            {
-                return result;
-            }
-
-            return this._timeStamp.CompareTo(testContainer._timeStamp);
-        }
-
-        public IDeploymentData DeployAppContainer()
-        {
-            return null;
-        }
-
-        public ITestContainerDiscoverer Discoverer
-        {
-            get { return _discoverer; }
-        }
-
-        public bool IsAppContainerTestContainer
-        {
-            get { return false; }
-        }
-
-        public ITestContainer Snapshot()
-        {
-            Dispose(true);
-            return new KarmaTestContainer(this, _timeStamp);
-        }
-
-        public KarmaTestContainer Refresh()
-        {
-            if (ShouldRefresh)
-            {
-                Dispose(true);
-                return new KarmaTestContainer(this, DateTime.Now);
-            }
-            return this;
-        }
+        //public KarmaTestContainer Refresh()
+        //{
+        //    if (ShouldRefresh)
+        //    {
+        //        TimeStamp = DateTime.Now;
+        //    }
+        //    return this;
+        //}
 
         public override string ToString()
         {
             return this.ExecutorUri.ToString() + "/" + this.Source;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Dispose(true);
-            // Use SupressFinalize in case a subclass
-            // of this type implements a finalizer.
-            GC.SuppressFinalize(this);
-        }
-
-        // Flag: Has Dispose already been called? 
-        private bool _disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-
             if (disposing)
             {
+                if (_fileWatchers != null)
+                {
+                    foreach (var watcher in _fileWatchers)
+                    {
+                        Logger.Info(@"Stop watching '{0}'", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching, true));
+                        watcher.Dispose();
+                    }
+                    _fileWatchers = null;
+                }
                 if (Settings != null)
                 {
                     Settings.Dispose();
                     Settings = null;
                 }
             }
-        }
-
-        ~KarmaTestContainer()
-        {
-            Dispose(false);
         }
     }
 }

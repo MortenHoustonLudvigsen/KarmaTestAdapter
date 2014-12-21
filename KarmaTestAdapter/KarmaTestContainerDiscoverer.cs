@@ -23,7 +23,7 @@ namespace KarmaTestAdapter
         private ITestFilesUpdateWatcher _testFilesUpdateWatcher;
         private ITestFileAddRemoveListener _testFilesAddRemoveListener;
         private bool _initialContainerSearch = true;
-        private KarmaTestContainerList _containers = new KarmaTestContainerList();
+        private KarmaTestContainerList _containers;
         public IKarmaLogger Logger { get; set; }
         private readonly HashSet<string> _files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -39,6 +39,7 @@ namespace KarmaTestAdapter
 
             _serviceProvider = serviceProvider;
             _solutionListener = solutionListener;
+            _containers = new KarmaTestContainerList(this);
 
             _testFilesUpdateWatcher = testFilesUpdateWatcher;
             _testFilesUpdateWatcher.Changed += OnProjectItemChanged;
@@ -76,6 +77,20 @@ namespace KarmaTestAdapter
             }
         }
 
+        private string _baseDirectory = null;
+        public string BaseDirectory
+        {
+            get
+            {
+                if (_baseDirectory == null)
+                {
+                    var solution = (IVsSolution)_serviceProvider.GetService(typeof(SVsSolution));
+                    _baseDirectory = solution.GetSolutionDirectory();
+                }
+                return _baseDirectory ?? null;
+            }
+        }
+
         private void WatchProjectDirectories()
         {
             foreach (var project in GetProjects())
@@ -93,7 +108,7 @@ namespace KarmaTestAdapter
 
         private bool _shouldRefresh = false;
         private object _refreshLock = new object();
-        private void RefreshTestContainers(string reason)
+        public void RefreshTestContainers(string reason)
         {
             if (!_initialContainerSearch)
             {
@@ -108,7 +123,6 @@ namespace KarmaTestAdapter
                         if (_shouldRefresh)
                         {
                             _shouldRefresh = false;
-                            _containers.Refresh();
                             OnTestContainersChanged();
                         }
                     }
@@ -135,12 +149,14 @@ namespace KarmaTestAdapter
         private void SolutionListenerOnSolutionLoaded(object sender, EventArgs eventArgs)
         {
             DoNotRefreshTestContainers();
+            _baseDirectory = null;
             _initialContainerSearch = true;
         }
 
         private void SolutionListenerOnSolutionUnloaded(object sender, EventArgs eventArgs)
         {
             DoNotRefreshTestContainers();
+            _baseDirectory = null;
             _testFilesUpdateWatcher.Clear();
             _containers.Clear();
             _initialContainerSearch = true;
@@ -154,13 +170,13 @@ namespace KarmaTestAdapter
                 {
                     _testFilesUpdateWatcher.AddDirectory(e.Project.GetProjectDirectory());
                     AddFiles(FindTestFiles(e.Project));
-                    RefreshTestContainers("Solution loaded");
+                    RefreshTestContainers("Project loaded");
                 }
                 else if (e.ChangedReason == SolutionChangedReason.Unload)
                 {
                     _testFilesUpdateWatcher.RemoveDirectory(e.Project.GetProjectDirectory());
                     RemoveFiles(FindTestFiles(e.Project));
-                    RefreshTestContainers("Solution unloaded");
+                    RefreshTestContainers("Project unloaded");
                 }
             }
 
@@ -198,27 +214,12 @@ namespace KarmaTestAdapter
                     switch (e.ChangedReason)
                     {
                         case TestFileChangedReason.Added:
-                            _files.Add(e.File);
-                            _testFilesUpdateWatcher.AddWatch(e.File);
-                            if (!AddTestContainerIfTestFile(e.File) && _containers.Count(c => c.FileAdded(e.File)) > 0)
-                            {
-                                RefreshTestContainers(string.Format("File added: {0}", e.File));
-                            }
-                            break;
-                        case TestFileChangedReason.Removed:
-                            _files.Remove(e.File);
-                            _testFilesUpdateWatcher.RemoveWatch(e.File);
-                            if (!RemoveTestContainer(e.File) && _containers.Count(c => c.FileRemoved(e.File)) > 0)
-                            {
-                                RefreshTestContainers(string.Format("File removed: {0}", e.File));
-                            }
-                            break;
                         case TestFileChangedReason.Changed:
                         case TestFileChangedReason.Saved:
-                            if (!AddTestContainerIfTestFile(e.File) && _containers.Count(c => c.FileChanged(e.File)) > 0)
-                            {
-                                RefreshTestContainers(string.Format("File changed: {0}", e.File));
-                            }
+                            AddTestContainerIfTestFile(e.File);
+                            break;
+                        case TestFileChangedReason.Removed:
+                            RemoveTestContainer(e.File);
                             break;
                     }
                 }
@@ -233,12 +234,13 @@ namespace KarmaTestAdapter
             }
         }
 
-        private bool AddTestContainerIfTestFile(string file)
+        public bool AddTestContainerIfTestFile(string file)
         {
             var directory = Path.GetDirectoryName(file);
-            var settingsFilename = Path.Combine(directory, Globals.SettingsFilename);
+            var settingsFile = Path.Combine(directory, Globals.SettingsFilename);
+            var karmaConfigFile = Path.Combine(directory, Globals.KarmaConfigFilename);
             var source = "";
-            if (PathUtils.PathsEqual(file, settingsFilename) || PathUtils.PathHasFileName(file, Globals.KarmaSettingsFilename) && !_files.Contains(settingsFilename))
+            if (PathUtils.PathsEqual(file, settingsFile) || PathUtils.PathsEqual(file, karmaConfigFile) && !_files.Contains(settingsFile))
             {
                 source = file;
             }
@@ -247,7 +249,7 @@ namespace KarmaTestAdapter
                 RemoveTestContainersInDirectory(directory);
                 if (File.Exists(source))
                 {
-                    _containers.Add(new KarmaTestContainer(this, source, Logger));
+                    _containers.CreateContainer(source);
                 }
                 RefreshTestContainers(string.Format("Test container added: {0}", file));
                 return true;
@@ -260,7 +262,7 @@ namespace KarmaTestAdapter
             return RemoveTestContainers(_containers.Where(c => PathUtils.IsInDirectory(c.Source, directory)));
         }
 
-        private bool RemoveTestContainer(string file)
+        public bool RemoveTestContainer(string file)
         {
             var result = RemoveTestContainers(_containers.Where(c => PathUtils.PathsEqual(c.Source, file)));
             var directory = Path.GetDirectoryName(file);
