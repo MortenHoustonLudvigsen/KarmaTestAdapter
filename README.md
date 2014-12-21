@@ -7,6 +7,10 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 # Changes
 
+## Version 0.6.3
+
+* Fixed: If `LogToFile` is true and `LogDirectory` is empty in `karma-vs-reporter.json` the adapter fails with the following message: `The path is not of a legal form.`.
+
 ## Version 0.6.2
 
 * Changes to tests files that are not included in a project will now trigger test discovery.

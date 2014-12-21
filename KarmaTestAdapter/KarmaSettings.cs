@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter
 {
-    public class KarmaSettings: IDisposable
+    public class KarmaSettings : IDisposable
     {
         public KarmaSettings(string source, IKarmaLogger logger)
         {
@@ -89,7 +89,7 @@ namespace KarmaTestAdapter
         {
             if (!string.IsNullOrWhiteSpace(OutputDirectory))
             {
-                
+
                 var timestamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
                 var outputDirectory = GetFullPath(OutputDirectory, string.Format("{0}.{1}", command, timestamp));
                 var _outputNo = 1;
@@ -121,11 +121,20 @@ namespace KarmaTestAdapter
 
         private string GetFullPath(params string[] paths)
         {
+            return GetFullPath(Path.Combine(paths));
+        }
+
+        private string GetFullPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                path = ".";
+            }
             var oldCwd = System.IO.Directory.GetCurrentDirectory();
             try
             {
                 System.IO.Directory.SetCurrentDirectory(Directory);
-                return Path.GetFullPath(Path.Combine(paths));
+                return Path.GetFullPath(path);
             }
             finally
             {
