@@ -32,6 +32,12 @@ module Cli {
             case "run":
                 Commands.run(args.config, args.outputFile, args.vsConfig, args.port);
                 break;
+            case "serve":
+                Commands.serve(args.config, args.port);
+                break;
+            case "served-run":
+                Commands.servedRun(args.config, args.outputFile, argv.v, args.port);
+                break;
             case "args":
                 console.log(util.inspect(args, { depth: null }));
                 break;

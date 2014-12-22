@@ -1,4 +1,5 @@
-﻿var fs = require('fs');
+﻿var _ = require('lodash');
+var fs = require('fs');
 var path = require('path');
 var extend = require('extend');
 var stripBom = require('strip-bom');
@@ -14,6 +15,9 @@ var Util;
     function readConfigFile(configFile) {
         var config = extend({
             karmaConfigFile: 'karma.conf.js',
+            LogToFile: false,
+            LogDirectory: '',
+            OutputDirectory: '',
             config: {}
         }, Try(function () {
             return readJsonFile(configFile);
@@ -28,14 +32,21 @@ var Util;
     Util.writeConfigFile = writeConfigFile;
 
     function resolvePath(filepath, relativeTo) {
-        if (relativeTo !== undefined) {
+        if (_.isUndefined(filepath)) {
+            return '';
+        }
+        if (!_.isUndefined(relativeTo)) {
             relativeTo = resolvePath(relativeTo);
             if (!fs.lstatSync(relativeTo).isDirectory()) {
                 relativeTo = path.dirname(relativeTo);
             }
             filepath = path.resolve(relativeTo, filepath);
         }
-        return path.relative(Util.baseDir, filepath).replace(/\\/g, '/');
+        if (_.isUndefined(Util.baseDir)) {
+            throw new Error("baseDir undefined");
+            return filepath;
+        }
+        return path.relative(Util.baseDir, filepath).replace(/\\/g, '/').toLowerCase();
     }
     Util.resolvePath = resolvePath;
 

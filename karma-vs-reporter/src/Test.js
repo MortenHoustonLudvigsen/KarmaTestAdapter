@@ -41,8 +41,10 @@ var Test;
 
     var Karma = (function (_super) {
         __extends(Karma, _super);
-        function Karma() {
+        function Karma(start) {
             _super.call(this);
+            this.start = start;
+            this.end = start;
         }
         Karma.prototype.toXml = function (parentElement) {
             var element = xmlbuilder.create('Karma', { version: '1.0', encoding: 'UTF-8', standalone: true }, { pubID: null, sysID: null }, {
@@ -65,7 +67,7 @@ var Test;
         };
 
         Karma.prototype.results = function () {
-            var results = this.add(new Container('Results'));
+            var results = this.add(new Results(this));
             this.results = function () {
                 return results;
             };
@@ -135,10 +137,11 @@ var Test;
         function Container(name) {
             _super.call(this);
             this.name = name;
+            this.attributes = {};
         }
         Container.prototype.toXml = function (parentElement) {
             if (this.children.length > 0) {
-                var element = parentElement.ele(this.name);
+                var element = parentElement.ele(this.name, this.attributes);
                 this.children.forEach(function (child) {
                     child.toXml(element);
                 });
@@ -148,6 +151,21 @@ var Test;
         return Container;
     })(Item);
     _Test.Container = Container;
+
+    var Results = (function (_super) {
+        __extends(Results, _super);
+        function Results(karma) {
+            _super.call(this, 'Results');
+            this.karma = karma;
+        }
+        Results.prototype.toXml = function (parentElement) {
+            this.attributes['start'] = this.karma.start.toISOString();
+            this.attributes['end'] = this.karma.end.toISOString();
+            return _super.prototype.toXml.call(this, parentElement);
+        };
+        return Results;
+    })(Container);
+    _Test.Results = Results;
 
     var Files = (function (_super) {
         __extends(Files, _super);

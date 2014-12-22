@@ -60,8 +60,14 @@
     </Content>
     <None Include="karma-vs-reporter" />
     <Content Include="package.json" />
+    <Content Include="src\Globals.js">
+      <DependentUpon>Globals.ts</DependentUpon>
+    </Content>
     <Content Include="src\JasminePreprocessor.js">
       <DependentUpon>JasminePreprocessor.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Runner.js">
+      <DependentUpon>Runner.ts</DependentUpon>
     </Content>
     <Content Include="src\ParseFiles.js.map">
       <DependentUpon>ParseFiles.ts</DependentUpon>
@@ -88,6 +94,13 @@
       <DependentUpon>JasminePreprocessor.ts</DependentUpon>
     </Content>
     <Content Include="test\get-config.cmd" />
+    <Content Include="test\serve.cmd" />
+    <Content Include="src\Globals.js.map">
+      <DependentUpon>Globals.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Runner.js.map">
+      <DependentUpon>Runner.ts</DependentUpon>
+    </Content>
     <None Include="test\run.cmd" />
     <Content Include="test\testfiles\Testfile1.js">
       <DependentUpon>Testfile1.ts</DependentUpon>
@@ -105,6 +118,7 @@
       <DependentUpon>TestFile2.ts</DependentUpon>
     </Content>
     <Content Include="test\VsConfig.json" />
+    <Content Include="test\serve-run.cmd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\Cli.js">
@@ -146,9 +160,11 @@
     <TypeScriptCompile Include="references.d.ts" />
     <TypeScriptCompile Include="src\Cli.ts" />
     <TypeScriptCompile Include="src\Commands.ts" />
+    <TypeScriptCompile Include="src\Globals.ts" />
     <TypeScriptCompile Include="src\JasmineParser.ts" />
     <TypeScriptCompile Include="src\JasminePreprocessor.ts" />
     <TypeScriptCompile Include="src\Javascript.ts" />
+    <TypeScriptCompile Include="src\Runner.ts" />
     <TypeScriptCompile Include="src\ParseFiles.ts" />
     <TypeScriptCompile Include="src\Parser.ts" />
     <TypeScriptCompile Include="src\Preprocessor.ts" />

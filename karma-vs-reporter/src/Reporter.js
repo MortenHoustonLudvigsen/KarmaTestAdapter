@@ -1,4 +1,5 @@
 ﻿var Util = require('./Util');
+var Globals = require('./Globals');
 
 var Test = require('./Test');
 var q = require('q');
@@ -12,7 +13,6 @@ var Reporter = function Reporter(baseReporterDecorator, config, fileList, helper
     Util.baseDir = config.basePath;
 
     var log = Util.createLogger(logger);
-    var outputFile = config.vsReporter.outputFile || helper.normalizeWinPath(path.resolve(config.basePath, Util.outputFile));
     var filesPromise = fileList.refresh();
 
     emitter.on('file_list_modified', function (emittedFilesPromise) {
@@ -24,7 +24,7 @@ var Reporter = function Reporter(baseReporterDecorator, config, fileList, helper
     var karma;
 
     this.onRunStart = function () {
-        karma = new Test.Karma();
+        karma = new Test.Karma(new Date());
         karma.add(new Test.KarmaConfig(config));
         browserResults = {};
         filesParsed = q.defer();
@@ -50,6 +50,7 @@ var Reporter = function Reporter(baseReporterDecorator, config, fileList, helper
     };
 
     this.onRunComplete = function () {
+        karma.end = new Date();
         filesParsed.promise.then(function () {
             _.forIn(browserResults, function (browserResult) {
                 var browser = karma.results().add(new Test.Browser(browserResult.browser.name));
@@ -67,6 +68,7 @@ var Reporter = function Reporter(baseReporterDecorator, config, fileList, helper
                 });
             });
 
+            var outputFile = Globals.outputFile || helper.normalizeWinPath(path.resolve(config.basePath, Util.outputFile));
             try  {
                 Util.writeFile(outputFile, karma.toXml());
             } catch (e) {
@@ -85,6 +87,7 @@ var Reporter = function Reporter(baseReporterDecorator, config, fileList, helper
 };
 
 Reporter.$inject = ['baseReporterDecorator', 'config', 'fileList', 'helper', 'logger', 'formatError', 'emitter'];
+Reporter.name = 'karma-vs-reporter';
 
 module.exports = Reporter;
 //# sourceMappingURL=Reporter.js.map

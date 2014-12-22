@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Karma>
+  <Config>
+    <LOG_DISABLE>OFF</LOG_DISABLE>
+    <LOG_ERROR>ERROR</LOG_ERROR>
+    <LOG_WARN>WARN</LOG_WARN>
+    <LOG_INFO>INFO</LOG_INFO>
+    <LOG_DEBUG>DEBUG</LOG_DEBUG>
+    <set/>
+    <frameworks>
+      <item>jasmine</item>
+    </frameworks>
+    <port>53983</port>
+    <hostname>localhost</hostname>
+    <basePath>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test</basePath>
+    <files>
+      <item>
+        <pattern>C:\Data\Projects\GitHub\KarmaTestAdapter\karma-vs-reporter\test\node_modules\karma-jasmine\lib/jasmine.js</pattern>
+        <included>true</included>
+        <served>true</served>
+        <watched>false</watched>
+      </item>
+      <item>
+        <pattern>C:\Data\Projects\GitHub\KarmaTestAdapter\karma-vs-reporter\test\node_modules\karma-jasmine\lib/adapter.js</pattern>
+        <included>true</included>
+        <served>true</served>
+        <watched>false</watched>
+      </item>
+      <item>
+        <pattern>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/*.js</pattern>
+        <served>true</served>
+        <included>true</included>
+        <watched>true</watched>
+      </item>
+      <item>
+        <pattern>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/*.ts</pattern>
+        <served>false</served>
+        <included>false</included>
+        <watched>true</watched>
+      </item>
+    </files>
+    <exclude>
+      <item>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/karma.test.conf.js</item>
+    </exclude>
+    <logLevel>INFO</logLevel>
+    <colors>false</colors>
+    <autoWatch>false</autoWatch>
+    <autoWatchBatchDelay>250</autoWatchBatchDelay>
+    <usePolling>false</usePolling>
+    <reporters>
+      <item>progress</item>
+      <item>vs</item>
+    </reporters>
+    <singleRun>false</singleRun>
+    <browsers>
+      <item>PhantomJS</item>
+    </browsers>
+    <captureTimeout>60000</captureTimeout>
+    <proxies/>
+    <proxyValidateSSL>true</proxyValidateSSL>
+    <preprocessors>
+      <item name="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/**/*.js">
+        <item>vs</item>
+      </item>
+    </preprocessors>
+    <urlRoot>/</urlRoot>
+    <reportSlowerThan>0</reportSlowerThan>
+    <loggers>
+      <item>
+        <type>console</type>
+        <layout>
+          <type>pattern</type>
+          <pattern>%p [%c]: %m</pattern>
+        </layout>
+        <makers>
+          <console/>
+        </makers>
+      </item>
+    </loggers>
+    <transports>
+      <item>websocket</item>
+      <item>flashsocket</item>
+      <item>xhr-polling</item>
+      <item>jsonp-polling</item>
+    </transports>
+    <plugins>
+      <item>karma-*</item>
+    </plugins>
+    <client>
+      <useIframe>true</useIframe>
+      <captureConsole>true</captureConsole>
+    </client>
+    <browserDisconnectTimeout>2000</browserDisconnectTimeout>
+    <browserDisconnectTolerance>0</browserDisconnectTolerance>
+    <browserNoActivityTimeout>10000</browserNoActivityTimeout>
+    <configFile>C:\Data\Projects\GitHub\KarmaTestAdapter\karma-vs-reporter\test\karma.test.conf.js</configFile>
+  </Config>
+  <Files>
+    <File Path="node_modules/karma-jasmine/lib/jasmine.js" Served="true" Included="true"/>
+    <File Path="node_modules/karma-jasmine/lib/adapter.js" Served="true" Included="true"/>
+    <File Path="testfiles/TestFile2.ts" Served="true" Included="false">
+      <Suite Name="Simple tests 2" Framework="jasmine" Line="1" Column="1">
+        <Test Name="should be, that 3 + 2 = 4" Framework="jasmine" Line="2" Column="4" Index="47"/>
+        <Suite Name="Nested tests" Framework="jasmine" Line="8" Column="4">
+          <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="9" Column="8" Index="275"/>
+        </Suite>
+        <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="13" Column="4" Index="388"/>
+      </Suite>
+    </File>
+    <File Path="testfiles/TestFile2.js" Served="true" Included="true">
+      <Suite Name="Simple tests 2" Framework="jasmine" Line="1" Column="1">
+        <Source Path="testfiles/TestFile2.ts" Line="1" Column="0"/>
+        <Test Name="should be, that 3 + 2 = 4" Framework="jasmine" Line="2" Column="4" Index="47">
+          <Source Path="testfiles/TestFile2.ts" Line="2" Column="4"/>
+        </Test>
+        <Suite Name="Nested tests" Framework="jasmine" Line="8" Column="4">
+          <Source Path="testfiles/TestFile2.ts" Line="8" Column="4"/>
+        </Suite>
+        <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="13" Column="4" Index="389">
+          <Source Path="testfiles/TestFile2.ts" Line="13" Column="4"/>
+        </Test>
+      </Suite>
+    </File>
+  </Files>
+  <Results>
+    <Browser Name="PhantomJS 1.9.8 (Windows 8)">
+      <SuiteResult Name="Simple tests 2">
+        <TestResult Name="should be, that 3 + 2 = 4" Id="0" Time="2" Outcome="Failed">
+          <Log>Expected 5 to be 4.</Log>
+        </TestResult>
+        <TestResult Name="should be, that 3 + 12 = 23" Id="3" Time="0" Outcome="Failed">
+          <Log>Expected 15 to be 23.</Log>
+        </TestResult>
+      </SuiteResult>
+    </Browser>
+  </Results>
+</Karma>

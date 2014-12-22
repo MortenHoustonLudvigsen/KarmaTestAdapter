@@ -20,7 +20,7 @@
         {
             "pattern": "C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/*.ts",
             "served": false,
-            "included": true,
+            "included": false,
             "watched": true
         }
     ],

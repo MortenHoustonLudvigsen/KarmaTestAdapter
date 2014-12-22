@@ -1,6 +1,6 @@
 ﻿import Javascript = require('./Javascript');
 import Test = require('./Test');
-
+import _ = require('lodash');
 import fs = require('fs');
 import path = require('path');
 var extend = require('extend');
@@ -21,6 +21,9 @@ module Util {
     export function readConfigFile(configFile): Config {
         var config: Config = extend({
             karmaConfigFile: 'karma.conf.js',
+            LogToFile: false,
+            LogDirectory: '',
+            OutputDirectory: '',
             config: {}
         }, Try(() => readJsonFile(configFile)));
         return config;
@@ -31,14 +34,21 @@ module Util {
     }
 
     export function resolvePath(filepath: string, relativeTo?: string) {
-        if (relativeTo !== undefined) {
+        if (_.isUndefined(filepath)) {
+            return '';
+        }
+        if (!_.isUndefined(relativeTo)) {
             relativeTo = resolvePath(relativeTo);
             if (!fs.lstatSync(relativeTo).isDirectory()) {
                 relativeTo = path.dirname(relativeTo);
             }
             filepath = path.resolve(relativeTo, filepath);
         }
-        return path.relative(baseDir, filepath).replace(/\\/g, '/');
+        if (_.isUndefined(baseDir)) {
+            throw new Error("baseDir undefined");
+            return filepath;
+        }
+        return path.relative(baseDir, filepath).replace(/\\/g, '/').toLowerCase();
     }
 
     export function absolutePath(filepath: string, relativeTo?: string) {

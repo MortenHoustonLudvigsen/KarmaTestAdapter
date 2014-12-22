@@ -1,5 +1,21 @@
-﻿var Util = require('./Util');
+﻿var Globals = require('./Globals');
+var Util = require('./Util');
 var _ = require("lodash");
+
+var path = require('path');
+var extend = require('extend');
+var helper = require('karma/lib/helper');
+
+function basePathResolve(basePath, relativePath) {
+    if (helper.isUrlAbsolute(relativePath)) {
+        return relativePath;
+    }
+
+    if (!helper.isDefined(basePath) || !helper.isDefined(relativePath)) {
+        return '';
+    }
+    return path.resolve(basePath, relativePath);
+}
 
 var VsConfig;
 (function (VsConfig) {
@@ -71,6 +87,25 @@ var VsConfig;
                 });
             }
             return this._fileMap[Util.resolvePath(path).toLowerCase()];
+        };
+
+        Config.prototype.getFiles = function (basePath) {
+            return this.files.map(function (f) {
+                return {
+                    "pattern": basePathResolve(basePath, f.path),
+                    "served": f.served,
+                    "included": f.included,
+                    "watched": false
+                };
+            });
+        };
+
+        Config.prototype.processKarmaConfig = function (karmaConfig) {
+            if (this.hasFiles()) {
+                karmaConfig.files = this.getFiles(karmaConfig.basePath);
+            } else if (Globals.origConfig) {
+                karmaConfig.files = Globals.origConfig.files;
+            }
         };
         return Config;
     })();

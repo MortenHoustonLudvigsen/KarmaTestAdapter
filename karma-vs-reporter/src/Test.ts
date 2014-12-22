@@ -35,8 +35,11 @@ module Test {
     }
 
     export class Karma extends Item {
-        constructor() {
+        public end: Date;
+
+        constructor(public start: Date) {
             super();
+            this.end = start;
         }
 
         public toXml(parentElement?): any {
@@ -64,7 +67,7 @@ module Test {
         }
 
         public results(): Item {
-            var results = this.add(new Container('Results'));
+            var results = this.add(new Results(this));
             this.results = function () {
                 return results;
             };
@@ -123,18 +126,32 @@ module Test {
     }
 
     export class Container extends Item {
+        public attributes = {};
+
         constructor(private name: string) {
             super();
         }
 
         public toXml(parentElement): any {
             if (this.children.length > 0) {
-                var element = parentElement.ele(this.name);
+                var element = parentElement.ele(this.name, this.attributes);
                 this.children.forEach(function (child) {
                     child.toXml(element);
                 });
                 return element;
             }
+        }
+    }
+
+    export class Results extends Container {
+        constructor(private karma: Karma) {
+            super('Results');
+        }
+
+        public toXml(parentElement): any {
+            this.attributes['start'] = this.karma.start.toISOString();
+            this.attributes['end'] = this.karma.end.toISOString();
+            return super.toXml(parentElement);
         }
     }
 

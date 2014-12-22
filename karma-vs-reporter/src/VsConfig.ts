@@ -1,6 +1,21 @@
-﻿import Util = require('./Util');
+﻿import Globals = require('./Globals');
+import Util = require('./Util');
 import _ = require("lodash");
 import util = require('util');
+import path = require('path');
+var extend = require('extend');
+var helper = require('karma/lib/helper');
+
+function basePathResolve(basePath: string, relativePath: string): string {
+    if (helper.isUrlAbsolute(relativePath)) {
+        return relativePath;
+    }
+
+    if (!helper.isDefined(basePath) || !helper.isDefined(relativePath)) {
+        return '';
+    }
+    return path.resolve(basePath, relativePath);
+}
 
 module VsConfig {
     export class Test {
@@ -68,6 +83,23 @@ module VsConfig {
                 this.files.forEach(f => this._fileMap[Util.resolvePath(f.path).toLowerCase()] = f);
             }
             return this._fileMap[Util.resolvePath(path).toLowerCase()];
+        }
+
+        public getFiles(basePath: string): any[]{
+            return this.files.map(f => <any>{
+                "pattern": basePathResolve(basePath, f.path),
+                "served": f.served,
+                "included": f.included,
+                "watched": false
+            });
+        }
+
+        public processKarmaConfig(karmaConfig: any) {
+            if (this.hasFiles()) {
+                karmaConfig.files = this.getFiles(karmaConfig.basePath);
+            } else if (Globals.origConfig) {
+                karmaConfig.files = Globals.origConfig.files;
+            }
         }
     }
 
