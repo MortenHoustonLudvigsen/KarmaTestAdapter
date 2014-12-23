@@ -93,7 +93,7 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 ### Server mode
 
 * Introduced server mode. When in server mode Karma will be started once, and run in the background.
-  This means that browsers are note restarted every time tests are run, improving performance and
+  This means that browsers are not restarted every time tests are run, improving performance and
   making the experience much smoother.
 
 * `karma-vs-reporter.json` has new optional properties:
