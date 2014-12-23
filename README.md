@@ -48,6 +48,8 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 ```json
 {
     "karmaConfigFile": "karma.conf.test.js",
+    "ServerMode": true,
+    "ServerPort": 3535,
     "LogToFile": true,
     "LogDirectory": "KarmaTestAdapter",
     "OutputDirectory": "KarmaTestAdapter/Output",
@@ -62,6 +64,13 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 There are five possible properties:
 
 * `karmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
+
+* `ServerMode` set to true, if you want Karma to always run in the background. This will normally give a
+  significant performance improvement. Karma will be started in the background if `ServerMode` is true **and**
+  `ServerPort` has a value.
+
+* `ServerPort` TCP port, that Karma should listen to when running in the background (when `ServerMode` is true).
+   This should be different from the port configured in the Karma configuration file (`karma.conf.js`).
 
 * `LogToFile` set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
 
@@ -78,6 +87,25 @@ There are five possible properties:
 At the moment the adapter only works properly with [Jasmine](http://jasmine.github.io/) tests. It should be relatively easy to add other frameworks. Pull requests are welcome.
 
 # Changes
+
+## Version 0.7.0
+
+### Server mode
+
+* Introduced server mode. When in server mode Karma will be started once, and run in the background.
+  This means that browsers are note restarted every time tests are run, improving performance and
+  making the experience much smoother.
+
+* `karma-vs-reporter.json` has new optional properties:
+
+  - `ServerMode` set to true, if you want Karma to always run in the background. This will normally give a
+    significant performance improvement. Karma will be started in the background if `ServerMode` is true **and**
+    `ServerPort` has a value.
+  
+  - `ServerPort` TCP port, that Karma should listen to when running in the background (when `ServerMode` is true).
+     This should be different from the port configured in the Karma configuration file (`karma.conf.js`).
+
+* Version 0.7.0 needs at least version 0.7.0 of karma-vs-reporter to work
 
 ## Version 0.6.3
 
@@ -101,7 +129,7 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 * I have made a number of tweeks to logging
 
-* karma-vs-reporter.json has new optional properties:
+* `karma-vs-reporter.json` has new optional properties:
 
   - `LogToFile`: set to true, if you want the adapter to write log statements to a log file (named `KarmaTestAdapter.log`)
 
