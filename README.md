@@ -61,7 +61,7 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 }
 ```
 
-There are five possible properties:
+These are the possible properties:
 
 * `karmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
 
