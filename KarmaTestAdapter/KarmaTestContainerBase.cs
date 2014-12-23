@@ -32,6 +32,7 @@ namespace KarmaTestAdapter
         public bool IsAppContainerTestContainer { get { return false; } }
         public FrameworkVersion TargetFramework { get { return FrameworkVersion.None; } }
         public Architecture TargetPlatform { get { return Architecture.AnyCPU; } }
+        public string BaseDirectory { get { return KarmaTestContainerDiscoverer.BaseDirectory; } }
 
         public int CompareTo(ITestContainer other)
         {

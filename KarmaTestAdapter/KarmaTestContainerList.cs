@@ -24,8 +24,8 @@ namespace KarmaTestAdapter
 
         public void Remove(KarmaTestContainer container)
         {
-            container.Dispose();
             _containers.Remove(container);
+            container.Dispose();
         }
 
         public void Clear()

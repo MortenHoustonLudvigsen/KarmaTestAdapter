@@ -26,7 +26,6 @@ namespace KarmaTestAdapter
         public KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger)
             : base(containerList.Discoverer, source, DateTime.Now)
         {
-            logger.Info("KarmaTestContainer.Create");
             this.Logger = logger;
             this.Settings = new KarmaSettings(Source, Logger);
             this._containerList = containerList;
@@ -43,7 +42,6 @@ namespace KarmaTestAdapter
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
         public Karma Karma { get; set; }
         public KarmaConfig Config { get; private set; }
-        public string BaseDirectory { get { return KarmaTestContainerDiscoverer.BaseDirectory; } }
 
         private Dictionary<string, string> GetFiles()
         {
@@ -196,15 +194,6 @@ namespace KarmaTestAdapter
                 return false;
             }
         }
-
-        //public KarmaTestContainer Refresh()
-        //{
-        //    if (ShouldRefresh)
-        //    {
-        //        TimeStamp = DateTime.Now;
-        //    }
-        //    return this;
-        //}
 
         public override string ToString()
         {
