@@ -21,7 +21,7 @@ namespace KarmaTestAdapter.Commands
         }
 
         public string Source { get; private set; }
-        public string Command { get; private set; }
+        public string Command { get; protected set; }
         public string Directory { get; private set; }
         public virtual string Name { get { return Command; } }
 
@@ -55,9 +55,12 @@ namespace KarmaTestAdapter.Commands
             if (_process != null)
             {
                 _process.Cancel();
-                logger.Info("{0} cancelled", Command);
+                if (logger != null)
+                {
+                    logger.Info("{0} cancelled", Command);
+                }
             }
-            else
+            else if (logger != null)
             {
                 logger.Info("Tried to cancel {0}, but it was not running", Command);
             }

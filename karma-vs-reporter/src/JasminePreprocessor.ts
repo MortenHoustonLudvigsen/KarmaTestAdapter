@@ -23,7 +23,7 @@ class JasminePreprocessor extends Parser {
             var index = node.range[0];
             var token = this._tokenMap[index];
             var test = this._file.getTest(index);
-            if (token && !test) {
+            if (token && test && !test.include) {
                 token.value = 'xit';
             }
         }

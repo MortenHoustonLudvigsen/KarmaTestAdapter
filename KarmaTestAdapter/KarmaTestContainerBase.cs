@@ -79,6 +79,8 @@ namespace KarmaTestAdapter
             if (disposing)
             {
             }
+
+            _disposed = true;
         }
 
         ~KarmaTestContainerBase()

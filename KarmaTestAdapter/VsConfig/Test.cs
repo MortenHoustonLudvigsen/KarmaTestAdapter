@@ -10,5 +10,6 @@ namespace KarmaTestAdapter.VsConfig
     {
         public string name { get; set; }
         public int? index { get; set; }
+        public bool include { get; set; }
     }
 }

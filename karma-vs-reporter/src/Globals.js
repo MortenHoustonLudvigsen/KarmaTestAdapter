@@ -5,6 +5,7 @@ var Globals;
     Globals.origConfig;
     Globals.outputFile;
     Globals.vsConfig = new VsConfig.Config({});
+    Globals.logTests = true;
 
     function Configure(config) {
         Globals.outputFile = config.outputFile;

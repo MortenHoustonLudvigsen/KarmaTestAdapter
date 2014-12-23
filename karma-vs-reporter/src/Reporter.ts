@@ -1,6 +1,5 @@
 ﻿import Util = require('./Util');
 import Globals = require('./Globals');
-import Commands = require('./Commands');
 import Test = require('./Test');
 import q = require('q');
 import path = require('path');
@@ -24,7 +23,14 @@ var Reporter: any = function Reporter(baseReporterDecorator, config, fileList, h
     var browserResults;
     var karma: Test.Karma;
 
+    this.logTest = function (message: string, browserName?: string): void {
+        if (Globals.logTests) {
+            logger.create(browserName || 'Test run').info(message);
+        }
+    }
+
     this.onRunStart = function () {
+        this.logTest("Start");
         karma = new Test.Karma(new Date());
         karma.add(new Test.KarmaConfig(config));
         browserResults = {};
@@ -42,21 +48,26 @@ var Reporter: any = function Reporter(baseReporterDecorator, config, fileList, h
     };
 
     this.onSpecComplete = function (browser, result) {
-        browserResults[browser.name] = browserResults[browser.name] || {
-            browser: browser,
-            results: []
-        };
+        if (!result.skipped) {
+            this.logTest(Test.Outcome[getOutcome(result)] + ": " + result.description, browser.name);
 
-        browserResults[browser.name].results.push(result);
+            browserResults[browser.name] = browserResults[browser.name] || {
+                browser: browser,
+                results: []
+            };
+
+            browserResults[browser.name].results.push(result);
+        }
     };
 
     this.onRunComplete = function () {
+        this.logTest("Complete");
         karma.end = new Date();
         filesParsed.promise.then(function () {
             _.forIn(browserResults, browserResult => {
                 var browser = karma.results().add(new Test.Browser(browserResult.browser.name));
 
-                browserResult.results.forEach(result => {
+                browserResult.results.filter(r => !r.skipped).forEach(result => {
                     var suite = browser.startSuite(result.suite);
                     var testResult = suite.add(new Test.TestResult(result.description));
                     testResult.id = result.id;
@@ -79,8 +90,8 @@ var Reporter: any = function Reporter(baseReporterDecorator, config, fileList, h
     };
 
     function getOutcome(result): Test.Outcome {
-        if (result.success) return Test.Outcome.Success;
         if (result.skipped) return Test.Outcome.Skipped;
+        if (result.success) return Test.Outcome.Success;
         return Test.Outcome.Failed;
     }
 }

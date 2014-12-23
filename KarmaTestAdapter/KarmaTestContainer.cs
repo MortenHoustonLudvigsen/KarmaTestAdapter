@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace KarmaTestAdapter
 {
@@ -20,32 +21,21 @@ namespace KarmaTestAdapter
         private KarmaTestContainerList _containerList;
         private Dictionary<string, string> _files = new Dictionary<string, string>();
         private IEnumerable<KarmaFileWatcher> _fileWatchers;
+        private KarmaServeCommand _serveCommand;
 
         public KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger)
-            : this(containerList, source, logger, null, null)
-        { }
-
-        private KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger, KarmaConfig config, Dictionary<string, string> files, DateTime? timeStamp = null)
-            : base(containerList.Discoverer, source, timeStamp ?? DateTime.Now)
+            : base(containerList.Discoverer, source, DateTime.Now)
         {
             logger.Info("KarmaTestContainer.Create");
             this.Logger = logger;
             this.Settings = new KarmaSettings(Source, Logger);
             this._containerList = containerList;
-            this.Config = config ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
-            this._files = files;
-            if (this._files == null || this._files.Count == 0)
-            {
-                this._files = GetFiles();
-            }
+            this.Config = KarmaGetConfigCommand.GetConfig(Source, Logger);
+            this._files = GetFiles();
             SetCurrentHash(Settings.SettingsFile);
             SetCurrentHash(Settings.KarmaConfigFile);
             _fileWatchers = GetFileWatchers().Where(w => w != null).ToList();
-        }
-
-        private KarmaTestContainer(KarmaTestContainer copy, DateTime timeStamp)
-            : this(copy._containerList, copy.Source, copy.Logger, copy.Config, copy._files)
-        {
+            StartKarmaServer();
         }
 
         public IKarmaLogger Logger { get; private set; }
@@ -58,6 +48,18 @@ namespace KarmaTestAdapter
         private Dictionary<string, string> GetFiles()
         {
             return Config.GetFiles().ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
+        }
+
+        private void StartKarmaServer()
+        {
+            if (Settings.ServerModeValid && !_disposed)
+            {
+                _serveCommand = _serveCommand ?? new KarmaServeCommand(Source);
+                _serveCommand.Start(Logger, () =>
+                {
+                    Task.Delay(500).ContinueWith(t => StartKarmaServer());
+                });
+            }
         }
 
         private IEnumerable<KarmaFileWatcher> GetFileWatchers()
@@ -209,10 +211,20 @@ namespace KarmaTestAdapter
             return this.ExecutorUri.ToString() + "/" + this.Source;
         }
 
+        private bool _disposed = false;
         protected override void Dispose(bool disposing)
         {
+            if (_disposed)
+                return;
+
             if (disposing)
             {
+                if (_serveCommand != null)
+                {
+                    _serveCommand.Dispose();
+                    _serveCommand = null;
+                }
+
                 if (_fileWatchers != null)
                 {
                     foreach (var watcher in _fileWatchers)
@@ -222,12 +234,15 @@ namespace KarmaTestAdapter
                     }
                     _fileWatchers = null;
                 }
+
                 if (Settings != null)
                 {
                     Settings.Dispose();
                     Settings = null;
                 }
             }
+
+            _disposed = true;
         }
     }
 }

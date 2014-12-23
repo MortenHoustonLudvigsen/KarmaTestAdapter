@@ -142,22 +142,23 @@ namespace KarmaTestAdapter
 
         private VsConfig.Config CreateVsConfig(IEnumerable<TestCase> tests, KarmaTestResults.Karma karma)
         {
-            var includedWithTests = tests.Select(t => t.CodeFilePath).Distinct();
+            //var includedWithTests = tests.Select(t => t.CodeFilePath).Distinct();
             return new VsConfig.Config
             {
                 files = karma.Files
-                    .Where(f => !f.AllTests.Any() || includedWithTests.Any(fi => f.HasFile(fi)))
+                    //.Where(f => !f.AllTests.Any() || includedWithTests.Any(fi => f.HasFile(fi)))
                     .Select(f => new VsConfig.File
                     {
                         path = f.Path,
                         served = f.Served,
                         included = f.Included,
                         tests = f.AllTests
-                            .Where(t => tests.Any(tc => tc.FullyQualifiedName == t.FullyQualifiedName))
+                            //.Where(t => tests.Any(tc => tc.FullyQualifiedName == t.FullyQualifiedName))
                             .Select(t => new VsConfig.Test
                             {
                                 name = t.Name,
-                                index = t.Index
+                                index = t.Index,
+                                include = tests.Any(tc => tc.FullyQualifiedName == t.FullyQualifiedName)
                             })
                     })
             };

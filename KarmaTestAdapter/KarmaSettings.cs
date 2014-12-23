@@ -64,6 +64,18 @@ namespace KarmaTestAdapter
         public string KarmaConfigFile { get; set; }
 
         /// <summary>
+        /// Should Karma be started in the background
+        /// </summary>
+        public bool ServerMode { get; set; }
+
+        /// <summary>
+        /// Port number to use if Karma should be started in the background
+        /// </summary>
+        public int? ServerPort { get; set; }
+
+        public bool ServerModeValid { get { return ServerMode && ServerPort.HasValue; } }
+
+        /// <summary>
         /// Should logging be done to a file as well as normal logging
         /// </summary>
         public bool LogToFile { get; set; }

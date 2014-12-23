@@ -11,11 +11,6 @@ var xmlbuilder = require('xmlbuilder');
 
 var Test;
 (function (_Test) {
-    //function lazy<T>(init: () => T): T {
-    //    var fn = function () {
-    //        var
-    //    }
-    //}
     (function (Outcome) {
         Outcome[Outcome["Success"] = 0] = "Success";
         Outcome[Outcome["Skipped"] = 1] = "Skipped";

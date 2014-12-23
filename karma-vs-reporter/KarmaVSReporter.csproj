@@ -60,6 +60,24 @@
     </Content>
     <None Include="karma-vs-reporter" />
     <Content Include="package.json" />
+    <Content Include="src\Commands\Discover.js">
+      <DependentUpon>Discover.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\GetConfig.js">
+      <DependentUpon>GetConfig.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Init.js">
+      <DependentUpon>Init.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Run.js">
+      <DependentUpon>Run.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Serve.js">
+      <DependentUpon>Serve.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\ServedRun.js">
+      <DependentUpon>ServedRun.ts</DependentUpon>
+    </Content>
     <Content Include="src\Globals.js">
       <DependentUpon>Globals.ts</DependentUpon>
     </Content>
@@ -101,6 +119,25 @@
     <Content Include="src\Runner.js.map">
       <DependentUpon>Runner.ts</DependentUpon>
     </Content>
+    <Content Include="src\Commands\Discover.js.map">
+      <DependentUpon>Discover.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\GetConfig.js.map">
+      <DependentUpon>GetConfig.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Init.js.map">
+      <DependentUpon>Init.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Run.js.map">
+      <DependentUpon>Run.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Commands\Serve.js.map">
+      <DependentUpon>Serve.ts</DependentUpon>
+    </Content>
+    <Content Include="test\all.cmd" />
+    <Content Include="src\Commands\ServedRun.js.map">
+      <DependentUpon>ServedRun.ts</DependentUpon>
+    </Content>
     <None Include="test\run.cmd" />
     <Content Include="test\testfiles\Testfile1.js">
       <DependentUpon>Testfile1.ts</DependentUpon>
@@ -118,14 +155,11 @@
       <DependentUpon>TestFile2.ts</DependentUpon>
     </Content>
     <Content Include="test\VsConfig.json" />
-    <Content Include="test\serve-run.cmd" />
+    <Content Include="test\served-run.cmd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\Cli.js">
       <DependentUpon>Cli.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Commands.js">
-      <DependentUpon>Commands.ts</DependentUpon>
     </Content>
     <Content Include="src\JasmineParser.js">
       <DependentUpon>JasmineParser.ts</DependentUpon>
@@ -159,7 +193,12 @@
     <TypeScriptCompile Include="index.ts" />
     <TypeScriptCompile Include="references.d.ts" />
     <TypeScriptCompile Include="src\Cli.ts" />
-    <TypeScriptCompile Include="src\Commands.ts" />
+    <TypeScriptCompile Include="src\Commands\Discover.ts" />
+    <TypeScriptCompile Include="src\Commands\GetConfig.ts" />
+    <TypeScriptCompile Include="src\Commands\Init.ts" />
+    <TypeScriptCompile Include="src\Commands\Run.ts" />
+    <TypeScriptCompile Include="src\Commands\Serve.ts" />
+    <TypeScriptCompile Include="src\Commands\ServedRun.ts" />
     <TypeScriptCompile Include="src\Globals.ts" />
     <TypeScriptCompile Include="src\JasmineParser.ts" />
     <TypeScriptCompile Include="src\JasminePreprocessor.ts" />
@@ -226,11 +265,6 @@
   <ItemGroup>
     <None Include="LICENSE" />
     <Content Include="tsd.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="src\Commands.js.map">
-      <DependentUpon>Commands.ts</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\Parser.js.map">

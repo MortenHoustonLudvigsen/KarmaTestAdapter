@@ -41,6 +41,7 @@
     </files>
     <exclude>
       <item>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/karma.test.conf.js</item>
+      <item>C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/karma.test.conf.js</item>
     </exclude>
     <logLevel>INFO</logLevel>
     <colors>false</colors>
@@ -96,36 +97,27 @@
     <configFile>C:\Data\Projects\GitHub\KarmaTestAdapter\karma-vs-reporter\test\karma.test.conf.js</configFile>
   </Config>
   <Files>
-    <File Path="node_modules/karma-jasmine/lib/jasmine.js" Served="true" Included="true"/>
-    <File Path="node_modules/karma-jasmine/lib/adapter.js" Served="true" Included="true"/>
-    <File Path="testfiles/TestFile2.ts" Served="true" Included="false">
+    <File Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/node_modules/karma-jasmine/lib/jasmine.js" Served="true" Included="true"/>
+    <File Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/node_modules/karma-jasmine/lib/adapter.js" Served="true" Included="true"/>
+    <File Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/TestFile2.js" Served="true" Included="true">
       <Suite Name="Simple tests 2" Framework="jasmine" Line="1" Column="1">
-        <Test Name="should be, that 3 + 2 = 4" Framework="jasmine" Line="2" Column="4" Index="47"/>
-        <Suite Name="Nested tests" Framework="jasmine" Line="8" Column="4">
-          <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="9" Column="8" Index="275"/>
-        </Suite>
-        <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="13" Column="4" Index="388"/>
-      </Suite>
-    </File>
-    <File Path="testfiles/TestFile2.js" Served="true" Included="true">
-      <Suite Name="Simple tests 2" Framework="jasmine" Line="1" Column="1">
-        <Source Path="testfiles/TestFile2.ts" Line="1" Column="0"/>
+        <Source Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/TestFile2.ts" Line="1" Column="0"/>
         <Test Name="should be, that 3 + 2 = 4" Framework="jasmine" Line="2" Column="4" Index="47">
-          <Source Path="testfiles/TestFile2.ts" Line="2" Column="4"/>
+          <Source Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/TestFile2.ts" Line="2" Column="4"/>
         </Test>
         <Suite Name="Nested tests" Framework="jasmine" Line="8" Column="4">
-          <Source Path="testfiles/TestFile2.ts" Line="8" Column="4"/>
+          <Source Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/TestFile2.ts" Line="8" Column="4"/>
         </Suite>
         <Test Name="should be, that 3 + 12 = 23" Framework="jasmine" Line="13" Column="4" Index="389">
-          <Source Path="testfiles/TestFile2.ts" Line="13" Column="4"/>
+          <Source Path="C:/Data/Projects/GitHub/KarmaTestAdapter/karma-vs-reporter/test/testfiles/TestFile2.ts" Line="13" Column="4"/>
         </Test>
       </Suite>
     </File>
   </Files>
-  <Results>
+  <Results start="2014-12-23T03:12:00.651Z" end="2014-12-23T03:12:01.041Z">
     <Browser Name="PhantomJS 1.9.8 (Windows 8)">
       <SuiteResult Name="Simple tests 2">
-        <TestResult Name="should be, that 3 + 2 = 4" Id="0" Time="2" Outcome="Failed">
+        <TestResult Name="should be, that 3 + 2 = 4" Id="0" Time="3" Outcome="Failed">
           <Log>Expected 5 to be 4.</Log>
         </TestResult>
         <TestResult Name="should be, that 3 + 12 = 23" Id="3" Time="0" Outcome="Failed">

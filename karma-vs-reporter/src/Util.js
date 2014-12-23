@@ -1,101 +1,133 @@
-﻿var _ = require('lodash');
+﻿var Globals = require('./Globals');
+
+var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var extend = require('extend');
 var stripBom = require('strip-bom');
 
-var Util;
-(function (Util) {
-    Util.configFile = path.resolve('karma-vs-reporter.json');
-    Util.baseDir = process.cwd();
-    Util.outputFile = 'karma-vs-reporter.xml';
-    Util.configOutputFile = 'karma-vs-reporter.config.json';
-    Util.config = readConfigFile(Util.configFile);
+function readConfigFile(configFile) {
+    var config = extend({
+        karmaConfigFile: 'karma.conf.js',
+        LogToFile: false,
+        LogDirectory: '',
+        OutputDirectory: '',
+        config: {}
+    }, exports.Try(function () {
+        return exports.readJsonFile(configFile);
+    }));
+    return config;
+}
+exports.readConfigFile = readConfigFile;
 
-    function readConfigFile(configFile) {
-        var config = extend({
-            karmaConfigFile: 'karma.conf.js',
-            LogToFile: false,
-            LogDirectory: '',
-            OutputDirectory: '',
-            config: {}
-        }, Try(function () {
-            return readJsonFile(configFile);
-        }));
-        return config;
+function writeConfigFile(configFile) {
+    exports.writeFile(configFile, JSON.stringify(exports.config, null, 4));
+}
+exports.writeConfigFile = writeConfigFile;
+
+function resolvePath(filepath, relativeTo) {
+    if (_.isUndefined(filepath)) {
+        return '';
     }
-    Util.readConfigFile = readConfigFile;
-
-    function writeConfigFile(configFile) {
-        writeFile(configFile, JSON.stringify(Util.config, null, 4));
-    }
-    Util.writeConfigFile = writeConfigFile;
-
-    function resolvePath(filepath, relativeTo) {
-        if (_.isUndefined(filepath)) {
-            return '';
+    if (!_.isUndefined(relativeTo)) {
+        relativeTo = exports.resolvePath(relativeTo);
+        if (!fs.lstatSync(relativeTo).isDirectory()) {
+            relativeTo = path.dirname(relativeTo);
         }
-        if (!_.isUndefined(relativeTo)) {
-            relativeTo = resolvePath(relativeTo);
-            if (!fs.lstatSync(relativeTo).isDirectory()) {
-                relativeTo = path.dirname(relativeTo);
-            }
-            filepath = path.resolve(relativeTo, filepath);
-        }
-        if (_.isUndefined(Util.baseDir)) {
-            throw new Error("baseDir undefined");
-            return filepath;
-        }
-        return path.relative(Util.baseDir, filepath).replace(/\\/g, '/').toLowerCase();
+        filepath = path.resolve(relativeTo, filepath);
     }
-    Util.resolvePath = resolvePath;
-
-    function absolutePath(filepath, relativeTo) {
-        return path.resolve(Util.baseDir, resolvePath(filepath, relativeTo));
+    if (_.isUndefined(exports.baseDir)) {
+        throw new Error("baseDir undefined");
+        return filepath.replace(/\\/g, '/');
     }
-    Util.absolutePath = absolutePath;
+    return path.resolve(exports.baseDir, filepath).replace(/\\/g, '/');
+}
+exports.resolvePath = resolvePath;
 
-    function readFile(filepath, relativeTo) {
-        return stripBom(fs.readFileSync(absolutePath(filepath, relativeTo), 'utf8'));
+function absolutePath(filepath, relativeTo) {
+    return path.resolve(exports.baseDir, exports.resolvePath(filepath, relativeTo));
+}
+exports.absolutePath = absolutePath;
+
+function readFile(filepath, relativeTo) {
+    return stripBom(fs.readFileSync(exports.absolutePath(filepath, relativeTo), 'utf8'));
+}
+exports.readFile = readFile;
+
+function readJsonFile(filepath, relativeTo) {
+    return JSON.parse(exports.readFile(filepath, relativeTo));
+}
+exports.readJsonFile = readJsonFile;
+
+function writeFile(filepath, data, relativeTo) {
+    return fs.writeFileSync(exports.absolutePath(filepath, relativeTo), data, { encoding: 'utf8' });
+}
+exports.writeFile = writeFile;
+
+function ifTruthy(value, action) {
+    return value ? action(value) : undefined;
+}
+exports.ifTruthy = ifTruthy;
+
+function ifMatch(re, str, onMatch) {
+    return exports.ifTruthy(re.exec(str), function (m) {
+        return onMatch(m);
+    });
+}
+exports.ifMatch = ifMatch;
+
+function Try(action, defaultResult) {
+    try  {
+        return action();
+    } catch (e) {
+        return defaultResult;
     }
-    Util.readFile = readFile;
+}
+exports.Try = Try;
 
-    function readJsonFile(filepath, relativeTo) {
-        return JSON.parse(readFile(filepath, relativeTo));
+function createLogger(logger) {
+    logger = logger || require("karma/lib/logger");
+    return logger.create('vs');
+}
+exports.createLogger = createLogger;
+
+function getKarmaConfig(config, extensions) {
+    var karmaConfigFile = path.resolve(config.karmaConfigFile);
+
+    var extend = require('extend');
+    var logger = require("karma/lib/logger");
+    var cfg = require('karma/lib/config');
+
+    logger.setup('INFO', false);
+
+    var karmaConfig = {
+        configFile: karmaConfigFile,
+        singleRun: true,
+        browsers: [],
+        reporters: [],
+        colors: false,
+        logLevel: 'INFO'
+    };
+
+    if (_.isObject(config.config)) {
+        karmaConfig = extend(karmaConfig, config.config);
     }
-    Util.readJsonFile = readJsonFile;
 
-    function writeFile(filepath, data, relativeTo) {
-        return fs.writeFileSync(absolutePath(filepath, relativeTo), data, { encoding: 'utf8' });
-    }
-    Util.writeFile = writeFile;
+    Globals.origConfig = cfg.parseConfig(karmaConfigFile, karmaConfig);
+    karmaConfig = extend({}, Globals.origConfig, extensions);
+    exports.baseDir = karmaConfig.basePath;
+    return karmaConfig;
+}
+exports.getKarmaConfig = getKarmaConfig;
 
-    function ifTruthy(value, action) {
-        return value ? action(value) : undefined;
-    }
-    Util.ifTruthy = ifTruthy;
+function setupLogger() {
+    require("karma/lib/logger").setup('INFO', false);
+}
+exports.setupLogger = setupLogger;
 
-    function ifMatch(re, str, onMatch) {
-        return ifTruthy(re.exec(str), function (m) {
-            return onMatch(m);
-        });
-    }
-    Util.ifMatch = ifMatch;
-
-    function Try(action, defaultResult) {
-        try  {
-            return action();
-        } catch (e) {
-            return defaultResult;
-        }
-    }
-    Util.Try = Try;
-
-    function createLogger(logger) {
-        return logger.create('karma-vs-reporter');
-    }
-    Util.createLogger = createLogger;
-})(Util || (Util = {}));
-
-module.exports = Util;
+exports.configFile = path.resolve('karma-vs-reporter.json');
+exports.baseDir = process.cwd();
+exports.outputFile = 'karma-vs-reporter.xml';
+exports.configOutputFile = 'karma-vs-reporter.config.json';
+exports.config = exports.readConfigFile(exports.configFile);
 //# sourceMappingURL=Util.js.map

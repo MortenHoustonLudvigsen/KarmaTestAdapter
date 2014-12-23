@@ -6,12 +6,6 @@ import util = require("util");
 var xmlbuilder = require('xmlbuilder');
 
 module Test {
-    //function lazy<T>(init: () => T): T {
-    //    var fn = function () {
-    //        var 
-    //    }
-    //}
-
     export enum Outcome {
         Success,
         Skipped,

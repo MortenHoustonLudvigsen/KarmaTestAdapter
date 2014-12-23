@@ -10,10 +10,10 @@ var Preprocessor = function (config, logger, helper) {
     var jasminePreprocessor = new JasminePreprocessor();
 
     return function (content, file, done) {
-        var fileFromConfig = Globals.vsConfig.getFile(file.path);
-        if (fileFromConfig && fileFromConfig.hasTests()) {
+        var testFile = Globals.vsConfig.getFile(file.path);
+        if (testFile && testFile.hasTests()) {
             var jsFile = new Javascript.Program({ path: file.path, content: content });
-            content = jasminePreprocessor.preprocess(jsFile, fileFromConfig);
+            content = jasminePreprocessor.preprocess(jsFile, testFile);
         }
         done(content);
     };

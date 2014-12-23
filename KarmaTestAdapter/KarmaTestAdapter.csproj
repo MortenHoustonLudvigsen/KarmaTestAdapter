@@ -79,6 +79,7 @@
     <Compile Include="Commands\KarmaCommand.cs" />
     <Compile Include="Commands\KarmaDiscoverCommand.cs" />
     <Compile Include="Commands\KarmaGetConfigCommand.cs" />
+    <Compile Include="Commands\KarmaServeCommand.cs" />
     <Compile Include="Commands\KarmaRunCommand.cs" />
     <Compile Include="Commands\ProcessOptionsExtensions.cs" />
     <Compile Include="Config\KarmaConfig.cs" />

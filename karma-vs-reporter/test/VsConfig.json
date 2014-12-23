@@ -1,10 +1,20 @@
 ﻿{
     "files": [
-        { "path": "node_modules/karma-jasmine/lib/jasmine.js" },
-        { "path": "node_modules/karma-jasmine/lib/adapter.js" },
+        {
+            "path": "testfiles/TestFile1.ts",
+            "served": false,
+            "included": false
+        },
+        {
+            "path": "testfiles/TestFile1.js",
+            "served": true,
+            "included": true,
+            "tests": [
+            ]
+        },
         {
             "path": "testfiles/TestFile2.ts",
-            "served": true,
+            "served": false,
             "included": false
         },
         {
