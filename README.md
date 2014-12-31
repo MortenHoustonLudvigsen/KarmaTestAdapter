@@ -28,7 +28,7 @@ A very simple demo is available here: [Demo](https://github.com/MortenHoustonLud
 * Install [Karma](http://karma-runner.github.io/) in your project:
 `npm install karma --save-dev`
 
-* Install the Karma Visual Studio Reporter in your project (at least version 0.6.0):
+* Install the Karma Visual Studio Reporter in your project (at least version 0.7.0):
 `npm install karma-vs-reporter --save-dev`
 
 # Installation
