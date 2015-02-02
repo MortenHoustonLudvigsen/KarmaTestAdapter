@@ -3,7 +3,7 @@ Karma Test Adapter
 
 A Visual Studio test explorer adapter for Karma
 
-This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview.
+This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.
 
 # Demo
 
@@ -51,6 +51,7 @@ If you want Visual Studio to work differently from how Karma is configured (if y
     "ServerMode": true,
     "ServerPort": 3535,
     "LogToFile": true,
+    "TestFiles": [ "test/**/*test.js" ],
     "LogDirectory": "KarmaTestAdapter",
     "OutputDirectory": "KarmaTestAdapter/Output",
     "config": {
@@ -65,14 +66,19 @@ These are the possible properties:
 
 * `karmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
 
-* `ServerMode` set to true, if you want Karma to always run in the background. This will normally give a
+* `ServerMode` Set to true, if you want Karma to always run in the background. This will normally give a
   significant performance improvement. Karma will be started in the background if `ServerMode` is true **and**
   `ServerPort` has a value.
 
 * `ServerPort` TCP port, that Karma should listen to when running in the background (when `ServerMode` is true).
    This should be different from the port configured in the Karma configuration file (`karma.conf.js`).
+   
+* `TestFiles` By default the adapter watches all files in the karma configuration to get the list of tests. To avoid
+  running test discovery when files, that do not contain tests, are changed specify files with tests in the `TestFiles`
+  property. Specify `TestFiles` as an array of file patterns, or omit it to use the file specifications in the karma
+  configuration.
 
-* `LogToFile` set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
+* `LogToFile` Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
 
 * `LogDirectory` Where the log file should be saved (if LogToFile is true). If this property is not specified the
   directory in which karma-vs-reporter.json resides is used.
@@ -87,6 +93,19 @@ These are the possible properties:
 At the moment the adapter only works properly with [Jasmine](http://jasmine.github.io/) tests. It should be relatively easy to add other frameworks. Pull requests are welcome.
 
 # Changes
+
+## Version 0.7.1
+
+* `karma-vs-reporter.json` has a new optional property:
+
+  - `TestFiles` By default the adapter watches all files in the karma configuration to get the list of tests. To avoid
+    running test discovery when files, that do not contain tests, are changed specify files with tests in the `TestFiles`
+    property. Specify `TestFiles` as an array of file patterns, or omit it to use the file specifications in the karma
+    configuration.
+
+* The adapter now fails if the correct version of karma-vs-reporter is not installed.
+
+* Error handling should be a bit better in this version.
 
 ## Version 0.7.0
 

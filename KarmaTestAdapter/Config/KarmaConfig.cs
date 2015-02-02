@@ -1,5 +1,5 @@
-﻿using KarmaTestAdapter.Logging;
-using Newtonsoft.Json;
+﻿using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,36 +9,30 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.Config
 {
-    public class KarmaConfig
+    public class KarmaConfig : FilesSpec
     {
         public KarmaConfig(string path)
         {
-            JsonConvert.PopulateObject(File.ReadAllText(path, Encoding.UTF8), this);
-            ExcludedFiles = Exclude.Select(p => new KarmaConfigExclude { Pattern = p }).ToList();
-        }
+            var karmaConfig = Json.ReadFile(path, new
+            {
+                Files = new[] { new {
+                    Pattern = string.Empty,
+                    Served = string.Empty,
+                    Included = string.Empty,
+                    Watched = string.Empty
+                } },
+                Exclude = new[] { string.Empty }
+            });
 
-        public KarmaConfigFile[] Files { get; set; }
-        public string[] Exclude { get; set; }
+            var cwd = Path.GetFullPath(Path.GetDirectoryName(path));
 
-        public IEnumerable<KarmaConfigExclude> ExcludedFiles { get; private set; }
-
-        public IEnumerable<string> GetFiles()
-        {
-            return Files
-                .SelectMany(f => f.GetFiles())
-                .Except(ExcludedFiles.SelectMany(f => f.GetFiles()), StringComparer.OrdinalIgnoreCase)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-        }
-
-        public bool HasFile(string file)
-        {
-            return Files.IsMatch(file) && !ExcludedFiles.IsMatch(file);
+            Include(cwd, karmaConfig.Files.Select(f => f.Pattern));
+            Exclude(cwd, karmaConfig.Exclude);
         }
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return Json.Serialize(this);
         }
     }
 }

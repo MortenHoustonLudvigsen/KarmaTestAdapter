@@ -221,7 +221,14 @@ namespace KarmaTestAdapter
                 RemoveTestContainersInDirectory(directory);
                 if (File.Exists(source))
                 {
-                    _containers.CreateContainer(source);
+                    try
+                    {
+                        _containers.CreateContainer(source);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex);
+                    }
                 }
                 RefreshTestContainers(string.Format("Test container added: {0}", file));
                 return true;

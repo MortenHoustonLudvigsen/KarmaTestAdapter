@@ -1,6 +1,5 @@
 ﻿using KarmaTestAdapter.KarmaTestResults;
 using KarmaTestAdapter.Logging;
-using Newtonsoft.Json;
 using Summerset.SemanticVersion;
 using System;
 using System.Collections.Generic;

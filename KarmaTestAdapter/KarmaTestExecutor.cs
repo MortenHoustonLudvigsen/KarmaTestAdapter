@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using KarmaTestAdapter.Commands;
-using Newtonsoft.Json;
 
 namespace KarmaTestAdapter
 {

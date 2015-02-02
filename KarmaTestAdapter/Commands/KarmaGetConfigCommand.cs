@@ -1,6 +1,5 @@
 ﻿using KarmaTestAdapter.Logging;
 using KarmaTestAdapter.Config;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -6,7 +6,6 @@ using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Microsoft.VisualStudio.TestWindow.Extensibility.Model;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,9 +26,21 @@ namespace KarmaTestAdapter
             : base(containerList.Discoverer, source, DateTime.Now)
         {
             this.Logger = logger;
-            this.Settings = new KarmaSettings(Source, Logger);
-            this._containerList = containerList;
-            this.Config = KarmaGetConfigCommand.GetConfig(Source, Logger);
+            try
+            {
+                this.Settings = new KarmaSettings(Source, Logger);
+                this._containerList = containerList;
+                this.TestFiles = Settings.TestFilesSpec ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, string.Format("Could not load tests from {0}", source));
+                this.TestFiles = new FilesSpec();
+                if (Settings == null)
+                {
+
+                }
+            }
             this._files = GetFiles();
             SetCurrentHash(Settings.SettingsFile);
             SetCurrentHash(Settings.KarmaConfigFile);
@@ -41,11 +52,11 @@ namespace KarmaTestAdapter
         public KarmaSettings Settings { get; private set; }
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
         public Karma Karma { get; set; }
-        public KarmaConfig Config { get; private set; }
+        public FilesSpec TestFiles { get; private set; }
 
         private Dictionary<string, string> GetFiles()
         {
-            return Config.GetFiles().ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
+            return TestFiles.ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
         }
 
         private void StartKarmaServer()
@@ -64,7 +75,7 @@ namespace KarmaTestAdapter
         {
             yield return CreateFileWatcher(Settings.SettingsFile);
             yield return CreateFileWatcher(Settings.KarmaConfigFile);
-            foreach (var filter in Config.Files.GroupBy(f => f.FileFilter, StringComparer.OrdinalIgnoreCase))
+            foreach (var filter in TestFiles.Included.GroupBy(f => f.FileFilter, StringComparer.OrdinalIgnoreCase))
             {
                 var dirs = filter.Select(f => f.Directory);
                 foreach (var dir in dirs.Where(d1 => !dirs.Any(d2 => !string.Equals(d1, d2, StringComparison.OrdinalIgnoreCase) && d1.StartsWith(d2, StringComparison.OrdinalIgnoreCase))).Distinct(StringComparer.OrdinalIgnoreCase))
@@ -167,7 +178,7 @@ namespace KarmaTestAdapter
         {
             lock (_fileChangeLock)
             {
-                if (_files.ContainsKey(file) || Config.HasFile(file) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
+                if (_files.ContainsKey(file) || TestFiles.Contains(file) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
                 {
                     // The file belongs to this container
                     if (hasChanged(file))

@@ -75,16 +75,24 @@ namespace KarmaTestAdapter.Logging
             Error(string.Format(message, args));
         }
 
-        public virtual void Error(Exception ex, string message = null)
+        protected StringBuilder ExceptionText(Exception ex, StringBuilder text, string message = null)
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                Error("{3}{1}{0}{1}Stack trace:{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace, message);
+                text.AppendLine(message);
             }
-            else
+            text.AppendLine(ex.Message);
+            text.AppendLine(ex.StackTrace);
+            if (ex.InnerException != null)
             {
-                Error("{0}{1}Stack trace:{1}{2}", ex.Message, Environment.NewLine, ex.StackTrace);
+                ExceptionText(ex.InnerException, text);
             }
+            return text;
+        }
+
+        public virtual void Error(Exception ex, string message = null)
+        {
+            Error(ExceptionText(ex, new StringBuilder(), message).ToString());
         }
 
         public virtual void Error(Exception ex, string message = null, params object[] args)

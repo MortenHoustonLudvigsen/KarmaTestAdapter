@@ -1,6 +1,6 @@
-﻿using KarmaTestAdapter.KarmaTestResults;
+﻿using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.KarmaTestResults;
 using KarmaTestAdapter.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +39,7 @@ namespace KarmaTestAdapter.Commands
                 {
                     try
                     {
-                        IO.File.WriteAllText(vsConfigFile.Path, JsonConvert.SerializeObject(_vsConfig, Formatting.Indented));
+                        IO.File.WriteAllText(vsConfigFile.Path, Json.Serialize(_vsConfig));
                         var processOptions = GetProcessOptions(settings);
                         processOptions.Add("-p", settings.ServerModeValid ? settings.ServerPort : GetFreeTcpPort());
                         processOptions.AddFileOption("-o", outputFile.Path);

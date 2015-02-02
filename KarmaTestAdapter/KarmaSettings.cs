@@ -1,6 +1,7 @@
-﻿using KarmaTestAdapter.Logging;
+﻿using KarmaTestAdapter.Config;
+using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,23 +17,45 @@ namespace KarmaTestAdapter
         {
             Source = source;
             Logger = logger;
-            Directory = Path.GetDirectoryName(source);
-            if (PathUtils.PathHasFileName(source, Globals.SettingsFilename) && File.Exists(source))
+
+            try
             {
-                JsonConvert.PopulateObject(File.ReadAllText(source, Encoding.UTF8), this);
-                SettingsFile = source;
-                KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
+                Directory = Path.GetDirectoryName(source);
+
+                if (PathUtils.PathHasFileName(source, Globals.SettingsFilename) && File.Exists(source))
+                {
+                    try
+                    {
+                        Json.PopulateFromFile(source, this);
+                        SettingsFile = source;
+                        KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
+                    }
+                    catch (Exception ex)
+                    {
+                        SettingsFile = GetFullPath(source);
+                        KarmaConfigFile = GetFullPath(Globals.KarmaConfigFilename);
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    SettingsFile = GetFullPath(Globals.SettingsFilename);
+                    KarmaConfigFile = source;
+                }
+                LogDirectory = GetFullPath(LogDirectory ?? "");
+                OutputDirectory = !string.IsNullOrWhiteSpace(OutputDirectory) ? OutputDirectory : null;
+                if (LogToFile)
+                {
+                    logger.AddLogger(LogFilePath);
+                }
+                TestFilesSpec = this.GetTestFilesSpec();
             }
-            else
+            catch (Exception ex)
             {
-                SettingsFile = GetFullPath(Globals.SettingsFilename);
-                KarmaConfigFile = source;
-            }
-            LogDirectory = GetFullPath(LogDirectory ?? "");
-            OutputDirectory = !string.IsNullOrWhiteSpace(OutputDirectory) ? OutputDirectory : null;
-            if (LogToFile)
-            {
-                logger.AddLogger(LogFilePath);
+                SettingsFile = SettingsFile ?? GetFullPath(Globals.SettingsFilename);
+                KarmaConfigFile = KarmaConfigFile ?? GetFullPath(Globals.KarmaConfigFilename);
+                TestFilesSpec = null;
+                logger.Error(ex, "Could not read settings");
             }
         }
 
@@ -57,6 +80,14 @@ namespace KarmaTestAdapter
         /// </summary>
         [JsonIgnore]
         public string Directory { get; private set; }
+
+        /// <summary>
+        /// List of files patterns for files containing tests.
+        /// </summary>
+        public List<string> TestFiles { get; set; }
+
+        [JsonIgnore]
+        public FilesSpec TestFilesSpec { get; private set; }
 
         /// <summary>
         /// The Karma configuration file
@@ -151,6 +182,24 @@ namespace KarmaTestAdapter
             finally
             {
                 System.IO.Directory.SetCurrentDirectory(oldCwd);
+            }
+        }
+
+        private FilesSpec GetTestFilesSpec()
+        {
+            if (TestFiles == null)
+            {
+                return null;
+            }
+            try
+            {
+                var testFilesSpec = new FilesSpec();
+                testFilesSpec.Include(Directory, TestFiles);
+                return testFilesSpec;
+            }
+            catch (Exception ex)
+            {
+                throw ex.Wrap("Could not read TestFiles");
             }
         }
 
