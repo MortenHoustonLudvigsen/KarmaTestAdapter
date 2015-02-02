@@ -66,6 +66,9 @@
     <Reference Include="ProcessRunner">
       <HintPath>..\packages\ProcessRunner.1.0.4\lib\net40\ProcessRunner.dll</HintPath>
     </Reference>
+    <Reference Include="Summerset.SemanticVersion">
+      <HintPath>..\packages\Summerset.SemanticVersion.dll.1.1.0\lib\net40\Summerset.SemanticVersion.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -81,6 +84,7 @@
     <Compile Include="Commands\KarmaGetConfigCommand.cs" />
     <Compile Include="Commands\KarmaServeCommand.cs" />
     <Compile Include="Commands\KarmaRunCommand.cs" />
+    <Compile Include="Commands\KarmaVsReporter.cs" />
     <Compile Include="Commands\ProcessOptionsExtensions.cs" />
     <Compile Include="Config\KarmaConfig.cs" />
     <Compile Include="Config\KarmaConfigExclude.cs" />

@@ -1,6 +1,7 @@
 ﻿using KarmaTestAdapter.KarmaTestResults;
 using KarmaTestAdapter.Logging;
 using Newtonsoft.Json;
+using Summerset.SemanticVersion;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,16 +27,27 @@ namespace KarmaTestAdapter.Commands
         public virtual string Name { get { return Command; } }
 
         private Process _process;
+        private static readonly ISemanticVersion _minVersion = new SemanticVersion("0.7.0");
 
         protected ProcessOptions GetProcessOptions(KarmaSettings settings)
         {
             var karmaVsReporter = FindKarmaVsReporter(Directory);
-            if (string.IsNullOrWhiteSpace(karmaVsReporter))
+            if (!karmaVsReporter.Exists)
             {
                 throw new Exception("Could not find node module karma-vs-reporter");
             }
 
-            var processOptions = new ProcessOptions("node", PathUtils.GetRelativePath(Directory, karmaVsReporter, true), Command)
+            if (karmaVsReporter.Version == null)
+            {
+                throw new Exception("Could not find node module karma-vs-reporter version");
+            }
+
+            if (karmaVsReporter.Version.CompareTo(_minVersion) < 0)
+            {
+                throw new Exception(string.Format("Installed version of node module karma-vs-reporter ({0}) is less than the required version ({1})", karmaVsReporter.Version, _minVersion));
+            }
+
+            var processOptions = new ProcessOptions("node", PathUtils.GetRelativePath(Directory, karmaVsReporter.Reporter, true), Command)
             {
                 WorkingDirectory = Directory,
                 StandardOutputEncoding = Encoding.UTF8,
@@ -105,18 +117,25 @@ namespace KarmaTestAdapter.Commands
             throw new NotImplementedException();
         }
 
-        private static string FindKarmaVsReporter(string directory)
+        private static Dictionary<string, KarmaVsReporter> _karmaVsReporters = new Dictionary<string, KarmaVsReporter>(StringComparer.OrdinalIgnoreCase);
+        private static object _karmaVsReportersLock = new object();
+        private static KarmaVsReporter FindKarmaVsReporter(string directory)
         {
             if (string.IsNullOrWhiteSpace(directory))
             {
                 return null;
             }
-            if (!IO.Directory.Exists(directory))
+
+            lock (_karmaVsReportersLock)
             {
-                return null;
+                KarmaVsReporter reporter;
+                if (!_karmaVsReporters.TryGetValue(directory, out reporter))
+                {
+                    reporter = new KarmaVsReporter(directory);
+                    _karmaVsReporters.Add(directory, reporter);
+                }
+                return reporter;
             }
-            var candidate = IO.Path.Combine(directory, "node_modules", "karma-vs-reporter", "karma-vs-reporter");
-            return IO.File.Exists(candidate) ? candidate : null;
         }
     }
 }
