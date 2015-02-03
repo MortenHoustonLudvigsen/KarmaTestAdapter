@@ -1,8 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "karma-vs-reporter",
-    "description": "A description of my schema file",
+    "title": "JSON schema for KarmaTestAdapter configuration files (karma-vs-reporter.json)",
     "type": "object",
+    "additionalProperties": false,
     "properties": {
         "KarmaConfigFile": {
             "description": "Use this if you want to use a karma configuration file not named karma.conf.js.",
@@ -19,9 +19,7 @@
         "TestFiles": {
             "description": "By default the adapter watches all files in the karma configuration to get the list of tests. To avoid running test discovery when files, that do not contain tests, are changed specify files with tests in the TestFiles property. Specify TestFiles as an array of file patterns, or omit it to use the file specifications in the karma configuration.",
             "type": "array",
-            "items": {
-                "type": "string"
-            }
+            "items": { "type": "string" }
         },
         "LogToFile": {
             "description": "Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log).",
@@ -37,7 +35,8 @@
         },
         "config": {
             "description": "This property overwrites any configurations from the karma configuration file.",
-            "type": "object"
+            "type": "object",
+            "additionalProperties": true
         }
     }
 }
