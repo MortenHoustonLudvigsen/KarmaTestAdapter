@@ -98,7 +98,7 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 ### Error handling
 
-* The adapter will now always log to %appdata%\2PS\KarmaTestAdapter\KarmaTestAdapter.log.
+* The adapter will now always log to `%appdata%\2PS\KarmaTestAdapter\KarmaTestAdapter.log`.
 
 * If there are errors in `karma-vs-reporter.json` no tests will be shown for that configuration,
   and the adapter *will not* use any `karma.conf` in the same directory.
