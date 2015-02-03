@@ -21,8 +21,7 @@
         <p>A Visual Studio test explorer adapter for Karma</p>
         <p class="view"><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter">View the Project on GitHub <small>MortenHoustonLudvigsen/KarmaTestAdapter</small></a></p>
         <ul>
-          <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://visualstudiogallery.msdn.microsoft.com/4cd59e4a-82e8-4b4e-8302-d102fc81b090">View in <strong>Visual Studio Gallery</strong></a></li>
           <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
@@ -79,6 +78,7 @@
 <p>If you want Visual Studio to work differently from how Karma is configured (if you f.ex. only want to run PhantomJS from VS), you can create a JSON settings file called <code>karma-vs-reporter.json</code>. F.ex.:</p>
 
 <div class="highlight highlight-json"><pre>{
+    <span class="pl-s1"><span class="pl-pds">"</span>$schema<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json<span class="pl-pds">"</span></span>,
     <span class="pl-s1"><span class="pl-pds">"</span>karmaConfigFile<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>karma.conf.test.js<span class="pl-pds">"</span></span>,
     <span class="pl-s1"><span class="pl-pds">"</span>ServerMode<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
     <span class="pl-s1"><span class="pl-pds">"</span>ServerPort<span class="pl-pds">"</span></span>: <span class="pl-c1">3535</span>,
@@ -96,6 +96,7 @@
 <p>These are the possible properties:</p>
 
 <ul>
+<li><p><code>$schema</code> Set to "<a href="http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json">http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json</a>" to get intellisense for <code>karma-vs-reporter.json</code>.</p></li>
 <li><p><code>karmaConfigFile</code> Use this if you want to use a karma configuration file not named <code>karma.conf.js</code>.</p></li>
 <li><p><code>ServerMode</code> Set to true, if you want Karma to always run in the background. This will normally give a
 significant performance improvement. Karma will be started in the background if <code>ServerMode</code> is true <strong>and</strong>

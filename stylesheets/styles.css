@@ -19,8 +19,7 @@ body {
 }
 
 .wrapper {
-  width: 640px;
-  margin: 0 auto;
+  margin: 0 10%;
   background: #DEDEDE;
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
@@ -139,7 +138,7 @@ header ul:before {
   box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0, inset rgba(255, 255, 255, 0.7) 0 -1px 0;
 }
 header ul li {
-  width: 79px;
+  width: 150px;
   float: left;
   border-right: 1px solid #3A7CBE;
   height: 38px;
