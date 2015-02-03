@@ -98,7 +98,7 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 ### Bug fixes
 
-* The adapter could sometimes fail with a null exception if there were errors in `karma-vs-reporter.json`. This should be fixed.
+* The adapter could sometimes fail with a null exception if there were errors in `karma-vs-reporter.json`. This should now be fixed.
 
 ## Version 0.7.2
 
