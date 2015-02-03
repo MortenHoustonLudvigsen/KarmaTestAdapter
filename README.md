@@ -43,10 +43,14 @@ Install this extension.
 
 Start testing!
 
-If you want Visual Studio to work differently from how Karma is configured (if you f.ex. only want to run PhantomJS from VS), you can create a JSON settings file called `karma-vs-reporter.json`. F.ex.:
+If you want Visual Studio to work differently from how Karma is configured (if you for example only want to run PhantomJS from VS),
+you can create a JSON settings file called `karma-vs-reporter.json`.
+
+Example:
 
 ```json
 {
+    "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json",
     "karmaConfigFile": "karma.conf.test.js",
     "ServerMode": true,
     "ServerPort": 3535,
@@ -62,7 +66,10 @@ If you want Visual Studio to work differently from how Karma is configured (if y
 }
 ```
 
-These are the possible properties:
+These are the possible properties (all properties are optional):
+
+* `$schema` Set to "<http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json>" to get
+  intellisense for `karma-vs-reporter.json`.
 
 * `karmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
 
