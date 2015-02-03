@@ -39,7 +39,7 @@ namespace KarmaTestAdapter
             }
             if (IsValid)
             {
-                TestFiles = Settings.TestFilesSpec ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
+                TestFiles = Settings.TestFilesSpec ?? KarmaGetConfigCommand.GetConfig(Source, Logger) ?? new FilesSpec();
             }
             else
             {
@@ -68,7 +68,8 @@ namespace KarmaTestAdapter
 
         private Dictionary<string, string> GetFiles()
         {
-            return TestFiles.ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
+            var files = TestFiles ?? Enumerable.Empty<string>();
+            return files.ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
         }
 
         private void StartKarmaServer()
