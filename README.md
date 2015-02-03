@@ -101,7 +101,7 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 # Changes
 
-## Version 0.7.2
+## Version 0.7.3
 
 ### Bug fixes
 
