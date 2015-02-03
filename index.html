@@ -1,0 +1,245 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>KarmaTestAdapter by MortenHoustonLudvigsen</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>KarmaTestAdapter</h1>
+        <p>A Visual Studio test explorer adapter for Karma</p>
+        <p class="view"><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter">View the Project on GitHub <small>MortenHoustonLudvigsen/KarmaTestAdapter</small></a></p>
+        <ul>
+          <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="karma-test-adapter" class="anchor" href="#karma-test-adapter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Karma Test Adapter</h1>
+
+<p>A Visual Studio test explorer adapter for Karma</p>
+
+<p>This extension integrates <a href="http://karma-runner.github.io/">Karma - Spectacular Test Runner for Javascript</a> with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.</p>
+
+<h1>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h1>
+
+<p><a href="http://youtu.be/T9wqxOX3OX0">See a demo video</a></p>
+
+<p>A very simple demo is available here: <a href="https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter-Demo">Demo</a> </p>
+
+<h1>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h1>
+
+<ul>
+<li><p>Scans the files from the karma configuration to discover tests.</p></li>
+<li><p>Registers the file and position of each test, so that the test explorer in Visual Studio can link to the source code for the test.</p></li>
+<li><p>Source maps in test files are used to find the position of tests. So if a test is written in Typescript and the compiled javascript file contains a source map the test explorer will link to the typescript file.</p></li>
+<li><p>Can run selected tests</p></li>
+</ul>
+
+<h1>
+<a id="prerequisites" class="anchor" href="#prerequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h1>
+
+<ul>
+<li><p>Install <a href="http://nodejs.org/">NodeJS</a></p></li>
+<li><p>Install <a href="http://karma-runner.github.io/">Karma</a> in your project:
+<code>npm install karma --save-dev</code></p></li>
+<li><p>Install the Karma Visual Studio Reporter in your project (at least version 0.7.0):
+<code>npm install karma-vs-reporter --save-dev</code></p></li>
+</ul>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>Download and install from the Visual Studio Gallery here: <a href="http://visualstudiogallery.msdn.microsoft.com/4cd59e4a-82e8-4b4e-8302-d102fc81b090">Karma Test Adapter</a></p>
+
+<h1>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h1>
+
+<p>Set up Karma normally (as described here: <a href="http://karma-runner.github.io/0.12/intro/installation.html">Installation</a> and here: <a href="http://karma-runner.github.io/0.12/intro/configuration.html">Configuration</a>).</p>
+
+<p>Install this extension.</p>
+
+<p>Start testing!</p>
+
+<p>If you want Visual Studio to work differently from how Karma is configured (if you f.ex. only want to run PhantomJS from VS), you can create a JSON settings file called <code>karma-vs-reporter.json</code>. F.ex.:</p>
+
+<div class="highlight highlight-json"><pre>{
+    <span class="pl-s1"><span class="pl-pds">"</span>karmaConfigFile<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>karma.conf.test.js<span class="pl-pds">"</span></span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>ServerMode<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>ServerPort<span class="pl-pds">"</span></span>: <span class="pl-c1">3535</span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>LogToFile<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>TestFiles<span class="pl-pds">"</span></span>: [ <span class="pl-s1"><span class="pl-pds">"</span>test/**/*test.js<span class="pl-pds">"</span></span> ],
+    <span class="pl-s1"><span class="pl-pds">"</span>LogDirectory<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>KarmaTestAdapter<span class="pl-pds">"</span></span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>OutputDirectory<span class="pl-pds">"</span></span>: <span class="pl-s1"><span class="pl-pds">"</span>KarmaTestAdapter/Output<span class="pl-pds">"</span></span>,
+    <span class="pl-s1"><span class="pl-pds">"</span>config<span class="pl-pds">"</span></span>: {
+        <span class="pl-s1"><span class="pl-pds">"</span>browsers<span class="pl-pds">"</span></span>: [
+            <span class="pl-s1"><span class="pl-pds">"</span>PhantomJS<span class="pl-pds">"</span></span>
+        ]
+    }
+}</pre></div>
+
+<p>These are the possible properties:</p>
+
+<ul>
+<li><p><code>karmaConfigFile</code> Use this if you want to use a karma configuration file not named <code>karma.conf.js</code>.</p></li>
+<li><p><code>ServerMode</code> Set to true, if you want Karma to always run in the background. This will normally give a
+significant performance improvement. Karma will be started in the background if <code>ServerMode</code> is true <strong>and</strong>
+<code>ServerPort</code> has a value.</p></li>
+<li><p><code>ServerPort</code> TCP port, that Karma should listen to when running in the background (when <code>ServerMode</code> is true).
+This should be different from the port configured in the Karma configuration file (<code>karma.conf.js</code>).</p></li>
+<li><p><code>TestFiles</code> By default the adapter watches all files in the karma configuration to get the list of tests. To avoid
+running test discovery when files, that do not contain tests, are changed specify files with tests in the <code>TestFiles</code>
+property. Specify <code>TestFiles</code> as an array of file patterns, or omit it to use the file specifications in the karma
+configuration.</p></li>
+<li><p><code>LogToFile</code> Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)</p></li>
+<li><p><code>LogDirectory</code> Where the log file should be saved (if LogToFile is true). If this property is not specified the
+directory in which karma-vs-reporter.json resides is used.</p></li>
+<li><p><code>OutputDirectory</code> Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
+If you want to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.</p></li>
+<li><p><code>config</code> This property overwrites any configurations from the karma configuration file.</p></li>
+</ul>
+
+<h1>
+<a id="caveats" class="anchor" href="#caveats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Caveats</h1>
+
+<p>At the moment the adapter only works properly with <a href="http://jasmine.github.io/">Jasmine</a> tests. It should be relatively easy to add other frameworks. Pull requests are welcome.</p>
+
+<h1>
+<a id="changes" class="anchor" href="#changes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes</h1>
+
+<h2>
+<a id="version-072" class="anchor" href="#version-072" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.7.2</h2>
+
+<h3>
+<a id="bug-fixes" class="anchor" href="#bug-fixes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bug fixes</h3>
+
+<ul>
+<li>The adapter could sometimes fail with a null exception if there were errors in <code>karma-vs-reporter.json</code>. This should now be fixed.</li>
+</ul>
+
+<h2>
+<a id="version-072-1" class="anchor" href="#version-072-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.7.2</h2>
+
+<h3>
+<a id="error-handling" class="anchor" href="#error-handling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Error handling</h3>
+
+<ul>
+<li><p>The adapter will now always log to <code>%appdata%\2PS\KarmaTestAdapter\KarmaTestAdapter.log</code>.</p></li>
+<li><p>If there are errors in <code>karma-vs-reporter.json</code> no tests will be shown for that configuration,
+and the adapter <em>will not</em> use any <code>karma.conf</code> in the same directory.</p></li>
+<li><p>It is no longer necessary to restart Visual Studio after correcting errors in <code>karma-vs-reporter.json</code>.</p></li>
+</ul>
+
+<h2>
+<a id="version-071" class="anchor" href="#version-071" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.7.1</h2>
+
+<ul>
+<li>
+<p><code>karma-vs-reporter.json</code> has a new optional property:</p>
+
+<ul>
+<li>
+<code>TestFiles</code> By default the adapter watches all files in the karma configuration to get the list of tests. To avoid
+running test discovery when files, that do not contain tests, are changed specify files with tests in the <code>TestFiles</code>
+property. Specify <code>TestFiles</code> as an array of file patterns, or omit it to use the file specifications in the karma
+configuration.</li>
+</ul>
+</li>
+<li><p>The adapter now fails if the correct version of karma-vs-reporter is not installed.</p></li>
+<li><p>Error handling should be a bit better in this version.</p></li>
+</ul>
+
+<h2>
+<a id="version-070" class="anchor" href="#version-070" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.7.0</h2>
+
+<h3>
+<a id="server-mode" class="anchor" href="#server-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Server mode</h3>
+
+<ul>
+<li><p>Introduced server mode. When in server mode Karma will be started once, and run in the background.
+This means that browsers are not restarted every time tests are run, improving performance and
+making the experience much smoother.</p></li>
+<li>
+<p><code>karma-vs-reporter.json</code> has new optional properties:</p>
+
+<ul>
+<li><p><code>ServerMode</code> set to true, if you want Karma to always run in the background. This will normally give a
+significant performance improvement. Karma will be started in the background if <code>ServerMode</code> is true <strong>and</strong>
+<code>ServerPort</code> has a value.</p></li>
+<li><p><code>ServerPort</code> TCP port, that Karma should listen to when running in the background (when <code>ServerMode</code> is true).
+This should be different from the port configured in the Karma configuration file (<code>karma.conf.js</code>).</p></li>
+</ul>
+</li>
+<li><p>Version 0.7.0 needs at least version 0.7.0 of karma-vs-reporter to work</p></li>
+</ul>
+
+<h2>
+<a id="version-063" class="anchor" href="#version-063" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.6.3</h2>
+
+<h3>
+<a id="bug-fixes-1" class="anchor" href="#bug-fixes-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bug fixes</h3>
+
+<ul>
+<li>Fixed: If <code>LogToFile</code> is true and <code>LogDirectory</code> is empty in <code>karma-vs-reporter.json</code> the adapter fails with the following message: <code>The path is not of a legal form.</code>.</li>
+</ul>
+
+<h2>
+<a id="version-062" class="anchor" href="#version-062" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.6.2</h2>
+
+<ul>
+<li>Changes to tests files that are not included in a project will now trigger test discovery.</li>
+</ul>
+
+<h2>
+<a id="version-061" class="anchor" href="#version-061" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.6.1</h2>
+
+<ul>
+<li><p>More improvements to logging</p></li>
+<li><p>Tests are discovered when the karma configuration file changes (normally <code>karma.conf.js</code>), even when <code>karma-vs-reporter.json</code> is used.</p></li>
+</ul>
+
+<h2>
+<a id="version-060" class="anchor" href="#version-060" aria-hidden="true"><span class="octicon octicon-link"></span></a>Version 0.6.0</h2>
+
+<ul>
+<li><p>Version 0.6.0 needs at least version 0.6.0 of karma-vs-reporter to work</p></li>
+<li><p>I have made a number of tweeks to logging</p></li>
+<li>
+<p><code>karma-vs-reporter.json</code> has new optional properties:</p>
+
+<ul>
+<li><p><code>LogToFile</code>: set to true, if you want the adapter to write log statements to a log file (named <code>KarmaTestAdapter.log</code>)</p></li>
+<li><p><code>LogDirectory</code>: Where the log file should be saved (if <code>LogToFile</code> is true). If this property is not specified the
+directory in which <code>karma-vs-reporter.json</code> resides is used.</p></li>
+<li><p><code>OutputDirectory</code>: Normally the adapter communicates with Karma using temporary files. These files are deleted immediately.
+If you want to see these files, you can specify an <code>OutputDirectory</code>, in which case the files will not be deleted.</p></li>
+</ul>
+</li>
+<li><p>The adapter should no longer try to discover tests when any file is saved. Only files that are included in the karma tests
+will trigger discovery, and only if they have actually changed (the adapter keeps track of this using a SHA1 hash for each file).</p></li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/MortenHoustonLudvigsen">MortenHoustonLudvigsen</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
