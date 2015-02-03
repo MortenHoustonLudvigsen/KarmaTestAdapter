@@ -1,0 +1,67 @@
+Open Visual Studio
+
+Install Karma test adapter
+
+Create new web project in C:\ called KarmaDemo
+
+Delete Web.config
+
+Create package.json for the node modules
+    "private": true
+
+switch to command prompt
+    cd \KarmaDemo\KarmaDemo
+    
+    npm install karma-cli -g
+    npm install karma --save-dev
+    npm install karma-jasmine --save-dev
+    npm install karma-chrome-launcher --save-dev
+    npm install karma-phantomjs-launcher --save-dev
+    
+    npm install karma-vs-reporter --save-dev
+    
+Setup karma:
+    karma init
+    karma start
+    
+Switch to VS
+
+Include karma.conf.js
+
+Create folder test
+
+Create TestFile1.js
+    describe("The test explorer", function() {
+        it("should display this test", function() {
+        });
+    });
+    
+Save - see test explorer
+Close TestFile1.js
+Double click the test
+Run test - show results for both browsers
+
+In TestFile1.js add test
+        it("should also display this test", function() {
+        });
+
+Save - see test explorer
+Run tests
+
+In VS, I only want to run PhantomJS
+
+Create karma-vs-reporter.json
+    {
+        "config": {
+            "browsers": [
+                "PhantomJS"
+            ]
+        }
+    }
+    
+Save and run
+
+Switch to command prompt
+
+    karma start
+
