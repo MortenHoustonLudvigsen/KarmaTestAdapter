@@ -92,6 +92,7 @@
     <Compile Include="Config\FilePatternExtensions.cs" />
     <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Glob.cs" />
+    <Compile Include="Helpers\IServiceProviderExtensions.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\KarmaFileWatcher.cs" />
     <Compile Include="KarmaOutputFile.cs" />

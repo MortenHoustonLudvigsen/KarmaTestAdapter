@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Summerset.SemanticVersion;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,26 @@ namespace KarmaTestAdapter
     public static class Globals
     {
         public static readonly TestProperty FileIndexProperty = TestProperty.Register("KarmaTestCaseFileIndex", "Index in file", typeof(int?), typeof(KarmaTestDiscoverer));
+
+        /// <summary>
+        /// The minimum version of karma-vs-reporter
+        /// </summary>
+        public static readonly ISemanticVersion ReporterMinVersion = new SemanticVersion("0.7.0");
+
+        /// <summary>
+        /// Whether to log to a global log file
+        /// </summary>
+        public const bool Debug = true;
+
+        /// <summary>
+        /// The global log directory
+        /// </summary>
+        public static readonly string GlobalLogDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "2PS", "KarmaTestAdapter");
+
+        /// <summary>
+        /// The global log directory
+        /// </summary>
+        public static readonly string GlobalLogFile = Path.Combine(GlobalLogDir, LogFilename);
 
         /// <summary>
         /// The file to log to when Settings.LogToFile == true

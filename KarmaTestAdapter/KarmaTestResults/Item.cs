@@ -11,13 +11,6 @@ namespace KarmaTestAdapter.KarmaTestResults
 {
     public abstract class Item
     {
-        public static IKarmaLogger Logger { get; set; }
-
-        static Item()
-        {
-            Logger = KarmaLogger.Create();
-        }
-
         protected Item(Item parent, XElement element)
         {
             Parent = parent;

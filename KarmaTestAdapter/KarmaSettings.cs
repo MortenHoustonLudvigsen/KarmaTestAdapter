@@ -15,6 +15,7 @@ namespace KarmaTestAdapter
     {
         public KarmaSettings(string source, IKarmaLogger logger)
         {
+            AreValid = false;
             Source = source;
             Logger = logger;
 
@@ -29,6 +30,7 @@ namespace KarmaTestAdapter
                         Json.PopulateFromFile(source, this);
                         SettingsFile = source;
                         KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
+                        AreValid = true;
                     }
                     catch (Exception ex)
                     {
@@ -41,23 +43,41 @@ namespace KarmaTestAdapter
                 {
                     SettingsFile = GetFullPath(Globals.SettingsFilename);
                     KarmaConfigFile = source;
+                    AreValid = true;
                 }
-                LogDirectory = GetFullPath(LogDirectory ?? "");
-                OutputDirectory = !string.IsNullOrWhiteSpace(OutputDirectory) ? OutputDirectory : null;
-                if (LogToFile)
+                if (AreValid)
                 {
-                    logger.AddLogger(LogFilePath);
+                    LogDirectory = GetFullPath(LogDirectory ?? "");
+                    OutputDirectory = !string.IsNullOrWhiteSpace(OutputDirectory) ? OutputDirectory : null;
+                    if (LogToFile)
+                    {
+                        logger.AddLogger(LogFilePath);
+                    }
+                    TestFilesSpec = this.GetTestFilesSpec();
                 }
-                TestFilesSpec = this.GetTestFilesSpec();
+                else
+                {
+                    LogDirectory = "";
+                    OutputDirectory = null;
+                    LogToFile = false;
+                    TestFilesSpec = this.GetTestFilesSpec();
+                }
             }
             catch (Exception ex)
             {
+                AreValid = false;
                 SettingsFile = SettingsFile ?? GetFullPath(Globals.SettingsFilename);
                 KarmaConfigFile = KarmaConfigFile ?? GetFullPath(Globals.KarmaConfigFilename);
                 TestFilesSpec = null;
                 logger.Error(ex, "Could not read settings");
             }
         }
+
+        /// <summary>
+        /// Indicates whether settings have been loaded successfully
+        /// </summary>
+        [JsonIgnore]
+        public bool AreValid { get; private set; }
 
         /// <summary>
         /// The source file of the settings - can be either an adapter settings file (named <c>karma-vs-reporter.json</c>) or a
@@ -207,7 +227,10 @@ namespace KarmaTestAdapter
         {
             if (Logger != null)
             {
-                Logger.RemoveLogger(LogFilePath);
+                if (AreValid)
+                {
+                    Logger.RemoveLogger(LogFilePath);
+                }
             }
         }
     }

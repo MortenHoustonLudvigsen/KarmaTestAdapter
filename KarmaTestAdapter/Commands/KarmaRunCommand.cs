@@ -31,28 +31,31 @@ namespace KarmaTestAdapter.Commands
             using (var commandLogger = new KarmaCommandLogger(logger, this))
             using (var settings = new KarmaSettings(Source, commandLogger))
             {
-                Command = settings.ServerModeValid ? "served-run" : "run";
-                var outputDirectory = settings.GetOutputDirectory(Command);
-                using (commandLogger.LogProcess("({0})", Source))
-                using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
-                using (var vsConfigFile = new KarmaOutputFile(outputDirectory, Globals.VsConfigFilename))
+                if (settings.AreValid)
                 {
-                    try
+                    Command = settings.ServerModeValid ? "served-run" : "run";
+                    var outputDirectory = settings.GetOutputDirectory(Command);
+                    using (commandLogger.LogProcess("({0})", Source))
+                    using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
+                    using (var vsConfigFile = new KarmaOutputFile(outputDirectory, Globals.VsConfigFilename))
                     {
-                        IO.File.WriteAllText(vsConfigFile.Path, Json.Serialize(_vsConfig));
-                        var processOptions = GetProcessOptions(settings);
-                        processOptions.Add("-p", settings.ServerModeValid ? settings.ServerPort : GetFreeTcpPort());
-                        processOptions.AddFileOption("-o", outputFile.Path);
-                        processOptions.AddFileOption("-v", vsConfigFile.Path);
-                        if (RunCommand(processOptions, commandLogger))
+                        try
                         {
-                            Thread.Sleep(20);
-                            return Karma.Load(outputFile.Path);
+                            IO.File.WriteAllText(vsConfigFile.Path, Json.Serialize(_vsConfig));
+                            var processOptions = GetProcessOptions(settings);
+                            processOptions.Add("-p", settings.ServerModeValid ? settings.ServerPort : GetFreeTcpPort());
+                            processOptions.AddFileOption("-o", outputFile.Path);
+                            processOptions.AddFileOption("-v", vsConfigFile.Path);
+                            if (RunCommand(processOptions, commandLogger))
+                            {
+                                Thread.Sleep(20);
+                                return Karma.Load(outputFile.Path);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        commandLogger.Error(ex);
+                        catch (Exception ex)
+                        {
+                            commandLogger.Error(ex);
+                        }
                     }
                 }
                 return null;

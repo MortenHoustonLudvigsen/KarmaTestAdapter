@@ -25,29 +25,41 @@ namespace KarmaTestAdapter
         public KarmaTestContainer(KarmaTestContainerList containerList, string source, IKarmaLogger logger)
             : base(containerList.Discoverer, source, DateTime.Now)
         {
-            this.Logger = logger;
+            _containerList = containerList;
+            Logger = logger;
             try
             {
-                this.Settings = new KarmaSettings(Source, Logger);
-                this._containerList = containerList;
-                this.TestFiles = Settings.TestFilesSpec ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
+                Settings = new KarmaSettings(Source, Logger);
+                IsValid = Settings.AreValid;
             }
             catch (Exception ex)
             {
+                IsValid = false;
                 logger.Error(ex, string.Format("Could not load tests from {0}", source));
-                this.TestFiles = new FilesSpec();
-                if (Settings == null)
-                {
-
-                }
             }
-            this._files = GetFiles();
-            SetCurrentHash(Settings.SettingsFile);
-            SetCurrentHash(Settings.KarmaConfigFile);
+            if (IsValid)
+            {
+                TestFiles = Settings.TestFilesSpec ?? KarmaGetConfigCommand.GetConfig(Source, Logger);
+            }
+            else
+            {
+                TestFiles = new FilesSpec();
+            }
+            _files = GetFiles();
+            if (IsValid)
+            {
+                SetCurrentHash(Settings.SettingsFile);
+                SetCurrentHash(Settings.KarmaConfigFile);
+            }
+            else
+            {
+                SetCurrentHash(Source);
+            }
             _fileWatchers = GetFileWatchers().Where(w => w != null).ToList();
             StartKarmaServer();
         }
 
+        public bool IsValid { get; private set; }
         public IKarmaLogger Logger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public Uri ExecutorUri { get { return Globals.ExecutorUri; } }
@@ -61,7 +73,7 @@ namespace KarmaTestAdapter
 
         private void StartKarmaServer()
         {
-            if (Settings.ServerModeValid && !_disposed)
+            if (IsValid && Settings.ServerModeValid && !_disposed)
             {
                 _serveCommand = _serveCommand ?? new KarmaServeCommand(Source);
                 _serveCommand.Start(Logger, () =>
@@ -73,15 +85,22 @@ namespace KarmaTestAdapter
 
         private IEnumerable<KarmaFileWatcher> GetFileWatchers()
         {
-            yield return CreateFileWatcher(Settings.SettingsFile);
-            yield return CreateFileWatcher(Settings.KarmaConfigFile);
-            foreach (var filter in TestFiles.Included.GroupBy(f => f.FileFilter, StringComparer.OrdinalIgnoreCase))
+            if (IsValid)
             {
-                var dirs = filter.Select(f => f.Directory);
-                foreach (var dir in dirs.Where(d1 => !dirs.Any(d2 => !string.Equals(d1, d2, StringComparison.OrdinalIgnoreCase) && d1.StartsWith(d2, StringComparison.OrdinalIgnoreCase))).Distinct(StringComparer.OrdinalIgnoreCase))
+                yield return CreateFileWatcher(Settings.SettingsFile);
+                yield return CreateFileWatcher(Settings.KarmaConfigFile);
+                foreach (var filter in TestFiles.Included.GroupBy(f => f.FileFilter, StringComparer.OrdinalIgnoreCase))
                 {
-                    yield return CreateFileWatcher(dir, filter.Key, true);
+                    var dirs = filter.Select(f => f.Directory);
+                    foreach (var dir in dirs.Where(d1 => !dirs.Any(d2 => !string.Equals(d1, d2, StringComparison.OrdinalIgnoreCase) && d1.StartsWith(d2, StringComparison.OrdinalIgnoreCase))).Distinct(StringComparer.OrdinalIgnoreCase))
+                    {
+                        yield return CreateFileWatcher(dir, filter.Key, true);
+                    }
                 }
+            }
+            else
+            {
+                yield return CreateFileWatcher(Source);
             }
         }
 
@@ -174,25 +193,25 @@ namespace KarmaTestAdapter
             return FileChanged(file, string.Format("File removed: {0}", file), f => _files.Remove(f) || true);
         }
 
-        public bool FileChanged(string file, string reason, Func<string, bool> hasChanged)
+        private bool FileChanged(string file, string reason, Func<string, bool> hasChanged)
         {
             lock (_fileChangeLock)
             {
-                if (_files.ContainsKey(file) || TestFiles.Contains(file) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
+                if (KnowsFile(file))
                 {
                     // The file belongs to this container
                     if (hasChanged(file))
                     {
                         TimeStamp = DateTime.Now;
-                        if (PathUtils.PathsEqual(file, Settings.KarmaConfigFile) || PathUtils.PathsEqual(file, Settings.SettingsFile))
+                        if (IsContainer(file))
                         {
-                            if (System.IO.File.Exists(Settings.Source))
+                            if (System.IO.File.Exists(Source))
                             {
-                                KarmaTestContainerDiscoverer.AddTestContainerIfTestFile(Settings.Source);
+                                KarmaTestContainerDiscoverer.AddTestContainerIfTestFile(Source);
                             }
                             else
                             {
-                                KarmaTestContainerDiscoverer.RemoveTestContainer(Settings.Source);
+                                KarmaTestContainerDiscoverer.RemoveTestContainer(Source);
                             }
                         }
                         else
@@ -204,6 +223,20 @@ namespace KarmaTestAdapter
                 }
                 return false;
             }
+        }
+
+        private bool IsContainer(string file)
+        {
+            return PathUtils.PathsEqual(file, Source)
+                || PathUtils.PathsEqual(file, Settings.KarmaConfigFile)
+                || PathUtils.PathsEqual(file, Settings.SettingsFile);
+        }
+
+        private bool KnowsFile(string file)
+        {
+            return _files.ContainsKey(file)
+                || TestFiles.Contains(file)
+                || IsContainer(file);
         }
 
         public override string ToString()

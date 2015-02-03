@@ -22,22 +22,25 @@ namespace KarmaTestAdapter.Commands
             using (var commandLogger = new KarmaCommandLogger(logger, this))
             using (var settings = new KarmaSettings(Source, commandLogger))
             {
-                var outputDirectory = settings.GetOutputDirectory(Command);
-                using (commandLogger.LogProcess("({0})", Source))
-                using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
+                if (settings.AreValid)
                 {
-                    try
+                    var outputDirectory = settings.GetOutputDirectory(Command);
+                    using (commandLogger.LogProcess("({0})", Source))
+                    using (var outputFile = new KarmaOutputFile(outputDirectory, Globals.OutputFilename))
                     {
-                        var processOptions = GetProcessOptions(settings);
-                        processOptions.AddFileOption("-o", outputFile.Path);
-                        if (RunCommand(processOptions, commandLogger))
+                        try
                         {
-                            return Karma.Load(outputFile.Path);
+                            var processOptions = GetProcessOptions(settings);
+                            processOptions.AddFileOption("-o", outputFile.Path);
+                            if (RunCommand(processOptions, commandLogger))
+                            {
+                                return Karma.Load(outputFile.Path);
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        commandLogger.Error(ex);
+                        catch (Exception ex)
+                        {
+                            commandLogger.Error(ex);
+                        }
                     }
                 }
                 return null;

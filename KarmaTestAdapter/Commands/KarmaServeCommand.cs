@@ -26,21 +26,24 @@ namespace KarmaTestAdapter.Commands
             var commandLogger = new KarmaCommandLogger(logger, this);
             using (var settings = new KarmaSettings(Source, commandLogger))
             {
-                var outputDirectory = settings.GetOutputDirectory(Command);
-                commandLogger.Info("Start ({0})", Source);
-                try
+                if (settings.AreValid)
                 {
-                    var processOptions = GetProcessOptions(settings);
-                    processOptions.Add("-p", settings.ServerPort);
-                    Task.Run(() => RunCommand(processOptions, commandLogger)).ContinueWith(t => 
+                    var outputDirectory = settings.GetOutputDirectory(Command);
+                    commandLogger.Info("Start ({0})", Source);
+                    try
                     {
-                        commandLogger.Info("Finished ({0})", Source);
-                        done();
-                    });
-                }
-                catch (Exception ex)
-                {
-                    commandLogger.Error(ex);
+                        var processOptions = GetProcessOptions(settings);
+                        processOptions.Add("-p", settings.ServerPort);
+                        Task.Run(() => RunCommand(processOptions, commandLogger)).ContinueWith(t =>
+                        {
+                            commandLogger.Info("Finished ({0})", Source);
+                            done();
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        commandLogger.Error(ex);
+                    }
                 }
             }
         }

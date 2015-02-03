@@ -26,7 +26,6 @@ namespace KarmaTestAdapter.Commands
         public virtual string Name { get { return Command; } }
 
         private Process _process;
-        private static readonly ISemanticVersion _minVersion = new SemanticVersion("0.7.0");
 
         protected ProcessOptions GetProcessOptions(KarmaSettings settings)
         {
@@ -41,9 +40,9 @@ namespace KarmaTestAdapter.Commands
                 throw new Exception("Could not find node module karma-vs-reporter version");
             }
 
-            if (karmaVsReporter.Version.CompareTo(_minVersion) < 0)
+            if (karmaVsReporter.Version.CompareTo(Globals.ReporterMinVersion) < 0)
             {
-                throw new Exception(string.Format("Installed version of node module karma-vs-reporter ({0}) is less than the required version ({1})", karmaVsReporter.Version, _minVersion));
+                throw new Exception(string.Format("Installed version of node module karma-vs-reporter ({0}) is less than the required version ({1})", karmaVsReporter.Version, Globals.ReporterMinVersion));
             }
 
             var processOptions = new ProcessOptions("node", PathUtils.GetRelativePath(Directory, karmaVsReporter.Reporter, true), Command)

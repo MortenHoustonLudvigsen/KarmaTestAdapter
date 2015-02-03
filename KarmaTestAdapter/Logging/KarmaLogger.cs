@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,24 @@ namespace KarmaTestAdapter.Logging
 {
     public class KarmaLogger : KarmaLoggerBase
     {
-        public static IKarmaLogger Create(ILogger logger = null, IMessageLogger messageLogger = null)
+        public static IKarmaLogger Create(ILogger logger = null, IMessageLogger messageLogger = null, bool newGlobalLog = false)
         {
             var karmaLogger = new KarmaLogger();
             karmaLogger.AddLogger(logger);
             karmaLogger.AddLogger(messageLogger);
+            if (Globals.Debug)
+            {
+                if (!Directory.Exists(Globals.GlobalLogDir))
+                {
+                    Directory.CreateDirectory(Globals.GlobalLogDir);
+                }
+                if (newGlobalLog && File.Exists(Globals.GlobalLogFile))
+                {
+                    File.Delete(Globals.GlobalLogFile);
+                }
+                karmaLogger.Info("Logging to {0}", Globals.GlobalLogFile);
+                karmaLogger.AddLogger(Globals.GlobalLogFile);
+            }
             return karmaLogger;
         }
 

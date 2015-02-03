@@ -94,6 +94,17 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 # Changes
 
+## Version 0.7.2
+
+### Error handling
+
+* The adapter will now always log to %appdata%\2PS\KarmaTestAdapter\KarmaTestAdapter.log.
+
+* If there are errors in `karma-vs-reporter.json` no tests will be shown for that configuration,
+  and the adapter *will not* use any `karma.conf` in the same directory.
+
+* It is no longer necessary to restart Visual Studio after correcting errors in `karma-vs-reporter.json`.
+
 ## Version 0.7.1
 
 * `karma-vs-reporter.json` has a new optional property:

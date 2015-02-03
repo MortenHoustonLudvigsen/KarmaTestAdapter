@@ -33,7 +33,7 @@ namespace KarmaTestAdapter
             ISolutionListener solutionListener,
             ITestFileAddRemoveListener testFilesAddRemoveListener)
         {
-            Logger = KarmaLogger.Create(logger: logger);
+            Logger = KarmaLogger.Create(logger: logger, newGlobalLog: true);
 
             _serviceProvider = serviceProvider;
             _solutionListener = solutionListener;
@@ -67,7 +67,7 @@ namespace KarmaTestAdapter
                     AddFiles(FindTestFiles());
                     _initialContainerSearch = false;
                 }
-                return _containers;
+                return _containers.Where(c => c.IsValid);
             }
         }
 
@@ -78,8 +78,7 @@ namespace KarmaTestAdapter
             {
                 if (_baseDirectory == null)
                 {
-                    var solution = (IVsSolution)_serviceProvider.GetService(typeof(SVsSolution));
-                    _baseDirectory = solution.GetSolutionDirectory();
+                    _baseDirectory = _serviceProvider.GetSolutionDirectory();
                 }
                 return _baseDirectory ?? null;
             }
@@ -96,7 +95,8 @@ namespace KarmaTestAdapter
                     _shouldRefresh = true;
                     Logger.Info(reason);
                 }
-                Tasks.Task.Delay(TimeSpan.FromMilliseconds(500)).ContinueWith(t => {
+                Tasks.Task.Delay(TimeSpan.FromMilliseconds(500)).ContinueWith(t =>
+                {
                     lock (_refreshLock)
                     {
                         if (_shouldRefresh)
@@ -216,6 +216,7 @@ namespace KarmaTestAdapter
             {
                 source = file;
             }
+
             if (!string.IsNullOrWhiteSpace(source))
             {
                 RemoveTestContainersInDirectory(directory);
@@ -224,13 +225,13 @@ namespace KarmaTestAdapter
                     try
                     {
                         _containers.CreateContainer(source);
+                        RefreshTestContainers(string.Format("Test container added: {0}", file));
                     }
                     catch (Exception ex)
                     {
                         Logger.Error(ex);
                     }
                 }
-                RefreshTestContainers(string.Format("Test container added: {0}", file));
                 return true;
             }
             return false;
@@ -275,8 +276,7 @@ namespace KarmaTestAdapter
 
         private IEnumerable<IVsProject> GetProjects()
         {
-            var solution = (IVsSolution)_serviceProvider.GetService(typeof(SVsSolution));
-            return solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
+            return _serviceProvider.GetLoadedProjects();
         }
 
         private IEnumerable<string> FindTestFiles(IVsProject project)

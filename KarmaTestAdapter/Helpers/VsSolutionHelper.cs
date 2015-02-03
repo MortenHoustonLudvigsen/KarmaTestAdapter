@@ -11,7 +11,13 @@ namespace KarmaTestAdapter.Helpers
 {
 	public static class VsSolutionHelper
 	{
-		public static IEnumerable<IVsHierarchy> EnumerateLoadedProjects(this IVsSolution solution, __VSENUMPROJFLAGS enumFlags)
+        public static IEnumerable<IVsProject> GetLoadedProjects(this IVsSolution solution)
+        {
+            return solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
+        }
+
+       
+        public static IEnumerable<IVsHierarchy> EnumerateLoadedProjects(this IVsSolution solution, __VSENUMPROJFLAGS enumFlags)
 		{
 			var prjType = Guid.Empty;
 			IEnumHierarchies ppHier;
@@ -36,6 +42,28 @@ namespace KarmaTestAdapter.Helpers
             if (solution.GetSolutionInfo(out solutionDir, out solutionFile, out userOpsFile) == VSConstants.S_OK)
             {
                 return solutionDir;
+            }
+            return null;
+        }
+
+        public static string GetSolutionFile(this IVsSolution solution)
+        {
+            string solutionDir;
+            string solutionFile;
+            string userOpsFile;
+            if (solution.GetSolutionInfo(out solutionDir, out solutionFile, out userOpsFile) == VSConstants.S_OK)
+            {
+                return solutionFile;
+            }
+            return null;
+        }
+
+        public static string GetSolutionName(this IVsSolution solution)
+        {
+            var solutionFile = solution.GetSolutionFile();
+            if (solutionFile != null)
+            {
+                return Path.GetFileNameWithoutExtension(solutionFile);
             }
             return null;
         }
