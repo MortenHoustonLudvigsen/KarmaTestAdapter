@@ -96,6 +96,12 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 ## Version 0.7.2
 
+### Bug fixes
+
+* The adapter could sometimes fail with a null exception if there were errors in `karma-vs-reporter.json`. This should be fixed.
+
+## Version 0.7.2
+
 ### Error handling
 
 * The adapter will now always log to `%appdata%\2PS\KarmaTestAdapter\KarmaTestAdapter.log`.
