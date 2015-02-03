@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "karma-vs-reporter",
+    "description": "A description of my schema file",
+    "type": "object",
+    "properties": {
+        "KarmaConfigFile": {
+            "description": "Use this if you want to use a karma configuration file not named karma.conf.js.",
+            "type": "string"
+        },
+        "ServerMode": {
+            "description": "Set to true, if you want Karma to always run in the background. This will normally give a significant performance improvement. Karma will be started in the background if ServerMode is true and ServerPort has a value.",
+            "type": "boolean"
+        },
+        "ServerPort": {
+            "description": "TCP port, that Karma should listen to when running in the background (when ServerMode is true). This should be different from the port configured in the Karma configuration file (karma.conf.js).",
+            "type": "integer"
+        },
+        "TestFiles": {
+            "description": "By default the adapter watches all files in the karma configuration to get the list of tests. To avoid running test discovery when files, that do not contain tests, are changed specify files with tests in the TestFiles property. Specify TestFiles as an array of file patterns, or omit it to use the file specifications in the karma configuration.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "LogToFile": {
+            "description": "Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log).",
+            "type": "boolean"
+        },
+        "LogDirectory": {
+            "description": "Where the log file should be saved (if LogToFile is true). If this property is not specified the directory in which karma-vs-reporter.json resides is used.",
+            "type": "string"
+        },
+        "OutputDirectory": {
+            "description": "Normally the adapter communicates with Karma using temporary files. These files are deleted immediately. If you want to see these files, you can specify an OutputDirectory, in which case the files will not be deleted.",
+            "type": "string"
+        },
+        "config": {
+            "description": "This property overwrites any configurations from the karma configuration file.",
+            "type": "object"
+        }
+    }
+}
