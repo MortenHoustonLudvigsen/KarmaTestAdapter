@@ -150,9 +150,6 @@
     <Compile Include="VsConfig\Test.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="karma-vs-reporter.schema.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
