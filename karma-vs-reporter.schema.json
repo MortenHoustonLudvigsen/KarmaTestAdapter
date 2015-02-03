@@ -4,6 +4,10 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri"
+        },
         "KarmaConfigFile": {
             "description": "Use this if you want to use a karma configuration file not named karma.conf.js.",
             "type": "string"
