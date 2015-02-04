@@ -213,7 +213,7 @@ img {
 
 nav {
   float: right;
-  margin-top: 23px; // @TODO: Vertically middle align
+  margin-top: 0;
   font-family: $helveticaNeue;
   font-size: 18px;
 
@@ -226,6 +226,9 @@ nav {
 
   a {
     margin-left: 20px;
+    margin-top: 23px;
+    display: inline-block;
+    vertical-align: top;
     color: $darkGray;
     text-align: right;
     font-weight: 300;
@@ -236,12 +239,15 @@ nav {
       color: $blue;
     }
   }
-}
 
-.site-icons {
-  float: right;
-  margin-left: 20px;
-  margin-top: 16px; // @TODO: Vertically middle align
+  .site-icons {
+    margin-left: 20px;
+    a {
+      vertical-align: top;
+      margin: 0;
+      margin-top: 16px;
+    }
+  }
 }
 
 //
