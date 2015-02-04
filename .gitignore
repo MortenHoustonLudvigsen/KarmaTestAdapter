@@ -3,6 +3,17 @@
 
 node_modules/
 
+# Jekyll
+_site
+.DS_Store
+.jekyll
+.bundle
+.sass-cache
+Gemfile
+Gemfile.lock
+node_modules
+package.json
+
 # User-specific files
 *.suo
 *.user
