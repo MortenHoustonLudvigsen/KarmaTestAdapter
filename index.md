@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Karma Test Adapter
-permalink: /
 ---
 
 Karma Test Adapter
