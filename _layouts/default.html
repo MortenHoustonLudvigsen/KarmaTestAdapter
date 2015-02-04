@@ -29,9 +29,12 @@
             <p class="site-description">{{ site.description }}</p>
           </div>
           
+          <div class="site-icons">{% include svg-icons.html %}</div>
+
           <nav>
             <a href="{{ site.baseurl }}/changes">Changes</a>
           </nav>
+
         </header>
       </div>
     </div>
@@ -40,6 +43,7 @@
       {{ content }}
     </div>
 
+<!--
     <div class="wrapper-footer">
       <div class="container">
         <footer class="footer">
@@ -47,7 +51,7 @@
         </footer>
       </div>
     </div>
-
+-->
     {% include analytics.html %}
   </body>
 </html>
