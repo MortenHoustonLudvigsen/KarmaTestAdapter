@@ -1,12 +1,7 @@
 ---
 layout: page
-title: Karma Test Adapter
+title:
 ---
-
-Karma Test Adapter
-================
-
-A Visual Studio test explorer adapter for Karma
 
 This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.
 
