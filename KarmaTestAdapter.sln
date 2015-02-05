@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{65BE6DB2-1FC4-4221-BECD-6231D28B3F70}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		Changes.md = Changes.md
 		karma-vs-reporter.schema.json = karma-vs-reporter.schema.json
 		LICENSE = LICENSE
 		README.md = README.md
