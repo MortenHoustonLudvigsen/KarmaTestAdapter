@@ -27,7 +27,7 @@ discoverTests.$inject = ['fileList', 'config'];
 
 function run(config, outputFile) {
     Globals.Configure({ outputFile: outputFile });
-    var di = require('karma/node_modules/di');
+    var di = require('di');
     new di.Injector([{
             emitter: ['type', require('karma/lib/events').EventEmitter],
             config: ['value', Util.getKarmaConfig(config)],

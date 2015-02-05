@@ -52,6 +52,7 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="test\.gitignore" />
     <Content Include="index.js">
       <DependentUpon>index.ts</DependentUpon>
     </Content>
