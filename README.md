@@ -98,6 +98,14 @@ At the moment the adapter only works properly with [Jasmine](http://jasmine.gith
 
 # Changes
 
+## Version 0.7.4
+
+### Bug fixes
+
+* The adapter now tries to detect the encoding of `karma-vs-reporter.json` falling back to UTF-8 if the encoding could not be detected.
+
+* The adapter no longer fails if it can not get a SHA1 hash of the contents of a file.
+
 ## Version 0.7.3
 
 ### Bug fixes
