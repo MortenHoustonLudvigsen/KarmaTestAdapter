@@ -16,7 +16,7 @@ namespace KarmaTestAdapter
         /// <summary>
         /// The minimum version of karma-vs-reporter
         /// </summary>
-        public static readonly ISemanticVersion ReporterMinVersion = new SemanticVersion("0.7.0");
+        public static readonly ISemanticVersion ReporterMinVersion = new SemanticVersion("0.8.0");
 
         /// <summary>
         /// Whether to log to a global log file

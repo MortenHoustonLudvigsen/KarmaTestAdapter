@@ -1,3 +1,15 @@
+## Reporter Version 0.8.0
+
+### Bug fixes
+
+* Use node module 'di' in stead of 'karma/node_modules/di'.
+
+* Version 0.8.0 needs at least version 0.8.0 of karma-vs-reporter to work. To upgrade run:
+
+```
+npm install karma-vs-reporter
+```
+
 ## Version 0.7.4
 
 ### Bug fixes
