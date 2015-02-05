@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using KarmaTestAdapter.Helpers;
+using Newtonsoft.Json.Linq;
 using Summerset.SemanticVersion;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace KarmaTestAdapter.Commands
                     if (_version == null || newTimestamp != Timestamp)
                     {
                         Timestamp = newTimestamp;
-                        var config = JObject.Parse(IO.File.ReadAllText(ConfigFile));
+                        var config = Json.ParseFile(ConfigFile);
                         JToken version;
                         if (config.TryGetValue("version", out version) && version.Type == JTokenType.String)
                         {
@@ -65,28 +66,6 @@ namespace KarmaTestAdapter.Commands
         private DateTime? GetTimestamp()
         {
             return Exists ? IO.File.GetLastWriteTime(ConfigFile) : (DateTime?)null;
-        }
-
-        private ISemanticVersion GetVersion(ISemanticVersion previousVersion)
-        {
-            if (Exists)
-            {
-                var newTimestamp = GetTimestamp();
-                if (previousVersion == null || newTimestamp != Timestamp)
-                {
-                    Timestamp = newTimestamp;
-                    var config = JObject.Parse(IO.File.ReadAllText(ConfigFile));
-                    JToken version;
-                    if (config.TryGetValue("version", out version))
-                    {
-                        if (version.Type == JTokenType.String)
-                        {
-                            return new SemanticVersion(version.ToString());
-                        }
-                    }
-                }
-            }
-            return null;
         }
     }
 }

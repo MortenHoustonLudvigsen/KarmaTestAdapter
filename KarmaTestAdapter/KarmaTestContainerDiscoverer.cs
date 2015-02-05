@@ -95,7 +95,7 @@ namespace KarmaTestAdapter
                     _shouldRefresh = true;
                     Logger.Info(reason);
                 }
-                Tasks.Task.Delay(TimeSpan.FromMilliseconds(500)).ContinueWith(t =>
+                Tasks.Task.Delay(500).ContinueWith(t =>
                 {
                     lock (_refreshLock)
                     {

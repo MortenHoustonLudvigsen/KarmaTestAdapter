@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +11,16 @@ namespace KarmaTestAdapter.Helpers
 {
     public static class Json
     {
+        public static string ReadFileText(string path)
+        {
+            return PathUtils.ReadFileText(path, Encoding.UTF8);
+        }
+
         public static T ReadFile<T>(string path, T anonymousTypeObject)
         {
             try
             {
-                return Read(File.ReadAllText(path, Encoding.UTF8), anonymousTypeObject);
+                return Read(ReadFileText(path), anonymousTypeObject);
             }
             catch (Exception ex)
             {
@@ -34,11 +40,16 @@ namespace KarmaTestAdapter.Helpers
             }
         }
 
+        public static JObject ParseFile(string path)
+        {
+            return JObject.Parse(ReadFileText(path));
+        }
+
         public static void PopulateFromFile(string path, object target)
         {
             try
             {
-                JsonConvert.PopulateObject(File.ReadAllText(path, Encoding.UTF8), target);
+                JsonConvert.PopulateObject(ReadFileText(path), target);
             }
             catch (Exception ex)
             {
@@ -62,7 +73,7 @@ namespace KarmaTestAdapter.Helpers
         {
             try
             {
-                File.WriteAllText(path, Serialize(value));
+                File.WriteAllText(path, Serialize(value), Encoding.UTF8);
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ude;
 
 namespace KarmaTestAdapter
 {
@@ -59,6 +60,44 @@ namespace KarmaTestAdapter
             }
 
             return relativePath;
+        }
+
+        public static Stream OpenRead(string path)
+        {
+            return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        }
+
+        public static string ReadFileText(string path, Encoding defaultEncoding = null)
+        {
+            using (var fs = OpenRead(path))
+            using (var reader = new StreamReader(fs, DetectEncoding(fs, defaultEncoding)))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private static Encoding DetectEncoding(Stream stream, Encoding defaultEncoding = null)
+        {
+            var encoding = defaultEncoding ?? Encoding.Default;
+            try
+            {
+                var cdet = new CharsetDetector();
+                cdet.Feed(stream);
+                cdet.DataEnd();
+                if (cdet.Charset != null)
+                {
+                    encoding = Encoding.GetEncoding(cdet.Charset);
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing
+            }
+            finally
+            {
+                stream.Position = 0;
+            }
+            return encoding;
         }
     }
 }

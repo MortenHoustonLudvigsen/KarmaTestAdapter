@@ -18,7 +18,7 @@ namespace KarmaTestAdapter
     public class KarmaTestContainer : KarmaTestContainerBase
     {
         private KarmaTestContainerList _containerList;
-        private Dictionary<string, string> _files = new Dictionary<string, string>();
+        private readonly FileInfoList _files;
         private IEnumerable<KarmaFileWatcher> _fileWatchers;
         private KarmaServeCommand _serveCommand;
 
@@ -45,15 +45,12 @@ namespace KarmaTestAdapter
             {
                 TestFiles = new FilesSpec();
             }
-            _files = GetFiles();
+            _files = new FileInfoList(this, TestFiles);
+            _files.Add(Source);
             if (IsValid)
             {
-                SetCurrentHash(Settings.SettingsFile);
-                SetCurrentHash(Settings.KarmaConfigFile);
-            }
-            else
-            {
-                SetCurrentHash(Source);
+                _files.Add(Settings.SettingsFile);
+                _files.Add(Settings.KarmaConfigFile);
             }
             _fileWatchers = GetFileWatchers().Where(w => w != null).ToList();
             StartKarmaServer();
@@ -66,10 +63,10 @@ namespace KarmaTestAdapter
         public Karma Karma { get; set; }
         public FilesSpec TestFiles { get; private set; }
 
-        private Dictionary<string, string> GetFiles()
+        private Dictionary<string, FileInfo> GetFiles()
         {
             var files = TestFiles ?? Enumerable.Empty<string>();
-            return files.ToDictionary(f => f, f => Sha1Utils.GetHash(f, null), StringComparer.OrdinalIgnoreCase);
+            return files.ToDictionary(f => f, f => new FileInfo(this, f), StringComparer.OrdinalIgnoreCase);
         }
 
         private void StartKarmaServer()
@@ -79,7 +76,7 @@ namespace KarmaTestAdapter
                 _serveCommand = _serveCommand ?? new KarmaServeCommand(Source);
                 _serveCommand.Start(Logger, () =>
                 {
-                    Task.Delay(500).ContinueWith(t => StartKarmaServer());
+                    Task.Delay(250).ContinueWith(t => StartKarmaServer());
                 });
             }
         }
@@ -139,54 +136,14 @@ namespace KarmaTestAdapter
             }
         }
 
-        private object _fileChangeLock = new object();
-        private bool SetCurrentHash(string file)
-        {
-            lock (_fileChangeLock)
-            {
-                if (!string.IsNullOrWhiteSpace(file))
-                {
-                    var currentHash = GetCurrentHash(file);
-                    if (System.IO.File.Exists(file))
-                    {
-                        var newHash = Sha1Utils.GetHash(file, currentHash);
-                        if (newHash != currentHash)
-                        {
-                            _files[file] = newHash;
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        _files.Remove(file);
-                        return currentHash != null;
-                    }
-                }
-                return false;
-            }
-        }
-
-        private string GetCurrentHash(string file)
-        {
-            lock (_fileChangeLock)
-            {
-                string hash;
-                if (_files.TryGetValue(file, out hash))
-                {
-                    return hash;
-                }
-                return null;
-            }
-        }
-
         public bool FileAdded(string file)
         {
-            return FileChanged(file, string.Format("File added:   {0}", file), f => SetCurrentHash(f) || true);
+            return FileChanged(file, string.Format("File added:   {0}", file), f => _files.GetHasChanges(f) || true);
         }
 
         public bool FileChanged(string file)
         {
-            return FileChanged(file, string.Format("File changed: {0}", file), f => SetCurrentHash(f));
+            return FileChanged(file, string.Format("File changed: {0}", file), f => _files.GetHasChanges(f));
         }
 
         public bool FileRemoved(string file)
@@ -194,6 +151,7 @@ namespace KarmaTestAdapter
             return FileChanged(file, string.Format("File removed: {0}", file), f => _files.Remove(f) || true);
         }
 
+        private object _fileChangeLock = new object();
         private bool FileChanged(string file, string reason, Func<string, bool> hasChanged)
         {
             lock (_fileChangeLock)
@@ -235,7 +193,7 @@ namespace KarmaTestAdapter
 
         private bool KnowsFile(string file)
         {
-            return _files.ContainsKey(file)
+            return _files.Contains(file)
                 || TestFiles.Contains(file)
                 || IsContainer(file);
         }
@@ -277,6 +235,101 @@ namespace KarmaTestAdapter
             }
 
             _disposed = true;
+        }
+
+        private class FileInfoList
+        {
+            public FileInfoList(KarmaTestContainer container, IEnumerable<string> files)
+            {
+                Container = container;
+                files = files ?? Enumerable.Empty<string>();
+                _files = files.ToDictionary(f => f, f => new FileInfo(Container, f), StringComparer.OrdinalIgnoreCase);
+            }
+
+            private readonly Dictionary<string, FileInfo> _files = new Dictionary<string, FileInfo>(StringComparer.OrdinalIgnoreCase);
+            public KarmaTestContainer Container { get; private set; }
+
+            public bool Contains(string file)
+            {
+                return _files.ContainsKey(file);
+            }
+
+            public FileInfo Add(string file)
+            {
+                FileInfo fileInfo;
+                if (!_files.TryGetValue(file, out fileInfo))
+                {
+                    fileInfo = new FileInfo(Container, file);
+                    _files.Add(file, fileInfo);
+                }
+                return fileInfo;
+            }
+
+            public bool Remove(string file)
+            {
+                return _files.Remove(file);
+            }
+
+            public bool GetHasChanges(string file)
+            {
+                if (!string.IsNullOrWhiteSpace(file))
+                {
+                    FileInfo fileInfo;
+                    if (_files.TryGetValue(file, out fileInfo))
+                    {
+                        var result = fileInfo.Update();
+                        if (!fileInfo.Exists)
+                        {
+                            Remove(file);
+                        }
+                        return result;
+                    }
+                    Add(file);
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private class FileInfo
+        {
+            public FileInfo(KarmaTestContainer container, string path)
+            {
+                Container = container;
+                Path = path;
+                Update();
+            }
+
+            public KarmaTestContainer Container { get; private set; }
+            public string Path { get; private set; }
+            public bool Exists { get; private set; }
+            public string Hash { get; private set; }
+
+            public bool Update()
+            {
+                var exists = System.IO.File.Exists(Path);
+                var hash = exists ? GetHash() : null;
+                if (exists != Exists || hash != Hash || hash == null)
+                {
+                    Exists = exists;
+                    Hash = hash;
+                    return true;
+                }
+                return false;
+            }
+
+            private string GetHash()
+            {
+                try
+                {
+                    return Sha1Utils.GetHash(Path);
+                }
+                catch (Exception ex)
+                {
+                    Container.Logger.Warn("Could not get hash for file {0}: {1}", PathUtils.GetRelativePath(Container.BaseDirectory, Path, true), ex.Message);
+                    return null;
+                }
+            }
         }
     }
 }

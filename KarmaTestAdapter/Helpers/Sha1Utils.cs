@@ -12,7 +12,17 @@ namespace KarmaTestAdapter.Helpers
     {
         public static string GetHash(string path)
         {
-            using (var fs = new FileStream(path, FileMode.Open))
+            return GetHashInternal(path);
+            //return GetHash(path, 5, 10).Result;
+        }
+
+        private static string GetHashInternal(string path)
+        {
+            if (!File.Exists(path))
+            {
+                return null;
+            }
+            using (var fs = PathUtils.OpenRead(path))
             using (var bs = new BufferedStream(fs))
             using (var sha1 = new SHA1Managed())
             {
@@ -20,23 +30,11 @@ namespace KarmaTestAdapter.Helpers
             }
         }
 
-        public static string GetHash(string path, string currentHash)
-        {
-            try
-            {
-                return GetHash(path, 5, 10).Result;
-            }
-            catch (IOException)
-            {
-                return currentHash;
-            }
-        }
-
         private async static Task<string> GetHash(string path, int attempts, int retryDelay)
         {
             try
             {
-                return GetHash(path);
+                return GetHashInternal(path);
             }
             catch (IOException ex)
             {
