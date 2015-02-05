@@ -191,3 +191,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 /KarmaTestAdapter.TestProject
 /Test
+/karma-vs-reporter
