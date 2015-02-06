@@ -4,6 +4,14 @@ title: Changes
 permalink: /changes/
 ---
 
+## Version 0.8.1
+
+* The adapter now searches for node module karma-vs-reporter in parent directories
+
+### Bug fixes
+
+* Don't fail if no test files are found
+
 ## Version 0.8.0
 
 ### Bug fixes
