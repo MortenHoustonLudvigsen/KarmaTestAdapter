@@ -19,16 +19,26 @@ namespace KarmaTestAdapter.Commands
                 throw new ArgumentNullException("directory");
             }
 
-            Directory = directory;
-            Reporter = IO.Path.Combine(Directory, "node_modules", "karma-vs-reporter", "karma-vs-reporter");
-            ConfigFile = IO.Path.Combine(Directory, "node_modules", "karma-vs-reporter", "package.json");
-            Timestamp = Exists ? IO.File.GetLastWriteTime(ConfigFile) : (DateTime?)null;
+            while (!string.IsNullOrWhiteSpace(directory) && !SetDirectory(directory))
+            {
+                directory = IO.Path.GetDirectoryName(directory);
+            }
         }
 
         public string Reporter { get; private set; }
         public string ConfigFile { get; private set; }
         public string Directory { get; private set; }
         public DateTime? Timestamp { get; private set; }
+
+        private bool SetDirectory(string directory)
+        {
+            var nodeModules = IO.Path.Combine(directory, "node_modules");
+            Directory = directory;
+            Reporter = IO.Path.Combine(nodeModules, "karma-vs-reporter", "karma-vs-reporter");
+            ConfigFile = IO.Path.Combine(nodeModules, "karma-vs-reporter", "package.json");
+            Timestamp = Exists ? IO.File.GetLastWriteTime(ConfigFile) : (DateTime?)null;
+            return IO.Directory.Exists(nodeModules);
+        }
 
         private ISemanticVersion _version = null;
         public ISemanticVersion Version
