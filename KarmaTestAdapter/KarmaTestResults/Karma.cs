@@ -33,7 +33,8 @@ namespace KarmaTestAdapter.KarmaTestResults
 
         public IEnumerable<TestCase> GetTestCases(string source)
         {
-            return Files.AllTests.Select(test => CreateTestCase(test, source));
+            var files = Files;
+            return files != null ? files.AllTests.Select(test => CreateTestCase(test, source)) : Enumerable.Empty<TestCase>();
         }
 
         public static TestCase CreateTestCase(Test test, string source)
