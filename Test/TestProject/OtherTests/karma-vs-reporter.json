@@ -1,0 +1,17 @@
+{
+    "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json",
+    "KarmaConfigFile": "karma.conf.js",
+    "LogToFile": true,
+    "LogDirectory": "../KarmaTestAdapter",
+    "OutputDirectory": "../KarmaTestAdapter/Output",
+    "TestFiles": [
+        "test/**/*.js"
+    ],
+    "ServerMode": true,
+    "ServerPort": 3536,
+    "config": {
+        "browsers": [
+            "PhantomJS"
+        ]
+    }
+}
