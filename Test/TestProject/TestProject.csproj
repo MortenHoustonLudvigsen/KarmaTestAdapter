@@ -53,6 +53,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="karma.conf.js" />
+    <Content Include="OtherTests\karma.conf.js" />
+    <Content Include="OtherTests\test\TestFile1.js">
+      <DependentUpon>TestFile1.ts</DependentUpon>
+    </Content>
+    <Content Include="OtherTests\test\TestFile2.js">
+      <DependentUpon>TestFile2.ts</DependentUpon>
+    </Content>
     <Content Include="test\TestFile1.js">
       <DependentUpon>TestFile1.ts</DependentUpon>
     </Content>
@@ -68,6 +75,8 @@
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="OtherTests\test\TestFile1.ts" />
+    <TypeScriptCompile Include="OtherTests\test\TestFile2.ts" />
     <TypeScriptCompile Include="references.d.ts" />
     <TypeScriptCompile Include="test\TestFile1.ts" />
     <TypeScriptCompile Include="test\TestFile2.ts" />
@@ -84,6 +93,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="karma-vs-reporter.json" />
+    <Content Include="OtherTests\karma-vs-reporter.json" />
+    <Content Include="OtherTests\test\TestFile1.js.map">
+      <DependentUpon>TestFile1.ts</DependentUpon>
+    </Content>
+    <Content Include="OtherTests\test\TestFile2.js.map">
+      <DependentUpon>TestFile2.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="init.cmd" />
