@@ -1,4 +1,4 @@
-﻿using KarmaTestResults = KarmaTestAdapter.KarmaTestResults;
+﻿using KarmaTestResults = KarmaTestAdapter.TestResults;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -97,7 +97,7 @@ namespace KarmaTestAdapter
             }
         }
 
-        private void RunTests(string source, IEnumerable<TestCase> tests, KarmaTestResults.Karma karma, IFrameworkHandle frameworkHandle, IKarmaLogger logger)
+        private void RunTests(string source, IEnumerable<TestCase> tests, TestResults.Karma karma, IFrameworkHandle frameworkHandle, IKarmaLogger logger)
         {
             var vsConfig = CreateVsConfig(tests, karma);
             var runKarma = Run(source, vsConfig, logger);
@@ -139,7 +139,7 @@ namespace KarmaTestAdapter
             }
         }
 
-        private VsConfig.Config CreateVsConfig(IEnumerable<TestCase> tests, KarmaTestResults.Karma karma)
+        private VsConfig.Config CreateVsConfig(IEnumerable<TestCase> tests, TestResults.Karma karma)
         {
             //var includedWithTests = tests.Select(t => t.CodeFilePath).Distinct();
             return new VsConfig.Config
@@ -163,7 +163,7 @@ namespace KarmaTestAdapter
             };
         }
 
-        private KarmaTestResults.Karma Discover(string source, IKarmaLogger logger)
+        private TestResults.Karma Discover(string source, IKarmaLogger logger)
         {
             if (_karmaDiscoverCommand != null)
             {
@@ -180,7 +180,7 @@ namespace KarmaTestAdapter
             }
         }
 
-        private KarmaTestResults.Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
+        private TestResults.Karma Run(string source, VsConfig.Config vsConfig, IKarmaLogger logger)
         {
             if (_karmaRunCommand != null)
             {
@@ -199,14 +199,14 @@ namespace KarmaTestAdapter
 
         private class TestCaseResult
         {
-            public TestCaseResult(TestCase test, KarmaTestResults.ConsolidatedTestResult result, string source)
+            public TestCaseResult(TestCase test, TestResults.ConsolidatedTestResult result, string source)
             {
-                Result = result ?? new KarmaTestResults.ConsolidatedTestResult(null);
-                Test = test ?? KarmaTestResults.Karma.CreateTestCase(result.Test, source);
+                Result = result ?? new TestResults.ConsolidatedTestResult(null);
+                Test = test ?? TestResults.Karma.CreateTestCase(result.Test, source);
             }
 
             public TestCase Test { get; private set; }
-            public KarmaTestResults.ConsolidatedTestResult Result { get; private set; }
+            public TestResults.ConsolidatedTestResult Result { get; private set; }
         }
     }
 }

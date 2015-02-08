@@ -1,7 +1,7 @@
 ﻿using KarmaTestAdapter.Commands;
 using KarmaTestAdapter.Config;
 using KarmaTestAdapter.Helpers;
-using KarmaTestAdapter.KarmaTestResults;
+using KarmaTestAdapter.TestResults;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;

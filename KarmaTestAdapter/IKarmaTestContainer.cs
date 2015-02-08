@@ -1,4 +1,4 @@
-﻿using KarmaTestAdapter.KarmaTestResults;
+﻿using KarmaTestAdapter.TestResults;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;

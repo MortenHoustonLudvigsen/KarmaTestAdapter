@@ -18,6 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaVSReporter", "karma-vs-reporter\KarmaVSReporter.csproj", "{96A41FAE-2C77-4386-A93D-F9EFD9A46030}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{592DF928-C74B-4CB2-8B55-C00BB2304673}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapterTests", "KarmaTestAdapterTests\KarmaTestAdapterTests.csproj", "{CE8A247D-0D24-4158-AE8E-4C151FE7547F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +43,10 @@ Global
 		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

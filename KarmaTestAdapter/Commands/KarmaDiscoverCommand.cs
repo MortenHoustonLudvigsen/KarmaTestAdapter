@@ -1,4 +1,4 @@
-﻿using KarmaTestAdapter.KarmaTestResults;
+﻿using KarmaTestAdapter.TestResults;
 using KarmaTestAdapter.Logging;
 using System;
 using System.Collections.Generic;
