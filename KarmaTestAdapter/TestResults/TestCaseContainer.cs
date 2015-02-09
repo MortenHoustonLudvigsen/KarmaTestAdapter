@@ -15,10 +15,10 @@ namespace KarmaTestAdapter.TestResults
         {
         }
 
-        public virtual IEnumerable<Suite> Suites { get { return Children.OfType<Suite>(); } }
-        public virtual IEnumerable<Test> Tests { get { return Children.OfType<Test>(); } }
+        public virtual IEnumerable<Suite> Suites { get { return GetChildren<Suite>(); } }
+        public virtual IEnumerable<Test> Tests { get { return GetChildren<Test>(); } }
         
         [JsonIgnore]
-        public virtual IEnumerable<Test> AllTests { get { return AllChildren.OfType<Test>(); } }
+        public virtual IEnumerable<Test> AllTests { get { return GetAllChildren<Test>(); } }
     }
 }

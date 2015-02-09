@@ -16,7 +16,7 @@ namespace KarmaTestAdapter.TestResults
 
         public IEnumerator<File> GetEnumerator()
         {
-            return Children.OfType<File>().GetEnumerator();
+            return GetChildren<File>().GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

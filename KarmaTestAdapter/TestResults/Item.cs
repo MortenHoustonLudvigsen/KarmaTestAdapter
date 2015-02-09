@@ -79,8 +79,26 @@ namespace KarmaTestAdapter.TestResults
             return Parent.GetParent<T>();
         }
 
+        protected T GetChild<T>()
+            where T : Item
+        {
+            return Children.OfType<T>().FirstOrDefault();
+        }
+
+        protected IEnumerable<T> GetChildren<T>()
+            where T : Item
+        {
+            return Children.OfType<T>();
+        }
+
+        protected IEnumerable<T> GetAllChildren<T>()
+            where T : Item
+        {
+            return AllChildren.OfType<T>();
+        }
+
         [JsonIgnore]
-        public IEnumerable<Item> AllChildren
+        private IEnumerable<Item> AllChildren
         {
             get
             {

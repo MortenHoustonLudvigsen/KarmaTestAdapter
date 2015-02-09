@@ -19,7 +19,7 @@ namespace KarmaTestAdapter.TestResults
         public string Framework { get { return Attribute("Framework"); } }
         public int? Line { get { return Attribute("Line").ToInt(); } }
         public int? Column { get { return Attribute("Column").ToInt(); } }
-        public Source Source { get { return Children.OfType<Source>().FirstOrDefault(); } }
+        public Source Source { get { return GetChild<Source>(); } }
 
         [JsonIgnore]
         public File File { get { return GetParent<File>(); } }

@@ -27,9 +27,9 @@ namespace KarmaTestAdapter.TestResults
         {
         }
 
-        public Config KarmaConfig { get { return Children.OfType<Config>().FirstOrDefault(); } }
-        public Files Files { get { return Children.OfType<Files>().FirstOrDefault(); } }
-        public Results Results { get { return Children.OfType<Results>().FirstOrDefault(); } }
+        public Config KarmaConfig { get { return GetChild<Config>(); } }
+        public Files Files { get { return GetChild<Files>(); } }
+        public Results Results { get { return GetChild<Results>(); } }
 
         public IEnumerable<TestCase> GetTestCases(string source)
         {

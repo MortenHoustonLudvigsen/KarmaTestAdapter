@@ -55,6 +55,9 @@
   <ItemGroup>
     <Compile Include="TestResults\Helper.cs" />
     <Compile Include="TestResults\Item\Elements.cs" />
+    <Compile Include="TestResults\Item\GetChild.cs" />
+    <Compile Include="TestResults\Item\GetAllChildren.cs" />
+    <Compile Include="TestResults\Item\GetChildren.cs" />
     <Compile Include="TestResults\Item\GetParent.cs" />
     <Compile Include="TestResults\Item\Root.cs" />
     <Compile Include="TestResults\Item\Attribute.cs" />

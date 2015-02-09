@@ -25,6 +25,21 @@ namespace KarmaTestAdapterTests.TestResults.Item
                     Assert.Empty(Item.Children);
                 }
             }
+
+            partial class WithChildren
+            {
+                [Fact(DisplayName = "Children should not be null")]
+                public void ChildrenShouldNotBeNull()
+                {
+                    Assert.NotNull(Item.Children);
+                }
+
+                [Fact(DisplayName = "Children should not be empty")]
+                public void ChildrenShouldBeEmpty()
+                {
+                    Assert.NotEmpty(Item.Children);
+                }
+            }
         }
     }
 }

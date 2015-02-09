@@ -14,6 +14,6 @@ namespace KarmaTestAdapter.TestResults
         {
         }
 
-        public virtual IEnumerable<Browser> Browsers { get { return Children.OfType<Browser>(); } }
+        public virtual IEnumerable<Browser> Browsers { get { return GetChildren<Browser>(); } }
     }
 }
