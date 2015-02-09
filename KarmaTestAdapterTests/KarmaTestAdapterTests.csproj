@@ -63,6 +63,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestKarmaLogger.cs" />
+    <Compile Include="TestResults\ConfigTests\BasePath.cs" />
+    <Compile Include="TestResults\ConfigTests\Frameworks.cs" />
+    <Compile Include="TestResults\ConfigTests\Port.cs" />
+    <Compile Include="TestResults\ConfigTests\_Tests.cs" />
     <Compile Include="TestResults\Constants.cs" />
     <Compile Include="TestResults\Helper.cs" />
     <Compile Include="TestResults\ItemTests\Elements.cs" />
@@ -75,7 +79,7 @@
     <Compile Include="TestResults\ItemTests\Children.cs" />
     <Compile Include="TestResults\ItemTests\Create.cs" />
     <Compile Include="TestResults\ItemTests\Item.cs" />
-    <Compile Include="TestResults\ItemTests\Tests.cs" />
+    <Compile Include="TestResults\ItemTests\_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestResults\ItemTests\Parent.cs" />
     <Compile Include="TestResults\ItemTests\Name.cs" />
@@ -86,7 +90,7 @@
     <Compile Include="TestResults\KarmaTests\GetTestCases.cs" />
     <Compile Include="TestResults\KarmaTests\KarmaConfig.cs" />
     <Compile Include="TestResults\KarmaTests\Results.cs" />
-    <Compile Include="TestResults\KarmaTests\Tests.cs" />
+    <Compile Include="TestResults\KarmaTests\_Tests.cs" />
     <Compile Include="XElementComparer.cs" />
   </ItemGroup>
   <ItemGroup>

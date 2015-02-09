@@ -97,7 +97,6 @@
     <Content Include="src\VsConfig.js">
       <DependentUpon>VsConfig.ts</DependentUpon>
     </Content>
-    <Content Include="test\karma.conf.js" />
     <Content Include="test\karma.test.conf.js" />
     <Content Include="test\discover.cmd" />
     <Content Include="README.md" />

@@ -12,17 +12,13 @@ namespace KarmaTestAdapter.TestResults
         public Config(Item parent, XElement element)
             : base(parent, element)
         {
+            BasePath = ValueOfElement("basePath");
+            Port = ValueOfElement("port").ToInt();
+            Frameworks = Elements("frameworks").SelectMany(f => f.Elements("item").Select(e => e.Value));
         }
 
-        public string BasePath { get { return ValueOfElement("basePath"); } }
-        public int? Port { get { return ValueOfElement("port").ToInt(); } }
-        public IEnumerable<string> Frameworks
-        {
-            get
-            {
-                return Elements("frameworks")
-                    .SelectMany(f => f.Elements("item").Select(e => e.Value));
-            }
-        }
+        public string BasePath { get; private set; }
+        public int? Port { get; private set; }
+        public IEnumerable<string> Frameworks { get; private set; }
     }
 }
