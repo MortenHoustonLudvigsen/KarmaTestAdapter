@@ -68,6 +68,12 @@
     <Compile Include="TestResults\ConfigTests\Port.cs" />
     <Compile Include="TestResults\ConfigTests\_Tests.cs" />
     <Compile Include="TestResults\Constants.cs" />
+    <Compile Include="TestResults\FileTests\Included.cs" />
+    <Compile Include="TestResults\FileTests\Name.cs" />
+    <Compile Include="TestResults\FileTests\FullPath.cs" />
+    <Compile Include="TestResults\FileTests\Served.cs" />
+    <Compile Include="TestResults\FileTests\Path.cs" />
+    <Compile Include="TestResults\FileTests\_Tests.cs" />
     <Compile Include="TestResults\Helper.cs" />
     <Compile Include="TestResults\ItemTests\Elements.cs" />
     <Compile Include="TestResults\ItemTests\GetChild.cs" />

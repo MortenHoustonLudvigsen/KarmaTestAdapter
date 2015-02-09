@@ -9,34 +9,26 @@ namespace KarmaTestAdapterTests.TestResults.ConfigTests
 {
     public partial class TestResults
     {
-        public abstract class ConfigTestsHelper : Helper<KarmaTestAdapter.TestResults.Config>
+        public class ConfigTestsHelper : Helper<KarmaTestAdapter.TestResults.Config>
         {
-            public virtual XElement GetElement()
-            {
-                return XDocument.Parse(Constants.KarmaXml).Root.Element("Config");
-            }
-
             public override KarmaTestAdapter.TestResults.Config CreateItem()
             {
-                return new KarmaTestAdapter.TestResults.Config(null, GetElement());
+                return CreateKarma().KarmaConfig;
             }
         }
 
-        public partial class Config : ConfigTestsHelper.Tests<Config.Helper>
+        public class EmptyConfigTestsHelper : ConfigTestsHelper
         {
-            public class Helper : ConfigTestsHelper
+            public override KarmaTestAdapter.TestResults.Config CreateItem()
             {
+                return new KarmaTestAdapter.TestResults.Config(CreateKarma(), null);
             }
+        }
 
-            public partial class Empty : ConfigTestsHelper.Tests<Empty.Helper>
+        public partial class Config : ConfigTestsHelper.Tests<ConfigTestsHelper>
+        {
+            public partial class Empty : ConfigTestsHelper.Tests<EmptyConfigTestsHelper>
             {
-                public class Helper : ConfigTestsHelper
-                {
-                    public override XElement GetElement()
-                    {
-                        return null;
-                    }
-                }
             }
         }
     }

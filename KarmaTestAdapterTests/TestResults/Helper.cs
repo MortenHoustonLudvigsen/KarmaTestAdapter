@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace KarmaTestAdapterTests.TestResults
 {
@@ -11,6 +12,11 @@ namespace KarmaTestAdapterTests.TestResults
         where TItem : KarmaTestAdapter.TestResults.Item
     {
         public abstract TItem CreateItem();
+
+        public KarmaTestAdapter.TestResults.Karma CreateKarma()
+        {
+            return new KarmaTestAdapter.TestResults.Karma(XDocument.Parse(Constants.KarmaXml).Root);
+        }
 
         public abstract class Tests<THelper>
             where THelper : Helper<TItem>, new()

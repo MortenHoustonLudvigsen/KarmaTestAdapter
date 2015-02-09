@@ -13,17 +13,27 @@ namespace KarmaTestAdapter.TestResults
         public File(Item parent, XElement element)
             : base(parent, element)
         {
+            Path = Attribute("Path");
+            Served = Attribute("Served").ToBool();
+            Included = Attribute("Included").ToBool();
         }
 
-        public string Path { get { return Attribute("Path"); } }
-        public bool? Served { get { return Attribute("Served").ToBool(); } }
-        public bool? Included { get { return Attribute("Included").ToBool(); } }
+        public string Path { get; private set; }
+        public bool? Served { get; private set; }
+        public bool? Included { get; private set; }
 
         public override string Name { get { return Path; } }
 
         public string FullPath
         {
-            get { return IOPath.GetFullPath(IOPath.Combine(Root.KarmaConfig.BasePath, Path)); }
+            get
+            {
+                if (Path == null || IOPath.IsPathRooted(Path))
+                {
+                    return Path;
+                }
+                return IOPath.GetFullPath(IOPath.Combine(Root.KarmaConfig.BasePath, Path));
+            }
         }
 
         public bool HasFile(string fullPath)

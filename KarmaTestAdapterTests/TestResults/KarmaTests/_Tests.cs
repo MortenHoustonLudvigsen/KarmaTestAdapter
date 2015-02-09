@@ -9,7 +9,7 @@ namespace KarmaTestAdapterTests.TestResults.KarmaTests
 {
     public partial class TestResults
     {
-        public abstract class KarmaTestsHelper : Helper<KarmaTestAdapter.TestResults.Karma>
+        public class KarmaTestsHelper : Helper<KarmaTestAdapter.TestResults.Karma>
         {
             public virtual XElement GetElement()
             {
@@ -22,21 +22,18 @@ namespace KarmaTestAdapterTests.TestResults.KarmaTests
             }
         }
 
-        public partial class Karma : KarmaTestsHelper.Tests<Karma.Helper>
+        public class EmptyKarmaTestsHelper : KarmaTestsHelper
         {
-            public class Helper : KarmaTestsHelper
+            public override KarmaTestAdapter.TestResults.Karma CreateItem()
             {
+                return new KarmaTestAdapter.TestResults.Karma((XElement)null);
             }
+        }
 
-            public partial class Empty : KarmaTestsHelper.Tests<Empty.Helper>
+        public partial class Karma : KarmaTestsHelper.Tests<KarmaTestsHelper>
+        {
+            public partial class Empty : KarmaTestsHelper.Tests<EmptyKarmaTestsHelper>
             {
-                public class Helper : KarmaTestsHelper
-                {
-                    public override XElement GetElement()
-                    {
-                        return null;
-                    }
-                }
             }
         }
     }
