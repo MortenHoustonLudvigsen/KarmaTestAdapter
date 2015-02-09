@@ -107,7 +107,7 @@ namespace KarmaTestAdapter
                 return;
             }
 
-            var consolidatedResults = runKarma.ConsolidateResults(logger);
+            var consolidatedResults = runKarma.ConsolidateResults();
             var testNames = tests.Select(t => t.DisplayName).Union(consolidatedResults.Select(r => r.Test.DisplayName));
 
             var results = from displayName in testNames

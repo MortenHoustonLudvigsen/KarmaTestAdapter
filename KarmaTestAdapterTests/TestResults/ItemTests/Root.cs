@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace KarmaTestAdapterTests.TestResults.Item
+namespace KarmaTestAdapterTests.TestResults.ItemTests
 {
     partial class TestResults
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace KarmaTestAdapterTests.TestResults.Item
+namespace KarmaTestAdapterTests.TestResults.ItemTests
 {
     partial class TestResults
     {
@@ -13,10 +13,10 @@ namespace KarmaTestAdapterTests.TestResults.Item
         {
             partial class Empty
             {
-                [Fact(DisplayName = "Name should be null")]
-                public void NameShouldBeNull()
+                [Fact(DisplayName = "should not be null")]
+                public void ShouldNotBeNull()
                 {
-                    Assert.Null(Item.Name);
+                    Assert.NotNull(Item);
                 }
             }
         }

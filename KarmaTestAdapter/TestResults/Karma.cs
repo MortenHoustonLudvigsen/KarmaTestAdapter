@@ -25,16 +25,18 @@ namespace KarmaTestAdapter.TestResults
         public Karma(XElement element)
             : base(null, element)
         {
+            KarmaConfig = GetChild<Config>() ?? new Config(this, null);
+            Files = GetChild<Files>() ?? new Files(this, null);
+            Results = GetChild<Results>() ?? new Results(this, null);
         }
 
-        public Config KarmaConfig { get { return GetChild<Config>(); } }
-        public Files Files { get { return GetChild<Files>(); } }
-        public Results Results { get { return GetChild<Results>(); } }
+        public Config KarmaConfig { get; private set; }
+        public Files Files { get; private set; }
+        public Results Results { get; private set; }
 
         public IEnumerable<TestCase> GetTestCases(string source)
         {
-            var files = Files;
-            return files != null ? files.AllTests.Select(test => CreateTestCase(test, source)) : Enumerable.Empty<TestCase>();
+            return Files.AllTests.Select(test => CreateTestCase(test, source));
         }
 
         public static TestCase CreateTestCase(Test test, string source)
@@ -61,13 +63,8 @@ namespace KarmaTestAdapter.TestResults
             return testCase;
         }
 
-        public IEnumerable<ConsolidatedTestResult> ConsolidateResults(IKarmaLogger logger)
+        public IEnumerable<ConsolidatedTestResult> ConsolidateResults()
         {
-            if (Files == null)
-            {
-                return Enumerable.Empty<ConsolidatedTestResult>();
-            }
-
             var tests = Files.AllTests.Select(t => new ConsolidatedTestResult(t)).ToList();
 
             if (Results != null)
