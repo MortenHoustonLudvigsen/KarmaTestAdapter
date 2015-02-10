@@ -112,8 +112,8 @@
     <Compile Include="TestResults\SourceTests\FullPath.cs" />
     <Compile Include="TestResults\SourceTests\Path.cs" />
     <Compile Include="TestResults\SourceTests\_Tests.cs" />
-    <Compile Include="TestResults\StringExtensions\ToBool.cs" />
-    <Compile Include="TestResults\StringExtensions\ToInt.cs" />
+    <Compile Include="TestResults\StringExtensionsTests\ToBool.cs" />
+    <Compile Include="TestResults\StringExtensionsTests\ToInt.cs" />
     <Compile Include="XElementComparer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +129,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="TestResults\SuiteTests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
