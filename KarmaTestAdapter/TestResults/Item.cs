@@ -15,7 +15,12 @@ namespace KarmaTestAdapter.TestResults
         {
             Parent = parent;
             _element = element;
-            Children = element.GetElements().Select(e => Create(e));
+
+            Children = element
+                .GetElements()
+                .Select(e => Create(e))
+                .ToList();
+
             Name = Attribute("Name") ?? "";
             Root = GetParent<Karma>();
         }
@@ -42,7 +47,7 @@ namespace KarmaTestAdapter.TestResults
             {
                 return PathUtils.GetFullPath(path, Root.KarmaConfig.BasePath);
             }
-            return path;
+            return PathUtils.GetFullPath(path, null);
         }
 
         protected Item Create(XElement element)

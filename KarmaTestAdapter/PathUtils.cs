@@ -18,7 +18,7 @@ namespace KarmaTestAdapter
             }
             if (string.IsNullOrWhiteSpace(basePath))
             {
-                return path;
+                return path.Replace('/', Path.DirectorySeparatorChar);
             }
             var oldCwd = System.IO.Directory.GetCurrentDirectory();
             try

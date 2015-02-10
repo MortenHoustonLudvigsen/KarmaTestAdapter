@@ -69,6 +69,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include=".gitignore" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
