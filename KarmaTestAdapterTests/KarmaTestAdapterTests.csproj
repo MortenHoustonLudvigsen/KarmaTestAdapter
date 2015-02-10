@@ -68,6 +68,11 @@
     <Compile Include="TestResults\ConfigTests\Port.cs" />
     <Compile Include="TestResults\ConfigTests\_Tests.cs" />
     <Compile Include="TestResults\Constants.cs" />
+    <Compile Include="TestResults\FilesTests\Enumerable.cs" />
+    <Compile Include="TestResults\FilesTests\Suites.cs" />
+    <Compile Include="TestResults\FilesTests\AllTests.cs" />
+    <Compile Include="TestResults\FilesTests\Tests.cs" />
+    <Compile Include="TestResults\FilesTests\_Tests.cs" />
     <Compile Include="TestResults\FileTests\Included.cs" />
     <Compile Include="TestResults\FileTests\Name.cs" />
     <Compile Include="TestResults\FileTests\FullPath.cs" />
