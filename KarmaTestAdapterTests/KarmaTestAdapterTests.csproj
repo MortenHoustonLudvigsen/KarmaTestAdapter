@@ -114,6 +114,12 @@
     <Compile Include="TestResults\SourceTests\_Tests.cs" />
     <Compile Include="TestResults\StringExtensionsTests\ToBool.cs" />
     <Compile Include="TestResults\StringExtensionsTests\ToInt.cs" />
+    <Compile Include="TestResults\SuiteResultTests\AllTests.cs" />
+    <Compile Include="TestResults\SuiteResultTests\DisplayName.cs" />
+    <Compile Include="TestResults\SuiteResultTests\ParentSuite.cs" />
+    <Compile Include="TestResults\SuiteResultTests\Suites.cs" />
+    <Compile Include="TestResults\SuiteResultTests\TestResults.cs" />
+    <Compile Include="TestResults\SuiteResultTests\_Tests.cs" />
     <Compile Include="TestResults\SuiteTests\AllTests.cs" />
     <Compile Include="TestResults\SuiteTests\Source.cs" />
     <Compile Include="TestResults\SuiteTests\Column.cs" />

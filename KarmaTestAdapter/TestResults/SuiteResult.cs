@@ -22,6 +22,10 @@ namespace KarmaTestAdapter.TestResults
         {
             get
             {
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    return null;
+                }
                 return ParentSuite != null ? ParentSuite.DisplayName + " " + Name : Name;
             }
         }
