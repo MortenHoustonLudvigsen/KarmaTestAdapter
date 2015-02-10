@@ -13,15 +13,20 @@ namespace KarmaTestAdapter.TestResults
         public Source(Item parent, XElement element)
             : base(parent, element)
         {
+            Path = Attribute("Path");
+            Line = Attribute("Line").ToInt();
+            Column = Attribute("Column").ToInt();
+            FullPath = GetFullPath(Path);
         }
 
-        public string Path { get { return Attribute("Path"); } }
-        public int? Line { get { return Attribute("Line").ToInt(); } }
-        public int? Column { get { return Attribute("Column").ToInt(); } }
-
-        public string FullPath
+        public override bool IsValid
         {
-            get { return PathUtils.GetFullPath(Path, Root.KarmaConfig.BasePath); }
+            get { return !string.IsNullOrWhiteSpace(Path); }
         }
+
+        public string Path { get; private set; }
+        public int? Line { get; private set; }
+        public int? Column { get; private set; }
+        public string FullPath { get; private set; }
     }
 }

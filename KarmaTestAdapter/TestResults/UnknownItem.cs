@@ -13,5 +13,10 @@ namespace KarmaTestAdapter.TestResults
             : base(parent, element)
         {
         }
+
+        public override bool IsValid
+        {
+            get { return false; }
+        }
     }
 }

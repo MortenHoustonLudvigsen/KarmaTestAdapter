@@ -19,6 +19,11 @@ namespace KarmaTestAdapter.TestResults
             Column = Attribute("Column").ToInt();
         }
 
+        public override bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Name); }
+        }
+
         public string Framework { get; private set; }
         public int? Line { get; private set; }
         public int? Column { get; private set; }

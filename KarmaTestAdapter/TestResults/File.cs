@@ -16,18 +16,19 @@ namespace KarmaTestAdapter.TestResults
             Path = Attribute("Path");
             Served = Attribute("Served").ToBool();
             Included = Attribute("Included").ToBool();
+            Name = Path;
+            FullPath = GetFullPath(Path);
+        }
+
+        public override bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Path); }
         }
 
         public string Path { get; private set; }
         public bool? Served { get; private set; }
         public bool? Included { get; private set; }
-
-        public override string Name { get { return Path; } }
-
-        public string FullPath
-        {
-            get { return PathUtils.GetFullPath(Path, Root.KarmaConfig.BasePath); }
-        }
+        public string FullPath { get; private set; }
 
         public bool HasFile(string fullPath)
         {

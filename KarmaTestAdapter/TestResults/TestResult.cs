@@ -19,6 +19,13 @@ namespace KarmaTestAdapter.TestResults
             Outcome = GetTestOutcome(Attribute("Outcome"));
             Log = Elements("Log").Select(e => e.Value);
             Message = string.Join(Environment.NewLine, Log);
+            ParentSuite = GetParent<SuiteResult>();
+            Browser = GetParent<Browser>();
+        }
+
+        public override bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Name); }
         }
 
         public int? Id { get; private set; }
@@ -28,10 +35,10 @@ namespace KarmaTestAdapter.TestResults
         public string Message { get; private set; }
 
         [JsonIgnore]
-        public SuiteResult ParentSuite { get { return GetParent<SuiteResult>(); } }
+        public SuiteResult ParentSuite { get; private set; }
 
         [JsonIgnore]
-        public Browser Browser { get { return GetParent<Browser>(); } }
+        public Browser Browser { get; private set; }
 
         public string DisplayName
         {

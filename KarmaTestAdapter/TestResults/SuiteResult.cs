@@ -13,10 +13,16 @@ namespace KarmaTestAdapter.TestResults
         public SuiteResult(Item parent, XElement element)
             : base(parent, element)
         {
+            ParentSuite = GetParent<SuiteResult>();
+        }
+
+        public override bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Name); }
         }
 
         [JsonIgnore]
-        public SuiteResult ParentSuite { get { return GetParent<SuiteResult>(); } }
+        public SuiteResult ParentSuite { get; private set; }
 
         public string DisplayName
         {

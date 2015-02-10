@@ -14,12 +14,21 @@ namespace KarmaTestAdapter.TestResults
         public Test(Item parent, XElement element)
             : base(parent, element)
         {
+            Framework = Attribute("Framework");
+            Line = Attribute("Line").ToInt();
+            Column = Attribute("Column").ToInt();
+            Index = Attribute("Index").ToInt();
         }
 
-        public string Framework { get { return Attribute("Framework"); } }
-        public int? Line { get { return Attribute("Line").ToInt(); } }
-        public int? Column { get { return Attribute("Column").ToInt(); } }
-        public int? Index { get { return Attribute("Index").ToInt(); } }
+        public override bool IsValid
+        {
+            get { return !string.IsNullOrWhiteSpace(Name); }
+        }
+
+        public string Framework { get; private set; }
+        public int? Line { get; private set; }
+        public int? Column { get; private set; }
+        public int? Index { get; private set; }
 
         public string FullyQualifiedName
         {

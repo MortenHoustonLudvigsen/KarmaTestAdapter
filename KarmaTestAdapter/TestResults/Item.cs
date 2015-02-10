@@ -16,22 +16,33 @@ namespace KarmaTestAdapter.TestResults
             Parent = parent;
             _element = element;
             Children = element.GetElements().Select(e => Create(e));
+            Name = Attribute("Name") ?? "";
+            Root = GetParent<Karma>();
         }
 
         private XElement _element;
+
+        [JsonIgnore]
+        public abstract bool IsValid { get; }
 
         [JsonIgnore]
         public Item Parent { get; private set; }
 
         [JsonIgnore]
         public IEnumerable<Item> Children { get; private set; }
-        
-        public virtual string Name { get { return Attribute("Name"); } }
+
+        public string Name { get; protected set; }
 
         [JsonIgnore]
-        public Karma Root
+        public Karma Root { get; protected set; }
+
+        protected string GetFullPath(string path)
         {
-            get { return GetParent<Karma>(); }
+            if (Root != null && Root.KarmaConfig != null && !string.IsNullOrWhiteSpace(Root.KarmaConfig.BasePath))
+            {
+                return PathUtils.GetFullPath(path, Root.KarmaConfig.BasePath);
+            }
+            return path;
         }
 
         protected Item Create(XElement element)

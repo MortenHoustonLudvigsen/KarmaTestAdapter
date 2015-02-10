@@ -30,6 +30,12 @@ namespace KarmaTestAdapter.TestResults
             Results = GetChild<Results>() ?? new Results(this, null);
         }
 
+
+        public override bool IsValid
+        {
+            get { return true; }
+        }
+        
         public Config KarmaConfig { get; private set; }
         public Files Files { get; private set; }
         public Results Results { get; private set; }

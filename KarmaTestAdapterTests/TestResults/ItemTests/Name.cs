@@ -13,10 +13,16 @@ namespace KarmaTestAdapterTests.TestResults.ItemTests
         {
             partial class Empty
             {
-                [Fact(DisplayName = "Name should be null")]
-                public void NameShouldBeNull()
+                [Fact(DisplayName = "Name should not be null")]
+                public void NameShouldNotBeNull()
                 {
-                    Assert.Null(Item.Name);
+                    Assert.NotNull(Item.Name);
+                }
+
+                [Fact(DisplayName = "Name should be empty")]
+                public void NameShouldBeEmpty()
+                {
+                    Assert.Equal("", Item.Name);
                 }
             }
         }

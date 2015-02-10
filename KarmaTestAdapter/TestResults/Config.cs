@@ -17,6 +17,11 @@ namespace KarmaTestAdapter.TestResults
             Frameworks = Elements("frameworks").SelectMany(f => f.Elements("item").Select(e => e.Value));
         }
 
+        public override bool IsValid
+        {
+            get { return true; }
+        }
+
         public string BasePath { get; private set; }
         public int? Port { get; private set; }
         public IEnumerable<string> Frameworks { get; private set; }

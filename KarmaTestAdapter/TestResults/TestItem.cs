@@ -13,15 +13,18 @@ namespace KarmaTestAdapter.TestResults
         public TestItem(Item parent, XElement element)
             : base(parent, element)
         {
+            Source = GetChild<Source>();
+            File = GetParent<File>();
+            ParentSuite = GetParent<Suite>();
         }
 
-        public Source Source { get { return GetChild<Source>(); } }
+        public Source Source { get; private set; }
 
         [JsonIgnore]
-        public File File { get { return GetParent<File>(); } }
+        public File File { get; private set; }
 
         [JsonIgnore]
-        public Suite ParentSuite { get { return GetParent<Suite>(); } }
+        public Suite ParentSuite { get; private set; }
 
         public virtual string DisplayName
         {

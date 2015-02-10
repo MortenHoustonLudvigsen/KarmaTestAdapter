@@ -12,8 +12,15 @@ namespace KarmaTestAdapter.TestResults
         public Results(Item parent, XElement element)
             : base(parent, element)
         {
+            Browsers = GetChildren<Browser>();
         }
 
-        public virtual IEnumerable<Browser> Browsers { get { return GetChildren<Browser>(); } }
+
+        public override bool IsValid
+        {
+            get { return true; }
+        }
+
+        public virtual IEnumerable<Browser> Browsers { get; private set; }
     }
 }

@@ -13,12 +13,15 @@ namespace KarmaTestAdapter.TestResults
         public TestCaseContainer(Item parent, XElement element)
             : base(parent, element)
         {
+            Suites = GetChildren<Suite>();
+            Tests = GetChildren<Test>();
+            AllTests = GetAllChildren<Test>();
         }
 
-        public virtual IEnumerable<Suite> Suites { get { return GetChildren<Suite>(); } }
-        public virtual IEnumerable<Test> Tests { get { return GetChildren<Test>(); } }
-        
+        public virtual IEnumerable<Suite> Suites { get; private set; }
+        public virtual IEnumerable<Test> Tests { get; private set; }
+
         [JsonIgnore]
-        public virtual IEnumerable<Test> AllTests { get { return GetAllChildren<Test>(); } }
+        public virtual IEnumerable<Test> AllTests { get; private set; }
     }
 }

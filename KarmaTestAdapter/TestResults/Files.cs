@@ -14,6 +14,11 @@ namespace KarmaTestAdapter.TestResults
         {
         }
 
+        public override bool IsValid
+        {
+            get { return true; }
+        }
+
         public IEnumerator<File> GetEnumerator()
         {
             return GetChildren<File>().GetEnumerator();

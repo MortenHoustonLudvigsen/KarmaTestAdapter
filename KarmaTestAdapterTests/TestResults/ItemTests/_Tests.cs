@@ -35,6 +35,11 @@ namespace KarmaTestAdapterTests.TestResults.ItemTests
                 {
                 }
 
+                public override bool IsValid
+                {
+                    get { return true; }
+                }
+
                 public new KarmaTestAdapter.TestResults.Item Create(XElement element)
                 {
                     return base.Create(element);

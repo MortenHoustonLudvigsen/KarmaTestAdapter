@@ -16,6 +16,10 @@ namespace KarmaTestAdapter
             {
                 return null;
             }
+            if (string.IsNullOrWhiteSpace(basePath))
+            {
+                return path;
+            }
             var oldCwd = System.IO.Directory.GetCurrentDirectory();
             try
             {
