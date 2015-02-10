@@ -9,16 +9,16 @@ namespace KarmaTestAdapterTests.TestResults.KarmaTests
 {
     public partial class TestResults
     {
-        public class KarmaTestsHelper : Helper<KarmaTestAdapter.TestResults.Karma>
+        public class KarmaTestsHelper : Helper<KarmaTestAdapter.TestResults.Karma, KarmaTestAdapter.TestResults.Item>
         {
-            public virtual XElement GetElement()
+            public override KarmaTestAdapter.TestResults.Item CreateParent()
             {
-                return XDocument.Parse(Constants.KarmaXml).Root;
+                return null;
             }
 
             public override KarmaTestAdapter.TestResults.Karma CreateItem()
             {
-                return new KarmaTestAdapter.TestResults.Karma(GetElement());
+                return CreateKarma();
             }
         }
 

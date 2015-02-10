@@ -9,11 +9,16 @@ namespace KarmaTestAdapterTests.TestResults.FileTests
 {
     public partial class TestResults
     {
-        public class FileTestsHelper : Helper<KarmaTestAdapter.TestResults.File>
+        public class FileTestsHelper : Helper<KarmaTestAdapter.TestResults.File, KarmaTestAdapter.TestResults.Files>
         {
+            public override KarmaTestAdapter.TestResults.Files CreateParent()
+            {
+                return CreateKarma().Files;
+            }
+
             public override KarmaTestAdapter.TestResults.File CreateItem()
             {
-                return CreateKarma().Files.Skip(2).First();
+                return CreateParent().Skip(2).First();
             }
         }
 
@@ -21,7 +26,7 @@ namespace KarmaTestAdapterTests.TestResults.FileTests
         {
             public override KarmaTestAdapter.TestResults.File CreateItem()
             {
-                return new KarmaTestAdapter.TestResults.File(CreateKarma().Files, null);
+                return new KarmaTestAdapter.TestResults.File(CreateParent(), null);
             }
         }
 

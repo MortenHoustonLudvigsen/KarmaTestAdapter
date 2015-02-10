@@ -9,11 +9,16 @@ namespace KarmaTestAdapterTests.TestResults.ConfigTests
 {
     public partial class TestResults
     {
-        public class ConfigTestsHelper : Helper<KarmaTestAdapter.TestResults.Config>
+        public class ConfigTestsHelper : Helper<KarmaTestAdapter.TestResults.Config, KarmaTestAdapter.TestResults.Karma>
         {
+            public override KarmaTestAdapter.TestResults.Karma CreateParent()
+            {
+                return CreateKarma();
+            }
+
             public override KarmaTestAdapter.TestResults.Config CreateItem()
             {
-                return CreateKarma().KarmaConfig;
+                return CreateParent().KarmaConfig;
             }
         }
 
@@ -21,7 +26,7 @@ namespace KarmaTestAdapterTests.TestResults.ConfigTests
         {
             public override KarmaTestAdapter.TestResults.Config CreateItem()
             {
-                return new KarmaTestAdapter.TestResults.Config(CreateKarma(), null);
+                return new KarmaTestAdapter.TestResults.Config(CreateParent(), null);
             }
         }
 

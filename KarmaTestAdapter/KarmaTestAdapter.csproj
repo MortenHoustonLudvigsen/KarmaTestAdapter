@@ -129,6 +129,7 @@
     <Compile Include="TestResults\Suite.cs" />
     <Compile Include="TestResults\ResultContainer.cs" />
     <Compile Include="TestResults\TestCaseContainer.cs" />
+    <Compile Include="TestResults\TestItem.cs" />
     <Compile Include="TestResults\TestResult.cs" />
     <Compile Include="TestResults\Test.cs" />
     <Compile Include="TestResults\Karma.cs" />

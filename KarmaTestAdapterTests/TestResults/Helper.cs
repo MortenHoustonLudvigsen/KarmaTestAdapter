@@ -8,9 +8,11 @@ using System.Xml.Linq;
 
 namespace KarmaTestAdapterTests.TestResults
 {
-    public abstract class Helper<TItem>
+    public abstract class Helper<TItem, TParent>
         where TItem : KarmaTestAdapter.TestResults.Item
+        where TParent : KarmaTestAdapter.TestResults.Item
     {
+        public abstract TParent CreateParent();
         public abstract TItem CreateItem();
 
         public KarmaTestAdapter.TestResults.Karma CreateKarma()
@@ -19,7 +21,7 @@ namespace KarmaTestAdapterTests.TestResults
         }
 
         public abstract class Tests<THelper>
-            where THelper : Helper<TItem>, new()
+            where THelper : Helper<TItem, TParent>, new()
         {
             protected THelper _helper = new THelper();
             protected TItem Item { get; set; }

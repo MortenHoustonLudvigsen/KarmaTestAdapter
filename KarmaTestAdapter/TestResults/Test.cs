@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace KarmaTestAdapter.TestResults
 {
-    public class Test : Item
+    public class Test : TestItem
     {
         public Test(Item parent, XElement element)
             : base(parent, element)
@@ -20,7 +20,6 @@ namespace KarmaTestAdapter.TestResults
         public int? Line { get { return Attribute("Line").ToInt(); } }
         public int? Column { get { return Attribute("Column").ToInt(); } }
         public int? Index { get { return Attribute("Index").ToInt(); } }
-        public Source Source { get { return GetChild<Source>(); } }
 
         [JsonIgnore]
         public File File { get { return GetParent<File>(); } }

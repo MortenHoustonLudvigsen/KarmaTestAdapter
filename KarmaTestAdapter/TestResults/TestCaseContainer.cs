@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace KarmaTestAdapter.TestResults
 {
-    public abstract class TestCaseContainer : Item
+    public abstract class TestCaseContainer : TestItem
     {
         public TestCaseContainer(Item parent, XElement element)
             : base(parent, element)

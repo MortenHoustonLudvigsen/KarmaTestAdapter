@@ -11,9 +11,9 @@ namespace KarmaTestAdapterTests.TestResults.ItemTests
 {
     public partial class TestResults
     {
-        public abstract class ItemTestsHelper : Helper<ItemTestsHelper.ConcreteItem>
+        public abstract class ItemTestsHelper : Helper<ItemTestsHelper.ConcreteItem, KarmaTestAdapter.TestResults.Item>
         {
-            public virtual KarmaTestAdapter.TestResults.Item GetParent()
+            public override KarmaTestAdapter.TestResults.Item CreateParent()
             {
                 return null;
             }
@@ -25,7 +25,7 @@ namespace KarmaTestAdapterTests.TestResults.ItemTests
 
             public override ConcreteItem CreateItem()
             {
-                return new ConcreteItem(GetParent(), GetElement());
+                return new ConcreteItem(CreateParent(), GetElement());
             }
 
             public class ConcreteItem : KarmaTestAdapter.TestResults.Item
@@ -115,7 +115,7 @@ namespace KarmaTestAdapterTests.TestResults.ItemTests
                         public Parent3() : base(new Parent2(), null) { }
                     }
 
-                    public override KarmaTestAdapter.TestResults.Item GetParent()
+                    public override KarmaTestAdapter.TestResults.Item CreateParent()
                     {
                         return new Parent3();
                     }

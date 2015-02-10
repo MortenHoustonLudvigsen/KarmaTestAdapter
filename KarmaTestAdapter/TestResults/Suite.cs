@@ -14,11 +14,14 @@ namespace KarmaTestAdapter.TestResults
         public Suite(Item parent, XElement element)
             : base(parent, element)
         {
+            Framework = Attribute("Framework");
+            Line = Attribute("Line").ToInt();
+            Column = Attribute("Column").ToInt();
         }
 
-        public string Framework { get { return Attribute("Framework"); } }
-        public int? Line { get { return Attribute("Line").ToInt(); } }
-        public int? Column { get { return Attribute("Column").ToInt(); } }
+        public string Framework { get; private set; }
+        public int? Line { get; private set; }
+        public int? Column { get; private set; }
         public Source Source { get { return GetChild<Source>(); } }
 
         [JsonIgnore]
