@@ -34,16 +34,5 @@ namespace KarmaTestAdapter.TestResults
             }
             return null;
         }
-
-        public static string ToPath(this string value)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                return value
-                    .Replace('/', Path.DirectorySeparatorChar)
-                    .Replace('\\', Path.DirectorySeparatorChar);
-            }
-            return null;
-        }
     }
 }

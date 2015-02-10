@@ -112,6 +112,8 @@
     <Compile Include="TestResults\SourceTests\FullPath.cs" />
     <Compile Include="TestResults\SourceTests\Path.cs" />
     <Compile Include="TestResults\SourceTests\_Tests.cs" />
+    <Compile Include="TestResults\StringExtensions\ToBool.cs" />
+    <Compile Include="TestResults\StringExtensions\ToInt.cs" />
     <Compile Include="XElementComparer.cs" />
   </ItemGroup>
   <ItemGroup>
