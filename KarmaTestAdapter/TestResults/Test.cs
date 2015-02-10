@@ -21,20 +21,6 @@ namespace KarmaTestAdapter.TestResults
         public int? Column { get { return Attribute("Column").ToInt(); } }
         public int? Index { get { return Attribute("Index").ToInt(); } }
 
-        [JsonIgnore]
-        public File File { get { return GetParent<File>(); } }
-
-        [JsonIgnore]
-        public Suite ParentSuite { get { return GetParent<Suite>(); } }
-
-        public string DisplayName
-        {
-            get
-            {
-                return ParentSuite != null ? ParentSuite.DisplayName + " " + Name : Name;
-            }
-        }
-
         public string FullyQualifiedName
         {
             get

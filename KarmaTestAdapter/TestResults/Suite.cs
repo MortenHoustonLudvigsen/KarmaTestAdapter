@@ -22,21 +22,6 @@ namespace KarmaTestAdapter.TestResults
         public string Framework { get; private set; }
         public int? Line { get; private set; }
         public int? Column { get; private set; }
-        public Source Source { get { return GetChild<Source>(); } }
-
-        [JsonIgnore]
-        public File File { get { return GetParent<File>(); } }
-
-        [JsonIgnore]
-        public Suite ParentSuite { get { return GetParent<Suite>(); } }
-
-        public string DisplayName
-        {
-            get
-            {
-                return ParentSuite != null ? ParentSuite.DisplayName + " " + Name : Name;
-            }
-        }
 
         public string FullyQualifiedName
         {
