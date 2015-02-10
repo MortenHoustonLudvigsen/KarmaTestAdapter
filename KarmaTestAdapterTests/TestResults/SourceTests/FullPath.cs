@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace KarmaTestAdapterTests.TestResults.FileTests
+namespace KarmaTestAdapterTests.TestResults.SourceTests
 {
     partial class TestResults
     {
-        partial class File
+        partial class Source
         {
             partial class Empty
             {
@@ -29,7 +29,7 @@ namespace KarmaTestAdapterTests.TestResults.FileTests
             [Fact(DisplayName = "FullPath should be correct")]
             public void FullPathShouldBeCorrect()
             {
-                Assert.Equal(@"C:\Git\KarmaTestAdapter\karma-vs-reporter\test\testfiles\TestFile2.js", Item.FullPath);
+                Assert.Equal(@"C:\Git\KarmaTestAdapter\karma-vs-reporter\test\testfiles\TestFile2.ts", Item.FullPath);
             }
         }
     }

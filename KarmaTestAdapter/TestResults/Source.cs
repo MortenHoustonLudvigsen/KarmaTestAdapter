@@ -21,7 +21,7 @@ namespace KarmaTestAdapter.TestResults
 
         public string FullPath
         {
-            get { return IOPath.GetFullPath(IOPath.Combine(Root.KarmaConfig.BasePath, Path)); }
+            get { return PathUtils.GetFullPath(Path, Root.KarmaConfig.BasePath); }
         }
     }
 }

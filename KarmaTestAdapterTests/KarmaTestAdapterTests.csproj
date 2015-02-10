@@ -107,6 +107,11 @@
     <Compile Include="TestResults\ResultsTests\Suites.cs" />
     <Compile Include="TestResults\ResultsTests\TestResults.cs" />
     <Compile Include="TestResults\ResultsTests\_Tests.cs" />
+    <Compile Include="TestResults\SourceTests\Column.cs" />
+    <Compile Include="TestResults\SourceTests\Line.cs" />
+    <Compile Include="TestResults\SourceTests\FullPath.cs" />
+    <Compile Include="TestResults\SourceTests\Path.cs" />
+    <Compile Include="TestResults\SourceTests\_Tests.cs" />
     <Compile Include="XElementComparer.cs" />
   </ItemGroup>
   <ItemGroup>

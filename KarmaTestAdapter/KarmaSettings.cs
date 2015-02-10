@@ -189,20 +189,7 @@ namespace KarmaTestAdapter
 
         private string GetFullPath(string path)
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                path = ".";
-            }
-            var oldCwd = System.IO.Directory.GetCurrentDirectory();
-            try
-            {
-                System.IO.Directory.SetCurrentDirectory(Directory);
-                return Path.GetFullPath(path);
-            }
-            finally
-            {
-                System.IO.Directory.SetCurrentDirectory(oldCwd);
-            }
+            return PathUtils.GetFullPath(string.IsNullOrWhiteSpace(path) ? "." : path, Directory);
         }
 
         private FilesSpec GetTestFilesSpec()

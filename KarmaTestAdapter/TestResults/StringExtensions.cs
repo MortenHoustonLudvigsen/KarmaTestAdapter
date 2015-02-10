@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,17 @@ namespace KarmaTestAdapter.TestResults
                 {
                     return result;
                 }
+            }
+            return null;
+        }
+
+        public static string ToPath(this string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return value
+                    .Replace('/', Path.DirectorySeparatorChar)
+                    .Replace('\\', Path.DirectorySeparatorChar);
             }
             return null;
         }

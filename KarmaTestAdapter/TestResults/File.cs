@@ -26,14 +26,7 @@ namespace KarmaTestAdapter.TestResults
 
         public string FullPath
         {
-            get
-            {
-                if (Path == null || IOPath.IsPathRooted(Path))
-                {
-                    return Path;
-                }
-                return IOPath.GetFullPath(IOPath.Combine(Root.KarmaConfig.BasePath, Path));
-            }
+            get { return PathUtils.GetFullPath(Path, Root.KarmaConfig.BasePath); }
         }
 
         public bool HasFile(string fullPath)

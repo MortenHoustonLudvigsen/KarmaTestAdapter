@@ -10,6 +10,24 @@ namespace KarmaTestAdapter
 {
     public static class PathUtils
     {
+        public static string GetFullPath(string path, string basePath)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return null;
+            }
+            var oldCwd = System.IO.Directory.GetCurrentDirectory();
+            try
+            {
+                System.IO.Directory.SetCurrentDirectory(basePath);
+                return Path.GetFullPath(path);
+            }
+            finally
+            {
+                System.IO.Directory.SetCurrentDirectory(oldCwd);
+            }
+        }
+
         public static bool PathsEqual(string path1, string path2)
         {
             if (string.IsNullOrWhiteSpace(path1) || string.IsNullOrWhiteSpace(path2))
