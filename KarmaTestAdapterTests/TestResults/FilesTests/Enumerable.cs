@@ -32,8 +32,8 @@ namespace KarmaTestAdapterTests.TestResults.FilesTests
                 Assert.NotNull(Item);
             }
 
-            [Fact(DisplayName = "should be non empty")]
-            public void ShouldBeNonEmpty()
+            [Fact(DisplayName = "should not be empty")]
+            public void ShouldNotBeEmpty()
             {
                 Assert.NotEmpty(Item);
             }

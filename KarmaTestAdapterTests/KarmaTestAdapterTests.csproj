@@ -102,6 +102,11 @@
     <Compile Include="TestResults\KarmaTests\KarmaConfig.cs" />
     <Compile Include="TestResults\KarmaTests\Results.cs" />
     <Compile Include="TestResults\KarmaTests\_Tests.cs" />
+    <Compile Include="TestResults\ResultsTests\AllTestResults.cs" />
+    <Compile Include="TestResults\ResultsTests\Browsers.cs" />
+    <Compile Include="TestResults\ResultsTests\Suites.cs" />
+    <Compile Include="TestResults\ResultsTests\TestResults.cs" />
+    <Compile Include="TestResults\ResultsTests\_Tests.cs" />
     <Compile Include="XElementComparer.cs" />
   </ItemGroup>
   <ItemGroup>

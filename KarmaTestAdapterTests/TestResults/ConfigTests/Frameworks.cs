@@ -32,8 +32,8 @@ namespace KarmaTestAdapterTests.TestResults.ConfigTests
                 Assert.NotNull(Item.Frameworks);
             }
 
-            [Fact(DisplayName = "Frameworks should be non empty")]
-            public void FrameworksShouldBeNonEmpty()
+            [Fact(DisplayName = "Frameworks should not be empty")]
+            public void FrameworksShouldNotBeEmpty()
             {
                 Assert.NotEmpty(Item.Frameworks);
             }
