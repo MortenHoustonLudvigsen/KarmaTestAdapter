@@ -14,14 +14,18 @@ namespace KarmaTestAdapter.TestResults
         public TestResult(Item parent, XElement element)
             : base(parent, element)
         {
+            Id = Attribute("Id").ToInt();
+            Time = TimeSpan.FromMilliseconds(Math.Max(0.5, Attribute("Time").ToInt() ?? 0));
+            Outcome = GetTestOutcome(Attribute("Outcome"));
+            Log = Elements("Log").Select(e => e.Value);
+            Message = string.Join(Environment.NewLine, Log);
         }
 
-        public int? Id { get { return Attribute("Id").ToInt(); } }
-
-        public TimeSpan Time { get { return TimeSpan.FromMilliseconds(Math.Max(0.5, Attribute("Time").ToInt() ?? 0)); } }
-        public TestOutcome Outcome { get { return GetTestOutcome(Attribute("Outcome")); } }
-        public IEnumerable<string> Log { get { return Elements("Log").Select(e => e.Value); } }
-        public string Message { get { return string.Join(Environment.NewLine, Log); } }
+        public int? Id { get; private set; }
+        public TimeSpan Time { get; private set; }
+        public TestOutcome Outcome { get; private set; }
+        public IEnumerable<string> Log { get; private set; }
+        public string Message { get; private set; }
 
         [JsonIgnore]
         public SuiteResult ParentSuite { get { return GetParent<SuiteResult>(); } }
@@ -33,6 +37,10 @@ namespace KarmaTestAdapter.TestResults
         {
             get
             {
+                if (string.IsNullOrWhiteSpace(Name))
+                {
+                    return null;
+                }
                 return ParentSuite != null ? ParentSuite.DisplayName + " " + Name : Name;
             }
         }

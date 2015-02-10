@@ -114,7 +114,7 @@
     <Compile Include="TestResults\SourceTests\_Tests.cs" />
     <Compile Include="TestResults\StringExtensionsTests\ToBool.cs" />
     <Compile Include="TestResults\StringExtensionsTests\ToInt.cs" />
-    <Compile Include="TestResults\SuiteResultTests\AllTests.cs" />
+    <Compile Include="TestResults\SuiteResultTests\AllTestResults.cs" />
     <Compile Include="TestResults\SuiteResultTests\DisplayName.cs" />
     <Compile Include="TestResults\SuiteResultTests\ParentSuite.cs" />
     <Compile Include="TestResults\SuiteResultTests\Suites.cs" />
@@ -128,6 +128,14 @@
     <Compile Include="TestResults\SuiteTests\Suites.cs" />
     <Compile Include="TestResults\SuiteTests\Tests.cs" />
     <Compile Include="TestResults\SuiteTests\_Tests.cs" />
+    <Compile Include="TestResults\TestResultTests\DisplayName.cs" />
+    <Compile Include="TestResults\TestResultTests\Message.cs" />
+    <Compile Include="TestResults\TestResultTests\Log.cs" />
+    <Compile Include="TestResults\TestResultTests\Outcome.cs" />
+    <Compile Include="TestResults\TestResultTests\Id.cs" />
+    <Compile Include="TestResults\TestResultTests\ParentSuite.cs" />
+    <Compile Include="TestResults\TestResultTests\Time.cs" />
+    <Compile Include="TestResults\TestResultTests\_Tests.cs" />
     <Compile Include="TestResults\TestTests\Column.cs" />
     <Compile Include="TestResults\TestTests\DisplayName.cs" />
     <Compile Include="TestResults\TestTests\Framework.cs" />
