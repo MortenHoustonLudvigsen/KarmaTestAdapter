@@ -42,7 +42,7 @@ namespace KarmaTestAdapter.TestResults
 
         public IEnumerable<TestCase> GetTestCases(string source)
         {
-            return Files.AllTests.Select(test => CreateTestCase(test, source));
+            return Files.AllTests.Where(t => t.IsValid).Select(test => CreateTestCase(test, source));
         }
 
         public static TestCase CreateTestCase(Test test, string source)
