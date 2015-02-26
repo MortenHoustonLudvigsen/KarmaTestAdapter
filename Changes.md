@@ -1,3 +1,9 @@
+## Version 0.8.3
+
+### Bug fixes
+
+* Ignore tests with no names
+
 ## Version 0.8.2
 
 * Bug fixes
