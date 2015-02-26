@@ -51,13 +51,13 @@ Example:
 ```json
 {
     "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/karma-vs-reporter.schema.json",
-    "karmaConfigFile": "karma.conf.test.js",
+    "KarmaConfigFile": "karma.conf.test.js",
     "ServerMode": true,
     "ServerPort": 3535,
     "LogToFile": true,
     "TestFiles": [ "test/**/*test.js" ],
-    "LogDirectory": "KarmaTestAdapter",
-    "OutputDirectory": "KarmaTestAdapter/Output",
+    "LogDirectory": "TestResults/Karma",
+    "OutputDirectory": "TestResults/Karma/Output",
     "config": {
         "browsers": [
             "PhantomJS"
