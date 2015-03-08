@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Changes.md = Changes.md
-		karma-vs-reporter.schema.json = karma-vs-reporter.schema.json
+		KarmaTestAdapter.schema.json = KarmaTestAdapter.schema.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
