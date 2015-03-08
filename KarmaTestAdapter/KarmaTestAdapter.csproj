@@ -190,7 +190,6 @@
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LICENSE" />
     <Content Include="package.json" />
     <Content Include="tsd.json" />
   </ItemGroup>

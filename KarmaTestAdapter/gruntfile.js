@@ -93,7 +93,7 @@ module.exports = function (grunt) {
                     // Binaries
                     { expand: true, cwd: 'bin/', src: ['**'], dest: 'build/' },
                     // LICENSE
-                    { expand: true, src: ['LICENSE'], dest: 'build/' }
+                    { expand: true, cwd: '../', src: ['LICENSE'], dest: 'build/' }
                 ]
             }
         },
