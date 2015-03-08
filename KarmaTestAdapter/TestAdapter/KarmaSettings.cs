@@ -70,6 +70,11 @@ namespace KarmaTestAdapter.TestAdapter
         public string KarmaConfigFile { get; set; }
 
         /// <summary>
+        /// True if the Karma test adapter should be disabled for this karma configuration file
+        /// </summary>
+        public bool Disabled { get; set; }
+
+        /// <summary>
         /// Should logging be done to a file as well as normal logging
         /// </summary>
         public bool LogToFile { get; set; }

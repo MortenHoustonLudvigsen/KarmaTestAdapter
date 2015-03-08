@@ -26,6 +26,10 @@ namespace KarmaTestAdapter.TestAdapter
             {
                 Settings = new KarmaSettings(Source, Logger);
                 SetIsValid(Settings.AreValid, "Settings are not valid");
+                if (Settings.Disabled)
+                {
+                    SetIsValid(false, string.Format("Karma is disabled in {0}", PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile)));
+                }
             }
             catch (Exception ex)
             {
