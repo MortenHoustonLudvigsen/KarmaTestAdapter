@@ -1,0 +1,104 @@
+﻿{
+    "KarmaConfig": "karma.conf.js",
+    "Specs": [
+        {
+            "Description": "Spec 1",
+            "UniqueName": "Suite 1.Suite 2.Spec 1",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": [ 4, 7 ],
+            "Success": true,
+            "Output": "Spec 1 message"
+        },
+        {
+            "Description": "Spec 2",
+            "UniqueName": "Suite 1.Suite 2.Spec 2",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 8,
+            "Success": true
+        },
+        {
+            "Description": "Spec 3",
+            "UniqueName": "Suite 1.Suite 2.Spec 3",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 9,
+            "Success": false
+        },
+        {
+            "Description": "Spec 4",
+            "UniqueName": "Suite 1.Suite 2.Spec 4",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 10,
+            "Success": false
+        },
+        {
+            "Description": "test no 1",
+            "UniqueName": "Suite 3.test no 1",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 2",
+            "UniqueName": "Suite 3.test no 2",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 3",
+            "UniqueName": "Suite 3.test no 3",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 4",
+            "UniqueName": "Suite 3.test no 4",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 5",
+            "UniqueName": "Suite 3.test no 5",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 6",
+            "UniqueName": "Suite 3.test no 6",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 7",
+            "UniqueName": "Suite 3.test no 7",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 8",
+            "UniqueName": "Suite 3.test no 8",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 9",
+            "UniqueName": "Suite 3.test no 9",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        },
+        {
+            "Description": "test no 10",
+            "UniqueName": "Suite 3.test no 10",
+            "FileName": "specs\\singleSpec.ts",
+            "LineNumber": 15,
+            "Success": true
+        }
+    ]
+}

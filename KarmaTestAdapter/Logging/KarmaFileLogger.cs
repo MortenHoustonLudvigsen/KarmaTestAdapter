@@ -18,11 +18,6 @@ namespace KarmaTestAdapter.Logging
             Filename = filename;
         }
 
-        public override void SendMessage(TestMessageLevel testMessageLevel, string message)
-        {
-            Log(GetMessageLevel(testMessageLevel), message);
-        }
-
         public override void Clear()
         {
             try
@@ -32,24 +27,24 @@ namespace KarmaTestAdapter.Logging
             catch { }
         }
 
-        public override void Log(MessageLevel messageLevel, string message)
+        public override void Log(KarmaLogLevel level, string phase, string message)
         {
             try
             {
                 using (var file = File.AppendText(Filename))
                 {
-                    file.WriteLine(FormatMessage(messageLevel, message));
+                    file.WriteLine(FormatMessage(level, phase, message));
                 }
             }
             catch { }
         }
 
-        protected override string FormatMessageInternal(MessageLevel level, string message)
+        protected override string FormatMessageInternal(KarmaLogLevel level, string phase, string message)
         {
             return FormatMessage(
                 DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss.fff"),
-                Phase,
-                LevelText(level),
+                phase,
+                level.LevelText(),
                 message
             );
         }

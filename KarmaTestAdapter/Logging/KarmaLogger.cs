@@ -11,11 +11,27 @@ namespace KarmaTestAdapter.Logging
 {
     public class KarmaLogger : KarmaLoggerBase
     {
-        public static IKarmaLogger Create(ILogger logger = null, IMessageLogger messageLogger = null, bool newGlobalLog = false)
+        private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
+
+        public KarmaLogger(ILogger logger, string phase, bool newGlobalLog = false)
+            : this(logger, null, phase, newGlobalLog)
         {
-            var karmaLogger = new KarmaLogger();
-            karmaLogger.AddLogger(logger);
-            karmaLogger.AddLogger(messageLogger);
+        }
+
+        public KarmaLogger(IMessageLogger messageLogger, string phase, bool newGlobalLog = false)
+            : this(null, messageLogger, phase, newGlobalLog)
+        {
+        }
+
+        public KarmaLogger(IKarmaLogger karmaLogger, string phase)
+        {
+            _phase = phase;
+            this.AddLogger(karmaLogger);
+        }
+
+        private KarmaLogger(ILogger logger, IMessageLogger messageLogger, string phase, bool newGlobalLog)
+        {
+            _phase = phase;
             if (Globals.Debug)
             {
                 if (!Directory.Exists(Globals.GlobalLogDir))
@@ -26,20 +42,17 @@ namespace KarmaTestAdapter.Logging
                 {
                     File.Delete(Globals.GlobalLogFile);
                 }
-                karmaLogger.Info("Logging to {0}", Globals.GlobalLogFile);
-                karmaLogger.AddLogger(Globals.GlobalLogFile);
+                this.Info("Logging to {0}", Globals.GlobalLogFile);
+                this.AddLogger(Globals.GlobalLogFile);
             }
-            return karmaLogger;
+            this.AddLogger(logger);
+            this.AddLogger(messageLogger);
         }
 
-        private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
-
-        public KarmaLogger(params IKarmaLogger[] loggers)
+        private string _phase;
+        public override string Phase
         {
-            foreach (var logger in loggers)
-            {
-                AddLogger(logger);
-            }
+            get { return _phase ?? base.Phase; }
         }
 
         public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
@@ -50,7 +63,7 @@ namespace KarmaTestAdapter.Logging
             }
             foreach (var logger in _loggers)
             {
-                if (logger.HasLogger<TLogger>(predicate))
+                if (logger.HasLogger(predicate))
                 {
                     return true;
                 }
@@ -62,9 +75,7 @@ namespace KarmaTestAdapter.Logging
         {
             if (!HasLogger(predicate))
             {
-                var logger = createLogger();
-                logger.Parent = this;
-                _loggers.Add(logger);
+                _loggers.Add(createLogger());
             }
         }
 
@@ -72,22 +83,6 @@ namespace KarmaTestAdapter.Logging
         {
             var loggersToRemove = _loggers.OfType<TLogger>().Where(predicate).Cast<IKarmaLogger>().ToList();
             _loggers.RemoveAll(l => loggersToRemove.Contains(l));
-            foreach (var logger in loggersToRemove)
-            {
-                logger.Parent = null;
-            }
-        }
-
-        public override void SendMessage(TestMessageLevel testMessageLevel, string message)
-        {
-            foreach (var logger in _loggers)
-            {
-                try
-                {
-                    logger.SendMessage(testMessageLevel, message);
-                }
-                catch { }
-            }
         }
 
         public override void Clear()
@@ -102,25 +97,16 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public override void Log(MessageLevel messageLevel, string message)
+        public override void Log(KarmaLogLevel level, string phase, string message)
         {
             foreach (var logger in _loggers)
             {
                 try
                 {
-                    logger.Log(messageLevel, message);
+                    logger.Log(level, phase, message);
                 }
                 catch { }
             }
-        }
-
-        public override void Dispose()
-        {
-            foreach (var logger in _loggers.ToList())
-            {
-                logger.Parent = null;
-            }
-            base.Dispose();
         }
     }
 }

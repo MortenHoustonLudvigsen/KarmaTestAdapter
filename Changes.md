@@ -1,3 +1,9 @@
+## Version 1.0.0
+
+* The node package `karma-vs-reporter` is deprecated, and is no longer used
+
+* The settings file `karma-vs-reporter.json` is now `KarmaTestAdapter.json`
+
 ## Version 0.8.3
 
 ### Bug fixes

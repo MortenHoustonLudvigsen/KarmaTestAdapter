@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 using Ude;
 
 namespace KarmaTestAdapter
@@ -59,7 +59,7 @@ namespace KarmaTestAdapter
             return string.Equals(Path.GetDirectoryName(path), directory, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string GetRelativePath(string basePath, string fullPath, bool onlyLocal)
+        public static string GetRelativePath(string basePath, string fullPath, bool onlyLocal = true)
         {
             if (string.IsNullOrWhiteSpace(basePath) || string.IsNullOrWhiteSpace(fullPath))
             {
