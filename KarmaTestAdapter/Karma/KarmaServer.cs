@@ -1,4 +1,5 @@
 ﻿using KarmaTestAdapter.Logging;
+using KarmaTestAdapter.TestAdapter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,28 +24,23 @@ namespace KarmaTestAdapter.Karma
 
     public class KarmaServer
     {
-        public KarmaServer(string karmaConfigFile, IKarmaLogger logger)
+        public KarmaServer(KarmaSettings settings, IKarmaLogger logger)
         {
             Logger = logger;
 
-            if (string.IsNullOrWhiteSpace(karmaConfigFile))
+            if (!settings.AreValid)
             {
-                throw new ArgumentNullException("karmaConfigFile");
+                throw new ArgumentException("Settings are not valid", "settings");
             }
 
-            if (!File.Exists(karmaConfigFile))
-            {
-                throw new ArgumentException("Configuration file does not exist: " + karmaConfigFile, "karmaConfigFile");
-            }
-
-            KarmaConfigFile = karmaConfigFile;
+            Settings = settings;
             State = KarmaServerState.None;
         }
 
         public IKarmaLogger Logger { get; private set; }
-        public string KarmaConfigFile { get; private set; }
-        public string WorkingDirectory { get { return Path.GetDirectoryName(KarmaConfigFile); } }
+        public KarmaSettings Settings { get; private set; }
         public string StartScript { get { return Path.Combine(Globals.LibDirectory, "Start.js"); } }
+        public string WorkingDirectory { get { return Path.GetDirectoryName(Settings.KarmaConfigFile); } }
         public string NodePath { get { return string.Join(";", GetNodePath(WorkingDirectory)); } }
         public KarmaServerState State { get; private set; }
         public int Port { get; private set; }
@@ -69,14 +65,14 @@ namespace KarmaTestAdapter.Karma
 
         public ProcessOptions GetProcessOptions()
         {
-            if (!Directory.Exists(WorkingDirectory))
-            {
-                throw new Exception("Could not find the working directory");
-            }
-
             if (!File.Exists(StartScript))
             {
                 throw new Exception("Could not find start script for KarmaTestAdapter (" + StartScript + ")");
+            }
+
+            if (!File.Exists(Settings.KarmaConfigFile))
+            {
+                throw new Exception("Could not find karma configuration file (" + PathUtils.GetRelativePath(WorkingDirectory, Settings.KarmaConfigFile) + ")");
             }
 
             var options = new ProcessOptions("node")
@@ -89,7 +85,11 @@ namespace KarmaTestAdapter.Karma
             options.EnvironmentVariables["NODE_PATH"] = NodePath;
 
             options.Add(StartScript);
-            options.Add("--karma", Path.GetFileName(KarmaConfigFile));
+            options.Add("--karma", PathUtils.GetRelativePath(WorkingDirectory, Settings.KarmaConfigFile));
+            if (Settings.HasSettingsFile && File.Exists(Settings.SettingsFile))
+            {
+                options.Add("--settings", PathUtils.GetRelativePath(WorkingDirectory, Settings.SettingsFile));
+            }
 
             return options;
         }

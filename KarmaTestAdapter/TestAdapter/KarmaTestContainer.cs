@@ -128,7 +128,7 @@ namespace KarmaTestAdapter.TestAdapter
         {
             try
             {
-                KarmaServer = new KarmaServer(Settings.KarmaConfigFile, Logger);
+                KarmaServer = new KarmaServer(Settings, Logger);
                 KarmaServer.OutputReceived += line => KarmaLogger.Info(line);
                 KarmaServer.ErrorReceived += line => KarmaLogger.Error(line);
                 KarmaServer.Started += port => OnServerStarted(port);

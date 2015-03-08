@@ -1,6 +1,7 @@
 ﻿using KarmaTestAdapter;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
+using KarmaTestAdapter.TestAdapter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -91,7 +92,8 @@ namespace KarmaTestAdapterTests.Expectations
         public async Task PopulateKarmaSpecs()
         {
             var karmaSpecs = new List<KarmaSpec>();
-            var server = new KarmaServer(KarmaConfig, Logger);
+            var settings = new KarmaSettings(KarmaConfig, Logger);
+            var server = new KarmaServer(settings, Logger);
             server.OutputReceived += line => Logger.Info("[OUT] {0}", line);
             server.ErrorReceived += line => Logger.Info("[ERR] {0}", line);
             var port = await server.StartServer(60000);

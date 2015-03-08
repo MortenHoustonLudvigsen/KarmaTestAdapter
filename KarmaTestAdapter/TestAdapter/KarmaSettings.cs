@@ -13,6 +13,7 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaSettings(string configFile, IKarmaLogger logger)
         {
             AreValid = false;
+            HasSettingsFile = false;
             Logger = logger;
 
             try
@@ -27,6 +28,7 @@ namespace KarmaTestAdapter.TestAdapter
                         SettingsFile = configFile;
                         KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
                         AreValid = true;
+                        HasSettingsFile = true;
                     }
                     catch (Exception ex)
                     {
@@ -89,6 +91,12 @@ namespace KarmaTestAdapter.TestAdapter
         /// </summary>
         [JsonIgnore]
         public string SettingsFile { get; private set; }
+
+        /// <summary>
+        /// True if a settings file (KarmaTestAdapter.json) is used
+        /// </summary>
+        [JsonIgnore]
+        public bool HasSettingsFile { get; private set; }
 
         /// <summary>
         /// Directory of the settings file

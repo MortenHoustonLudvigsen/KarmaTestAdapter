@@ -4,15 +4,25 @@ var path = require('path');
 var Karma = require('./Karma');
 var freePort = require('./FreePort');
 var argv = require('yargs').argv;
+var extend = require('extend');
 try {
     var karmaConfigFile = path.resolve(argv.karma);
-    var karmaConfig = Karma.karma.Config.parseConfig(karmaConfigFile, {
+    var config = {};
+    if (argv.settings) {
+        var settings = require(path.resolve(argv.settings));
+        if (settings.config) {
+            extend(config, settings.config);
+        }
+    }
+    extend(config, {
+        reporters: ['vs'],
         colors: false,
         singleRun: false,
         autoWatch: true,
         loggers: GlobalLog.appenders
     });
-    //GlobalLog.setup();
+    GlobalLog.info(config);
+    var karmaConfig = Karma.karma.Config.parseConfig(karmaConfigFile, config);
     karmaConfig.plugins.push(require('./Index'));
     karmaConfig.frameworks = karmaConfig.frameworks.map(function (framework) {
         switch (framework) {
@@ -29,12 +39,6 @@ try {
     }).then(function () {
         Karma.karma.Server.start(karmaConfig, function (exitCode) {
             GlobalLog.info('exitCode: ' + exitCode);
-            try {
-                throw new Error();
-            }
-            catch (e) {
-                GlobalLog.info(e.stack);
-            }
             process.exit(exitCode);
         });
     });
