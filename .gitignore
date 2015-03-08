@@ -181,3 +181,4 @@ FakesAssemblies/
 /KarmaTestAdapter.TestProject
 /Test/TestProject/KarmaTestAdapter.Output/
 /Test/TestProject/KarmaTestAdapter/
+*.vsix
