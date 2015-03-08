@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "title": "JSON schema for KarmaTestAdapter configuration files (karma-vs-reporter.json)",
+    "title": "JSON schema for KarmaTestAdapter configuration files (KarmaTestAdapter.json)",
     "type": "object",
     "additionalProperties": false,
     "properties": {
