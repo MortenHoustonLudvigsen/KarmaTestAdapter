@@ -55,10 +55,11 @@ These are the possible properties (all properties are optional):
 
 * `KarmaConfigFile` Use this if you want to use a karma configuration file not named `karma.conf.js`.
 
-* `LogToFile` Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log)
+* `Disabled` Set to true, if the Karma test adapter should be disabled for this karma configuration file.
 
-* `LogDirectory` Where the log file should be saved (if LogToFile is true). If this property is not specified the
-  directory in which karma-vs-reporter.json resides is used.
+* `LogToFile` Set to true, if you want the adapter to write log statements to a log file (named KarmaTestAdapter.log).
+
+* `LogDirectory` Where the log file should be saved (if LogToFile is true). If this property is not specified the directory in which `KarmaTestAdapter.json` resides is used.
 
 * `config` This property overwrites any configurations from the karma configuration file.
 
