@@ -28,8 +28,6 @@ try {
         loggers: GlobalLog.appenders
     });
 
-    GlobalLog.info(config);
-
     var karmaConfig = Karma.karma.Config.parseConfig(karmaConfigFile, config);
 
     karmaConfig.plugins.push(require('./Index'));

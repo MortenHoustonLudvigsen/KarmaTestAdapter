@@ -21,7 +21,6 @@ try {
         autoWatch: true,
         loggers: GlobalLog.appenders
     });
-    GlobalLog.info(config);
     var karmaConfig = Karma.karma.Config.parseConfig(karmaConfigFile, config);
     karmaConfig.plugins.push(require('./Index'));
     karmaConfig.frameworks = karmaConfig.frameworks.map(function (framework) {
