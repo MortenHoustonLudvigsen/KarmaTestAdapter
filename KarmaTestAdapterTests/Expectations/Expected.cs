@@ -51,7 +51,7 @@ namespace KarmaTestAdapterTests.Expectations
                     {
                         throw new ArgumentException("Specs is not an array", "Specs");
                     }
-                    Specs = expected["Specs"].OfType<JObject>().Select(s => new ExpectedSpec(s)).ToList();
+                    Specs = expected["Specs"].OfType<JObject>().Select(s => new ExpectedSpec(s, Directory)).ToList();
                 }
                 else
                 {

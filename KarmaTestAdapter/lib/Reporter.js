@@ -154,7 +154,7 @@ var Reporter = (function () {
     };
     Reporter.prototype.normalizeStack = function (stack) {
         var _this = this;
-        var relative = true;
+        var relative = false;
         try {
             var stackFrames = errorStackParser.parse({ stack: stack });
             return stackFrames.map(function (frame) { return {
@@ -169,17 +169,12 @@ var Reporter = (function () {
         }
         function formatFrame(frame) {
             var result = '    at ';
-            if (frame.functionName) {
-                result += frame.functionName + ' ';
-            }
-            result += '(' + frame.fileName;
+            result += frame.functionName || '<anonymous>';
+            result += ' in ';
+            result += frame.fileName;
             if (typeof frame.lineNumber === 'number' && frame.lineNumber >= 0) {
-                result += ':' + frame.lineNumber.toString(10);
+                result += ':line ' + frame.lineNumber.toString(10);
             }
-            if (typeof frame.columnNumber === 'number' && frame.columnNumber >= 0) {
-                result += ':' + frame.columnNumber.toString(10);
-            }
-            result += ')';
             return result;
         }
     };

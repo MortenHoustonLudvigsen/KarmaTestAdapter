@@ -128,9 +128,8 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveFileNameData")]
         public void ShouldHaveFileName(SpecTestCase testCase)
         {
-            var fullFileName = Path.Combine(testCase.Expected.Directory, testCase.Spec.FileName);
             Assert.That(testCase.KarmaSpec.Source, Is.Not.Null);
-            Assert.That(testCase.KarmaSpec.Source.FileName, Is.SamePath(fullFileName));
+            Assert.That(testCase.KarmaSpec.Source.FileName, Is.SamePath(testCase.Spec.FileName));
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveFileNameData()
@@ -166,6 +165,24 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
             return Expectations.GetSpecResultTestCases()
                 .Where(t => !t.Spec.Success)
                 .Select(t => t.SetDescription("should fail"));
+        }
+
+        [Test, TestCaseSource("GetShouldHaveStackTraceData")]
+        public void ShouldHaveStackTrace(SpecResultTestCase testCase)
+        {
+            string actualStack = null;
+            if (testCase.KarmaResult.Failures != null && testCase.KarmaResult.Failures.Any())
+            {
+                actualStack = string.Join(Environment.NewLine, testCase.KarmaResult.Failures.First().stack);
+            }
+            Assert.That(actualStack, Is.EqualTo(testCase.Spec.StackTrace));
+        }
+
+        private IEnumerable<SpecResultTestCase> GetShouldHaveStackTraceData()
+        {
+            return Expectations.GetSpecResultTestCases()
+                .Where(t => !t.Spec.Success)
+                .Select(t => t.SetDescription("should have stack trace"));
         }
 
         [Test, TestCaseSource("GetShouldSucceedData")]

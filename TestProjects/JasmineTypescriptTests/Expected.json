@@ -21,14 +21,20 @@
             "UniqueName": "Suite 1 / Suite 2.Spec 3",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 9,
-            "Success": false
+            "Success": false,
+            "StackTrace": [
+                { "FunctionName": "<anonymous>", "FileName": "specs\\singleSpec.ts", "LineNumber": 9 }
+            ]
         },
         {
             "Description": "Spec 4",
             "UniqueName": "Suite 1 / Suite 2.Spec 4",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 10,
-            "Success": false
+            "Success": false,
+            "StackTrace": [
+                { "FunctionName": "<anonymous>", "FileName": "specs\\singleSpec.ts", "LineNumber": 10 }
+            ]
         },
         {
             "Description": "test no 1",
