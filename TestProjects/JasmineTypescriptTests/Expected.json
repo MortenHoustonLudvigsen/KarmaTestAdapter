@@ -105,6 +105,28 @@
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
             "Success": true
+        },
+        {
+            "Description": "(3, 3) should return 6",
+            "UniqueName": "Adder / add.(3, 3) should return 6",
+            "FileName": "specs\\AdderSpec.ts",
+            "LineNumber": 6,
+            "Success": false,
+            "StackTrace": [
+                { "FunctionName": "add", "FileName": "src\\Adder.ts", "LineNumber": 3 },
+                { "FunctionName": "<anonymous>", "FileName": "specs\\AdderSpec.ts", "LineNumber": 6 }
+            ]
+        },
+        {
+            "Description": "(3, 6) should return 9",
+            "UniqueName": "Adder / add.(3, 6) should return 9",
+            "FileName": "specs\\AdderSpec.ts",
+            "LineNumber": 6,
+            "Success": false,
+            "StackTrace": [
+                { "FunctionName": "add", "FileName": "src\\Adder.ts", "LineNumber": 3 },
+                { "FunctionName": "<anonymous>", "FileName": "specs\\AdderSpec.ts", "LineNumber": 6 }
+            ]
         }
     ]
 }

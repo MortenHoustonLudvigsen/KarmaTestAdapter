@@ -52,12 +52,17 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="specs\AdderSpec.ts" />
     <TypeScriptCompile Include="specs\singleSpec.ts" />
+    <TypeScriptCompile Include="src\Adder.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="karma.conf.js" />
+    <Content Include="specs\AdderSpec.js">
+      <DependentUpon>AdderSpec.ts</DependentUpon>
+    </Content>
     <Content Include="specs\singleSpec.js">
       <DependentUpon>singleSpec.ts</DependentUpon>
     </Content>
@@ -68,6 +73,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="src\Adder.js">
+      <DependentUpon>Adder.ts</DependentUpon>
+    </Content>
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +89,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="KarmaTestAdapter.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Adder.js.map">
+      <DependentUpon>Adder.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="specs\AdderSpec.js.map">
+      <DependentUpon>AdderSpec.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

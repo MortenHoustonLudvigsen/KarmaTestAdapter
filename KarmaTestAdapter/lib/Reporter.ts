@@ -175,6 +175,7 @@ class Reporter {
                 }
                 if (orig.source) {
                     source.source = this.resolveSource({
+                        functionName: source.functionName,
                         fileName: consumer['resolvePath'](orig.source),
                         lineNumber: orig.line,
                         columnNumber: orig.column + 1
@@ -211,6 +212,8 @@ class Reporter {
 
     normalizeStack(stack: string): string[]{
         var relative = false;
+        var basePath = this.basePath;
+
         try {
             var stackFrames: any[] = errorStackParser.parse({ stack: stack });
             return stackFrames.map(frame => <Specs.Source>{

@@ -120,6 +120,7 @@ var Reporter = (function () {
                 }
                 if (orig.source) {
                     source.source = this.resolveSource({
+                        functionName: source.functionName,
                         fileName: consumer['resolvePath'](orig.source),
                         lineNumber: orig.line,
                         columnNumber: orig.column + 1
@@ -155,6 +156,7 @@ var Reporter = (function () {
     Reporter.prototype.normalizeStack = function (stack) {
         var _this = this;
         var relative = false;
+        var basePath = this.basePath;
         try {
             var stackFrames = errorStackParser.parse({ stack: stack });
             return stackFrames.map(function (frame) { return {
