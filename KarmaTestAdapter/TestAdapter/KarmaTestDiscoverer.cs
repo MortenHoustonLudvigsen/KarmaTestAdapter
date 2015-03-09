@@ -20,6 +20,7 @@ namespace KarmaTestAdapter.TestAdapter
         public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             var karmaLogger = new KarmaLogger(logger, "Discover");
+            karmaLogger.Debug("Start");
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             if (testSettings == null)
             {
@@ -27,11 +28,20 @@ namespace KarmaTestAdapter.TestAdapter
             }
             else
             {
-                foreach (var sourceSettings in sources.Select(s => testSettings.GetSource(s)).Where(s => s != null))
+                foreach (var source in sources)
                 {
-                    DiscoverTests(sourceSettings, karmaLogger, discoverySink).Wait();
+                    var sourceSettings = testSettings.GetSource(source);
+                    if (sourceSettings != null)
+                    {
+                        DiscoverTests(sourceSettings, karmaLogger, discoverySink).Wait();
+                    }
+                    else
+                    {
+                        karmaLogger.Debug("Could not get karma settings for {0}", source);
+                    }
                 }
             }
+            karmaLogger.Debug("Finished");
         }
 
         private async Task DiscoverTests(KarmaSourceSettings settings, IKarmaLogger logger, ITestCaseDiscoverySink discoverySink)
