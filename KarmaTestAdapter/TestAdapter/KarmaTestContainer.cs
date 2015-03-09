@@ -198,7 +198,7 @@ namespace KarmaTestAdapter.TestAdapter
                     if (IsValid && _refreshing)
                     {
                         _refreshing = false;
-                        Discoverer.RequestFactory.ExecuteTestsAsync(evt.Tests, null);
+                        Discoverer.RunTests(evt.Tests);
                     }
                     break;
             }

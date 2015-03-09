@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using System.Web;
 using Tasks = System.Threading.Tasks;
 
 namespace KarmaTestAdapter.TestAdapter
@@ -33,7 +32,7 @@ namespace KarmaTestAdapter.TestAdapter
             Containers = new KarmaTestContainerList(this);
 
             ServiceProvider = serviceProvider;
-            RequestFactory = requestFactory;
+            _requestFactory = requestFactory;
 
             SolutionListener = solutionListener;
             SolutionListener.SolutionLoaded += OnSolutionLoaded;
@@ -43,10 +42,10 @@ namespace KarmaTestAdapter.TestAdapter
         }
 
         private bool _initialContainerSearch = true;
+        private IRequestFactory _requestFactory;
 
         public KarmaTestContainerList Containers { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
-        public IRequestFactory RequestFactory { get; private set; }
         public SolutionListener SolutionListener { get; private set; }
         public IKarmaLogger Logger { get; set; }
         public KarmaTestSettingsProvider TestSettingsProvider { get; private set; }
@@ -57,7 +56,15 @@ namespace KarmaTestAdapter.TestAdapter
         {
             get { return Globals.ExecutorUri; }
         }
-        
+
+        public void RunTests(IEnumerable<Guid> tests)
+        {
+            if (_requestFactory != null)
+            {
+                _requestFactory.ExecuteTestsAsync(tests, null);
+            }
+        }
+
         public IEnumerable<ITestContainer> TestContainers
         {
             get
@@ -138,7 +145,7 @@ namespace KarmaTestAdapter.TestAdapter
                 });
             }
         }
-        
+
         private IEnumerable<string> FindSources()
         {
             return ServiceProvider
