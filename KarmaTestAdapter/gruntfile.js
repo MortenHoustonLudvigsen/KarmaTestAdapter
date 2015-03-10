@@ -1,3 +1,4 @@
+/// <binding AfterBuild='default' />
 /// <vs AfterBuild='default' />
 /*global module */
 

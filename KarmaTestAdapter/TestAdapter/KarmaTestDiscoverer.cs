@@ -20,6 +20,7 @@ namespace KarmaTestAdapter.TestAdapter
         {
             var karmaLogger = new KarmaLogger(logger, "Discover");
             karmaLogger.Debug("Start");
+            karmaLogger.Debug("discoveryContext.RunSettings.SettingsXml: {0}", discoveryContext.RunSettings.SettingsXml);
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             if (testSettings == null)
             {

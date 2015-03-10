@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{65BE6DB2-1FC4-4221-BECD-6231D28B3F70}"
 	ProjectSection(SolutionItems) = preProject
@@ -27,18 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineTypescriptTests", "T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B624A6AE-2C96-48E5-8D80-C6E89FAB082C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX", "Root-VSIX", "{16DE9AC8-2F2D-4473-948D-EACC1C089270}"
-	ProjectSection(SolutionItems) = preProject
-		Tools\Root-VSIX\.gitignore = Tools\Root-VSIX\.gitignore
-		Tools\Root-VSIX\Root-VSIX.exe = Tools\Root-VSIX\Root-VSIX.exe
-		Tools\Root-VSIX\Root-VSIX.exe.config = Tools\Root-VSIX\Root-VSIX.exe.config
-		Tools\Root-VSIX\Root-VSIX.pdb = Tools\Root-VSIX\Root-VSIX.pdb
-		Tools\Root-VSIX\Root-VSIX.vshost.exe = Tools\Root-VSIX\Root-VSIX.vshost.exe
-		Tools\Root-VSIX\Root-VSIX.vshost.exe.manifest = Tools\Root-VSIX\Root-VSIX.vshost.exe.manifest
-		Tools\Root-VSIX\Shell.Interop.dll = Tools\Root-VSIX\Shell.Interop.dll
-		Tools\Root-VSIX\Shell.Interop.pdb = Tools\Root-VSIX\Shell.Interop.pdb
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonServerClient", "JsonServerClient\JsonServerClient.csproj", "{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapter", "KarmaTestAdapter\KarmaTestAdapter.csproj", "{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}"
@@ -46,6 +34,28 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapterTests", "KarmaTestAdapterTests\KarmaTestAdapterTests.csproj", "{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaServer", "KarmaServer\KarmaServer.csproj", "{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX-12.0", "Root-VSIX-12.0", "{FF6C9F55-FA4A-4755-8754-7F17A2B2969E}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\Root-VSIX-12.0\.gitignore = Tools\Root-VSIX-12.0\.gitignore
+		Tools\Root-VSIX-12.0\Root-VSIX.exe = Tools\Root-VSIX-12.0\Root-VSIX.exe
+		Tools\Root-VSIX-12.0\Root-VSIX.exe.config = Tools\Root-VSIX-12.0\Root-VSIX.exe.config
+		Tools\Root-VSIX-12.0\Root-VSIX.pdb = Tools\Root-VSIX-12.0\Root-VSIX.pdb
+		Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe = Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe
+		Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe.manifest = Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe.manifest
+		Tools\Root-VSIX-12.0\Shell.Interop.dll = Tools\Root-VSIX-12.0\Shell.Interop.dll
+		Tools\Root-VSIX-12.0\Shell.Interop.pdb = Tools\Root-VSIX-12.0\Shell.Interop.pdb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX-14.0", "Root-VSIX-14.0", "{3E68A5D1-8C11-4096-B355-7FF2CF4F3D9E}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\Root-VSIX-14.0\.gitignore = Tools\Root-VSIX-14.0\.gitignore
+		Tools\Root-VSIX-14.0\Root-VSIX.exe = Tools\Root-VSIX-14.0\Root-VSIX.exe
+		Tools\Root-VSIX-14.0\Root-VSIX.exe.config = Tools\Root-VSIX-14.0\Root-VSIX.exe.config
+		Tools\Root-VSIX-14.0\Root-VSIX.pdb = Tools\Root-VSIX-14.0\Root-VSIX.pdb
+		Tools\Root-VSIX-14.0\Shell.Interop.dll = Tools\Root-VSIX-14.0\Shell.Interop.dll
+		Tools\Root-VSIX-14.0\Shell.Interop.pdb = Tools\Root-VSIX-14.0\Shell.Interop.pdb
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +89,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
-		{16DE9AC8-2F2D-4473-948D-EACC1C089270} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
+		{FF6C9F55-FA4A-4755-8754-7F17A2B2969E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
+		{3E68A5D1-8C11-4096-B355-7FF2CF4F3D9E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
 	EndGlobalSection
 EndGlobal
