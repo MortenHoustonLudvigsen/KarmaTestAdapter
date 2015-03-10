@@ -10,6 +10,6 @@ set DevEnv="C:\Program Files (x86)\Microsoft Visual Studio %VSVersion%\Common7\I
 set RootVSIX=..\Tools\Root-VSIX-%VSVersion%\Root-VSIX.exe
 
 %CreateExpInstance% /Clean /VSInstance=%VSVersion% /RootSuffix=karma
-%RootVSIX% %VSVersion% karma dist/KarmaTestAdapter.vsix
+%RootVSIX% %VSVersion% karma dist/KarmaTestAdapter.%VSVersion%.vsix
 %DevEnv% ..\TestProjects\TestProjects.sln /RootSuffix karma
 

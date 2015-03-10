@@ -78,9 +78,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         // read in the project settings from the package.json file into the pkg property
         pkg: grunt.file.readJSON('package.json'),
+        buildConfig: grunt.file.readJSON('./BuildConfig.json'),
 
         clean: {
-            dist: ['build', 'dist']
+            dist: ['build', 'dist/KarmaTestAdapter.<%= buildConfig.VisualStudioVersion %>.vsix']
         },
 
         copy: {
@@ -122,10 +123,17 @@ module.exports = function (grunt) {
             },
             debugSettings: {
                 options: {
-                    xpath: '/Project/PropertyGroup/StartWorkingDirectory',
-                    value: function (node) {
-                        return path.resolve(__dirname, '..');
-                    }
+                    replacements: [
+                        {
+                            xpath: '/Project/PropertyGroup/StartProgram',
+                            value: '<%= buildConfig.DevEnvDir %>devenv.exe'
+                        }, {
+                            xpath: '/Project/PropertyGroup/StartWorkingDirectory',
+                            value: function (node) {
+                                return path.resolve(__dirname, '..');
+                            }
+                        }
+                    ],
                 },
                 files: {
                     'KarmaTestAdapter.csproj.user': 'DebugSettings.xml'
@@ -138,7 +146,7 @@ module.exports = function (grunt) {
                 options: {
                     level: 9,
                     mode: 'zip',
-                    archive: 'dist/KarmaTestAdapter.vsix'
+                    archive: 'dist/KarmaTestAdapter.<%= buildConfig.VisualStudioVersion %>.vsix'
                 },
                 files: [
                     { expand: true, cwd: 'build/', src: ['**/*'], dest: '/' }
@@ -148,10 +156,10 @@ module.exports = function (grunt) {
 
         commands: {
             resetExperimentalHub: {
-                cmd: 'ResetExperimentalHub.bat'
+                cmd: 'ResetExperimentalHub.bat <%= buildConfig.VisualStudioVersion %>'
             },
             startExperimentalHub: {
-                cmd: 'StartExperimentalHub.bat'
+                cmd: 'StartExperimentalHub.bat <%= buildConfig.VisualStudioVersion %>'
             }
         }
     });
