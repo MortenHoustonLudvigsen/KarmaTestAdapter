@@ -100,10 +100,17 @@ module.exports = function (grunt) {
         },
 
         xmlpoke: {
-            updateVersion: {
+            vsixManifest: {
                 options: {
-                    xpath: '/PackageManifest/Metadata/Identity/@Version',
-                    value: '<%= pkg.version %>'
+                    replacements: [
+                        {
+                            xpath: '/PackageManifest/Metadata/Identity/@Version',
+                            value: '<%= pkg.version %>'
+                        }, {
+                            xpath: '/PackageManifest/Installation/InstallationTarget/@Version',
+                            value: '[<%= buildConfig.VisualStudioVersion %>]'
+                        }
+                    ]
                 },
                 files: {
                     'build/extension.vsixmanifest': 'source.extension.vsixmanifest'
@@ -133,7 +140,7 @@ module.exports = function (grunt) {
                                 return path.resolve(__dirname, '..');
                             }
                         }
-                    ],
+                    ]
                 },
                 files: {
                     'KarmaTestAdapter.csproj.user': 'DebugSettings.xml'
@@ -186,7 +193,7 @@ module.exports = function (grunt) {
         'clean:dist',
         'copy:dist',
         'flatten-packages',
-        'xmlpoke:updateVersion',
+        'xmlpoke:vsixManifest',
         'xmlpoke:contentTypes',
         'compress:dist',
         'commands:resetExperimentalHub',
