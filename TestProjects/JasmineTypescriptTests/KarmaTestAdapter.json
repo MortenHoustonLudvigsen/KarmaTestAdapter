@@ -2,7 +2,7 @@
     "Disabled": false,
     "config": {
         "browsers": [
-            "PhantomJS"
+            "PhantomJS", "IE", "Chrome"
         ]
     }
 }

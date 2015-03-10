@@ -58,20 +58,28 @@ class VsBrowser {
         }
     }
 
-    getUniqueName(event: Event): string {
-        var uniqueName = event.suite.map(name => {
-            name = name.replace(/\./g, '-');
-        }).join(' / ') + '.' + event.description;
+    getUniqueName(suite: string[], description: string): string;
+    getUniqueName(event: Event): string;
+    getUniqueName(eventOrSuite: Event | string[], description?: string): string {
+        if (eventOrSuite instanceof Array) {
+            var suite = <string[]>eventOrSuite;
+            var uniqueName = suite.map(name => {
+                name = name.replace(/\./g, '-');
+            }).join(' / ') + '.' + description;
 
-        if (this.uniqueNames[uniqueName]) {
-            var no = 2;
-            while (this.uniqueNames[uniqueName + '-' + no]) {
-                no += 1;
+            if (this.uniqueNames[uniqueName]) {
+                var no = 2;
+                while (this.uniqueNames[uniqueName + '-' + no]) {
+                    no += 1;
+                }
+                uniqueName = uniqueName + '-' + no;
             }
-            uniqueName = uniqueName + '-' + no;
-        }
 
-        return uniqueName;
+            return uniqueName;
+        } else {
+            var event = <Event>eventOrSuite;
+            return this.getUniqueName(event.suite, event.description);
+        }
     }
 
     adjustResults() {
@@ -104,7 +112,13 @@ interface Event {
     endTime: number;
     uniqueName: string;
     source: Specs.Source;
-    failures: { message: string; stack: string; passed: boolean; }[];
+    failures: Failure[];
+}
+
+interface Failure {
+    message: string;
+    stack: string;
+    passed: boolean;
 }
 
 class Reporter {
@@ -130,7 +144,7 @@ class Reporter {
             if (typeof value !== 'undefined') {
                 message += '\n' + util.inspect(value, { depth: null });
             }
-            this.logger.info(message);
+            this.logger.debug(message);
         }
     }
 
@@ -210,22 +224,37 @@ class Reporter {
         return fileName;
     }
 
-    normalizeStack(stack: string): string[]{
+    parseStack(stack: string, relative: boolean): Specs.Source[]{
+        var reporter = this;
+
+        try {
+            return errorStackParser.parse({ stack: stack })
+                .map(frame => getSource(frame))
+                .map(frame => this.resolveSource(frame))
+                .map(frame => this.getRealSource(frame, relative));
+        } catch (e) {
+            this.logger.debug(e);
+            return;
+        }
+
+        function getSource(frame: any): Specs.Source {
+            return {
+                functionName: frame.functionName,
+                fileName: reporter.getFilePath(frame.fileName),
+                lineNumber: frame.lineNumber,
+                columnNumber: frame.columnNumber
+            };
+        }
+    }
+
+    normalizeStack(stack: string): string[] {
         var relative = false;
         var basePath = this.basePath;
 
-        try {
-            var stackFrames: any[] = errorStackParser.parse({ stack: stack });
-            return stackFrames.map(frame => <Specs.Source>{
-                functionName: frame.functionName,
-                fileName: this.getFilePath(frame.fileName),
-                lineNumber: frame.lineNumber,
-                columnNumber: frame.columnNumber
-            }).map(frame => this.resolveSource(frame))
-                .map(frame => this.getRealSource(frame, relative))
-                .map(frame => formatFrame(frame));
-        }
-        catch (e) {
+        var stackFrames = this.parseStack(stack, relative);
+        if (stackFrames) {
+            return stackFrames.map(frame => formatFrame(frame));
+        } else {
             return stack.split(/\r\n|\n/g);
         }
 
@@ -274,11 +303,62 @@ class Reporter {
 
     onBrowserStart(browser: Browser): void {
         this.output = [];
-        browser.vsBrowser = new VsBrowser(browser);
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
     }
 
-    onBrowserError(browser: Browser, error: any): void {
-        this.logValue("Browser", "Error", { browser: browser.name, error: error });
+    onBrowserError(browser: Browser, error: string): void {
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
+
+        var failures: Failure[];
+        var source: Specs.Source;
+        var stackFrames = this.parseStack(error, false);
+        if (stackFrames) {
+            source = stackFrames[0];
+            failures = [{
+                message: error.split(/(\r\n|\n|\r)/g)[0],
+                passed: false,
+                stack: error
+            }];
+        }
+
+        var id = browser.vsBrowser.getUniqueName([], "Uncaught error");
+
+        var event = <Event>{
+            description: "Uncaught error",
+            id: id,
+            log: [error],
+            skipped: false,
+            success: false,
+            suite: [],
+            time: 0,
+            startTime: undefined,
+            endTime: undefined,
+            uniqueName: id,
+            source: source,
+            failures: failures
+        };
+
+        var spec = this.getSpec(browser, event);
+
+        var result: Specs.SpecResult = {
+            browser: browser.name,
+            success: event.success,
+            skipped: event.skipped,
+            output: this.output.join('\n'),
+            time: event.time,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            log: event.log,
+            failures: event.failures ? event.failures.map(failure => <Specs.Expectation>{
+                message: failure.message,
+                stack: this.normalizeStack(failure.stack),
+                passed: failure.passed
+            }) : undefined
+        };
+        browser.vsBrowser.addResult(spec, result);
+        spec.results.push(result);
+
+        this.output = [];
     }
 
     onBrowserLog(browser: Browser, message: string, type): void {
@@ -290,6 +370,7 @@ class Reporter {
 
     onBrowserComplete(browser: Browser): void {
         this.output = [];
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
         browser.vsBrowser.adjustResults();
     }
 

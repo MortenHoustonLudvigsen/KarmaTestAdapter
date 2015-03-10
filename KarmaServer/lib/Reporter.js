@@ -34,18 +34,25 @@ var VsBrowser = (function () {
             this.timesValid = false;
         }
     };
-    VsBrowser.prototype.getUniqueName = function (event) {
-        var uniqueName = event.suite.map(function (name) {
-            name = name.replace(/\./g, '-');
-        }).join(' / ') + '.' + event.description;
-        if (this.uniqueNames[uniqueName]) {
-            var no = 2;
-            while (this.uniqueNames[uniqueName + '-' + no]) {
-                no += 1;
+    VsBrowser.prototype.getUniqueName = function (eventOrSuite, description) {
+        if (eventOrSuite instanceof Array) {
+            var suite = eventOrSuite;
+            var uniqueName = suite.map(function (name) {
+                name = name.replace(/\./g, '-');
+            }).join(' / ') + '.' + description;
+            if (this.uniqueNames[uniqueName]) {
+                var no = 2;
+                while (this.uniqueNames[uniqueName + '-' + no]) {
+                    no += 1;
+                }
+                uniqueName = uniqueName + '-' + no;
             }
-            uniqueName = uniqueName + '-' + no;
+            return uniqueName;
         }
-        return uniqueName;
+        else {
+            var event = eventOrSuite;
+            return this.getUniqueName(event.suite, event.description);
+        }
     };
     VsBrowser.prototype.adjustResults = function () {
         this.adjustTimes();
@@ -69,7 +76,7 @@ var Reporter = (function () {
                 if (typeof value !== 'undefined') {
                     message += '\n' + util.inspect(value, { depth: null });
                 }
-                _this.logger.info(message);
+                _this.logger.debug(message);
             }
         };
         this.urlRoot = this.config.urlRoot || '/';
@@ -153,20 +160,33 @@ var Reporter = (function () {
         }
         return fileName;
     };
-    Reporter.prototype.normalizeStack = function (stack) {
+    Reporter.prototype.parseStack = function (stack, relative) {
         var _this = this;
-        var relative = false;
-        var basePath = this.basePath;
+        var reporter = this;
         try {
-            var stackFrames = errorStackParser.parse({ stack: stack });
-            return stackFrames.map(function (frame) { return {
-                functionName: frame.functionName,
-                fileName: _this.getFilePath(frame.fileName),
-                lineNumber: frame.lineNumber,
-                columnNumber: frame.columnNumber
-            }; }).map(function (frame) { return _this.resolveSource(frame); }).map(function (frame) { return _this.getRealSource(frame, relative); }).map(function (frame) { return formatFrame(frame); });
+            return errorStackParser.parse({ stack: stack }).map(function (frame) { return getSource(frame); }).map(function (frame) { return _this.resolveSource(frame); }).map(function (frame) { return _this.getRealSource(frame, relative); });
         }
         catch (e) {
+            this.logger.debug(e);
+            return;
+        }
+        function getSource(frame) {
+            return {
+                functionName: frame.functionName,
+                fileName: reporter.getFilePath(frame.fileName),
+                lineNumber: frame.lineNumber,
+                columnNumber: frame.columnNumber
+            };
+        }
+    };
+    Reporter.prototype.normalizeStack = function (stack) {
+        var relative = false;
+        var basePath = this.basePath;
+        var stackFrames = this.parseStack(stack, relative);
+        if (stackFrames) {
+            return stackFrames.map(function (frame) { return formatFrame(frame); });
+        }
+        else {
             return stack.split(/\r\n|\n/g);
         }
         function formatFrame(frame) {
@@ -211,10 +231,56 @@ var Reporter = (function () {
     };
     Reporter.prototype.onBrowserStart = function (browser) {
         this.output = [];
-        browser.vsBrowser = new VsBrowser(browser);
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
     };
     Reporter.prototype.onBrowserError = function (browser, error) {
-        this.logValue("Browser", "Error", { browser: browser.name, error: error });
+        var _this = this;
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
+        var failures;
+        var source;
+        var stackFrames = this.parseStack(error, false);
+        if (stackFrames) {
+            source = stackFrames[0];
+            failures = [{
+                message: error.split(/(\r\n|\n|\r)/g)[0],
+                passed: false,
+                stack: error
+            }];
+        }
+        var id = browser.vsBrowser.getUniqueName([], "Uncaught error");
+        var event = {
+            description: "Uncaught error",
+            id: id,
+            log: [error],
+            skipped: false,
+            success: false,
+            suite: [],
+            time: 0,
+            startTime: undefined,
+            endTime: undefined,
+            uniqueName: id,
+            source: source,
+            failures: failures
+        };
+        var spec = this.getSpec(browser, event);
+        var result = {
+            browser: browser.name,
+            success: event.success,
+            skipped: event.skipped,
+            output: this.output.join('\n'),
+            time: event.time,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            log: event.log,
+            failures: event.failures ? event.failures.map(function (failure) { return {
+                message: failure.message,
+                stack: _this.normalizeStack(failure.stack),
+                passed: failure.passed
+            }; }) : undefined
+        };
+        browser.vsBrowser.addResult(spec, result);
+        spec.results.push(result);
+        this.output = [];
     };
     Reporter.prototype.onBrowserLog = function (browser, message, type) {
         if (typeof message === 'string') {
@@ -224,6 +290,7 @@ var Reporter = (function () {
     };
     Reporter.prototype.onBrowserComplete = function (browser) {
         this.output = [];
+        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
         browser.vsBrowser.adjustResults();
     };
     Reporter.prototype.onSpecComplete = function (browser, result) {
