@@ -1,5 +1,5 @@
 ﻿using KarmaTestAdapter.Logging;
-using KarmaTestAdapter.Tasks;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.TestAdapter;
 using System;
 using System.Collections.Generic;

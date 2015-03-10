@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Karma;
+﻿using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;

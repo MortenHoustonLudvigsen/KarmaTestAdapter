@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using KarmaTestAdapter.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace KarmaTestAdapter
+namespace KarmaTestAdapter.Helpers
 {
     public static class Json
     {

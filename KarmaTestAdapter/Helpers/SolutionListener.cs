@@ -8,7 +8,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.VSHelpers
+namespace KarmaTestAdapter.Helpers
 {
     public enum SolutionChangedReason
     {

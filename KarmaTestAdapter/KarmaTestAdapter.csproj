@@ -90,9 +90,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExceptionExtensions.cs" />
+    <Compile Include="Helpers\ExceptionExtensions.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Json.cs" />
+    <Compile Include="Helpers\Json.cs" />
     <Compile Include="Karma\KarmaClient.cs" />
     <Compile Include="Karma\KarmaDiscoverCommand.cs" />
     <Compile Include="Karma\KarmaEvent.cs" />
@@ -109,9 +109,9 @@
     <Compile Include="Logging\KarmaLoggerBase.cs" />
     <Compile Include="Logging\KarmaLogLevel.cs" />
     <Compile Include="Logging\KarmaTestMessageLogger.cs" />
-    <Compile Include="PathUtils.cs" />
+    <Compile Include="Helpers\PathUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\TaskCompletionSourceExtensions.cs" />
+    <Compile Include="Helpers\TaskCompletionSourceExtensions.cs" />
     <Compile Include="TestAdapter\KarmaFileWatcher.cs" />
     <Compile Include="TestAdapter\KarmaSettings.cs" />
     <Compile Include="TestAdapter\KarmaTestContainer.cs" />
@@ -125,8 +125,8 @@
     <Compile Include="TestAdapter\KarmaTestSettings.cs" />
     <Compile Include="TestAdapter\KarmaTestSettingsProvider.cs" />
     <Compile Include="TestAdapter\RunSettingsExtensions.cs" />
-    <Compile Include="VSHelpers\Extensions.cs" />
-    <Compile Include="VSHelpers\SolutionListener.cs" />
+    <Compile Include="Helpers\VSExtensions.cs" />
+    <Compile Include="Helpers\SolutionListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DebugSettings.xml" />

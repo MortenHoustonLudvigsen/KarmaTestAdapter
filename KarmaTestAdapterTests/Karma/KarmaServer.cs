@@ -1,6 +1,6 @@
 ﻿using KarmaTestAdapter;
 using KarmaTestAdapter.Logging;
-using KarmaTestAdapter.Tasks;
+using KarmaTestAdapter.Helpers;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using System;

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.VSHelpers
+namespace KarmaTestAdapter.Helpers
 {
-    public static class Extensions
+    public static class VSExtensions
     {
         private static IVsSolution GetSolution(this IServiceProvider serviceProvider)
         {

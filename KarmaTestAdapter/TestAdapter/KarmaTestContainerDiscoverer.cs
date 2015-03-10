@@ -1,5 +1,5 @@
-﻿using KarmaTestAdapter.Logging;
-using KarmaTestAdapter.VSHelpers;
+﻿using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestWindow.Controller;
