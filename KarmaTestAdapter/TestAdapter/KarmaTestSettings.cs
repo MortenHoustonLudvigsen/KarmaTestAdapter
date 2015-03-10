@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using KarmaTestAdapter.Helpers;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -80,6 +80,9 @@ namespace KarmaTestAdapter.TestAdapter
     [XmlType("Source")]
     public class KarmaSourceSettings
     {
+        private static XmlSerializer _serializer = new XmlSerializer(typeof(KarmaSourceSettings));
+        private static XmlSerializerNamespaces _serializerNamespaces = new XmlSerializerNamespaces(new[] { new XmlQualifiedName("", "") });
+
         [XmlAttribute]
         public string BaseDirectory { get; set; }
 
@@ -88,6 +91,46 @@ namespace KarmaTestAdapter.TestAdapter
 
         [XmlAttribute]
         public int Port { get; set; }
+
+        public static string SettingsFilePath(string source)
+        {
+            return Path.Combine(Globals.GlobalLogDir, Sha1Utils.GetHash(source.ToLowerInvariant()) + ".xml");
+        }
+
+        public static KarmaSourceSettings Load(string source)
+        {
+            try
+            {
+                using (var reader = XmlReader.Create(SettingsFilePath(source)))
+                {
+                    return _serializer.Deserialize(reader) as KarmaSourceSettings;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void Save()
+        {
+            using (var writer = XmlWriter.Create(SettingsFilePath(Source)))
+            {
+                _serializer.Serialize(writer, this, _serializerNamespaces);
+            }
+        }
+
+        public void DeleteSettingsFile()
+        {
+            try
+            {
+                File.Delete(SettingsFilePath(Source));
+            }
+            catch
+            {
+                // Do nothing
+            }
+        }
 
         public override string ToString()
         {

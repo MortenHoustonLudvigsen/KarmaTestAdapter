@@ -2,7 +2,8 @@
 
 setlocal
 
-set VSVersion=14.0
+set VSVersion=%1
+IF [%1] == [] set VSVersion=14.0
 
 set CreateExpInstance="C:\Program Files (x86)\Microsoft Visual Studio %VSVersion%\VSSDK\VisualStudioIntegration\Tools\Bin\CreateExpInstance.exe"
 set DevEnv="C:\Program Files (x86)\Microsoft Visual Studio %VSVersion%\Common7\IDE\devenv.exe"

@@ -74,7 +74,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void Clear()
         {
-            _containers.ForEach(c => c.Dispose());
+            _containers.ToList().ForEach(c => c.Dispose());
             _containers.Clear();
         }
 

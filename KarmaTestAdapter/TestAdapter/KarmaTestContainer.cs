@@ -42,6 +42,7 @@ namespace KarmaTestAdapter.TestAdapter
             {
                 KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
                 KarmaSourceSettings.BaseDirectory = BaseDirectory;
+                KarmaSourceSettings.Save();
                 StartKarmaServer();
             }
             Logger.Info("{0} KarmaTestContainer created for {1}", IsValid ? "Valid" : "Invalid", PathUtils.GetRelativePath(BaseDirectory, Source));
@@ -184,6 +185,10 @@ namespace KarmaTestAdapter.TestAdapter
         {
             _refreshing = true;
             TimeStamp = DateTime.Now;
+            if (IsValid)
+            {
+                KarmaSourceSettings.Save();
+            }
             Discoverer.RefreshTestContainers(reason);
         }
 
@@ -250,6 +255,7 @@ namespace KarmaTestAdapter.TestAdapter
                     FileWatchers = null;
                 }
 
+                KarmaSourceSettings.DeleteSettingsFile();
                 Containers.Remove(this);
             }
 

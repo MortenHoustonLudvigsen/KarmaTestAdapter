@@ -23,9 +23,18 @@ namespace KarmaTestAdapter.TestAdapter
         {
             var karmaLogger = new KarmaLogger(frameworkHandle, "Run");
             var testSettings = runContext.RunSettings.GetKarmaTestSettings();
-            foreach (var sourceSettings in sources.Select(s => testSettings.GetSource(s)).Where(s => s != null))
+
+            foreach (var source in sources)
             {
-                RunTests(sourceSettings, karmaLogger, runContext, frameworkHandle).Wait();
+                var sourceSettings = KarmaTestDiscoverer.GetKarmaSourceSettings(source, testSettings);
+                if (sourceSettings != null)
+                {
+                    RunTests(sourceSettings, karmaLogger, runContext, frameworkHandle).Wait();
+                }
+                else
+                {
+                    karmaLogger.Debug("Could not get karma settings for {0}", source);
+                }
             }
         }
 

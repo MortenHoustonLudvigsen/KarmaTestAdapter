@@ -181,6 +181,7 @@ module.exports = function (grunt) {
         'xmlpoke:updateVersion',
         'xmlpoke:contentTypes',
         'compress:dist',
+        'commands:resetExperimentalHub',
         'build-done'
     ]);
 

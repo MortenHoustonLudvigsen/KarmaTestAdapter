@@ -20,28 +20,34 @@ namespace KarmaTestAdapter.TestAdapter
         {
             var karmaLogger = new KarmaLogger(logger, "Discover");
             karmaLogger.Debug("Start");
-            karmaLogger.Debug("discoveryContext.RunSettings.SettingsXml: {0}", discoveryContext.RunSettings.SettingsXml);
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
-            if (testSettings == null)
+            foreach (var source in sources)
             {
-                karmaLogger.Error("Could not get karma settings");
-            }
-            else
-            {
-                foreach (var source in sources)
+                var sourceSettings = GetKarmaSourceSettings(source, testSettings);
+                if (sourceSettings != null)
                 {
-                    var sourceSettings = testSettings.GetSource(source);
-                    if (sourceSettings != null)
-                    {
-                        DiscoverTests(sourceSettings, karmaLogger, discoverySink).Wait();
-                    }
-                    else
-                    {
-                        karmaLogger.Debug("Could not get karma settings for {0}", source);
-                    }
+                    DiscoverTests(sourceSettings, karmaLogger, discoverySink).Wait();
+                }
+                else
+                {
+                    karmaLogger.Debug("Could not get karma settings for {0}", source);
                 }
             }
             karmaLogger.Debug("Finished");
+        }
+
+        public static KarmaSourceSettings GetKarmaSourceSettings(string source, KarmaTestSettings testSettings)
+        {
+            KarmaSourceSettings sourceSettings = null;
+            if (testSettings != null)
+            {
+                sourceSettings = testSettings.GetSource(source);
+            }
+            if (sourceSettings == null)
+            {
+                sourceSettings = KarmaSourceSettings.Load(source);
+            }
+            return sourceSettings;
         }
 
         private async Task DiscoverTests(KarmaSourceSettings settings, IKarmaLogger logger, ITestCaseDiscoverySink discoverySink)
