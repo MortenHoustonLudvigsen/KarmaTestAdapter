@@ -168,16 +168,20 @@ namespace KarmaTestAdapter.TestAdapter
 
         private void OnServerStopped(int? exitCode, Exception ex)
         {
-            SetIsValid(false, "Karma stopped");
             if (ex != null)
             {
                 Logger.Error(ex, "Karma stopped");
+            }
+            else if (IsValid)
+            {
+                Logger.Warn("Karma stopped - exit code: {0}", exitCode);
+                Logger.Warn("Restarting karma");
+                Task.Delay(250).ContinueWith(t => StartKarmaServer());
             }
             else
             {
                 Logger.Debug("Karma stopped - exit code: {0}", exitCode);
             }
-            RefreshContainer("Karma stopped");
         }
 
         private bool _refreshing = false;
