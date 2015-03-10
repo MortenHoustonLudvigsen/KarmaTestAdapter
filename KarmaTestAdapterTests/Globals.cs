@@ -35,7 +35,7 @@ namespace KarmaTestAdapterTests.GlobalsTests
             [Test]
             public void ShouldBeKarmaDirectoryIfTest()
             {
-                Assert.That(KarmaTestAdapter.Globals.RootDirectory, IsTestPath(SolutionDir, @"KarmaTestAdapter"));
+                Assert.That(KarmaTestAdapter.Globals.RootDirectory, IsTestPath(SolutionDir, @"KarmaServer"));
             }
 
             [Test]
@@ -51,7 +51,7 @@ namespace KarmaTestAdapterTests.GlobalsTests
             [Test]
             public void ShouldBeInKarmaDirectoryIfTest()
             {
-                Assert.That(KarmaTestAdapter.Globals.LibDirectory, IsTestPath(SolutionDir, @"KarmaTestAdapter\lib"));
+                Assert.That(KarmaTestAdapter.Globals.LibDirectory, IsTestPath(SolutionDir, @"KarmaServer\lib"));
             }
 
             [Test]
