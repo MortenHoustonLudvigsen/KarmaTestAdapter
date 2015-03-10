@@ -1,0 +1,16 @@
+{
+  "name": "KarmaTestAdapter",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+  },
+  "dependencies": {
+    "error-stack-parser": "^1.1.2",
+    "extend": "^2.0.0",
+    "q": "^1.2.0",
+    "source-map": "^0.4.0",
+    "source-map-resolve": "^0.3.1",
+    "stackframe": "^0.2.2",
+    "yargs": "^3.4.5"
+  }
+}

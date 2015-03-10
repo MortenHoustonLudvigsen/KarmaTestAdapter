@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using Tasks = System.Threading.Tasks;
+using System.Threading.Tasks;
+using TPL = System.Threading.Tasks;
 
 namespace KarmaTestAdapter.TestAdapter
 {
@@ -132,7 +133,7 @@ namespace KarmaTestAdapter.TestAdapter
                     _shouldRefresh = true;
                     Logger.Info("Refreshing containers: {0}", reason);
                 }
-                Tasks.Task.Delay(500).ContinueWith(t =>
+                TPL.Task.Delay(500).ContinueWith(t =>
                 {
                     lock (_refreshLock)
                     {

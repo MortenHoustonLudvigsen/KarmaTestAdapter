@@ -5,22 +5,39 @@ setlocal
 
 set SolutionDir=%~dp0
 
+echo ====================================================================================
 echo Clean %SolutionDir%
+echo ------------------------------------------------------------------------------------
 cd %SolutionDir%
 git clean -fdX
 echo.
 echo.
 
-echo Install npm packages in %SolutionDir%\TestProjects
-cd %SolutionDir%\TestProjects
-call npm install
-echo.
-echo.
-
+echo ====================================================================================
 echo Install npm packages in %SolutionDir%\KarmaTestAdapter
+echo ------------------------------------------------------------------------------------
 cd %SolutionDir%\KarmaTestAdapter
 call npm install
 echo.
 echo.
 
+echo ====================================================================================
+echo Install npm packages in %SolutionDir%\KarmaServer
+echo ------------------------------------------------------------------------------------
+cd %SolutionDir%\KarmaServer
+call npm install
+echo.
+echo.
+
+echo ====================================================================================
+echo Install npm packages in %SolutionDir%\TestProjects
+echo ------------------------------------------------------------------------------------
+cd %SolutionDir%\TestProjects
+call npm install
+echo.
+echo.
+
+echo ====================================================================================
 echo FINISHED
+echo ====================================================================================
+

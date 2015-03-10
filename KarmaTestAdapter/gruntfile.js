@@ -8,12 +8,11 @@ var flatten = require('flatten-packages');
 module.exports = function (grunt) {
     'use strict';
 
-    var pkg = grunt.file.readJSON('package.json');
-
     function getDependencies() {
+        var karmaServerPackage = grunt.file.readJSON('../KarmaServer/package.json');
         var result = [];
-        for (var dependency in pkg.dependencies) {
-            if (pkg.dependencies.hasOwnProperty(dependency)) {
+        for (var dependency in karmaServerPackage.dependencies) {
+            if (karmaServerPackage.dependencies.hasOwnProperty(dependency)) {
                 result.push(dependency);
             }
         }
@@ -87,11 +86,11 @@ module.exports = function (grunt) {
             dist: {
                 files: [
                     // Node modules
-                    { expand: true, src: getNodeModules(), dest: 'build/' },
+                    { expand: true, cwd: '../KarmaServer/', src: getNodeModules(), dest: 'build/' },
                     // Lib
-                    { expand: true, src: ['lib/**/*.js'], dest: 'build/' },
+                    { expand: true, cwd: '../KarmaServer/', src: ['lib/**/*.js'], dest: 'build/' },
                     // Binaries
-                    { expand: true, cwd: 'bin/', src: ['**'], dest: 'build/' },
+                    { expand: true, cwd: 'bin/Debug/', src: ['**'], dest: 'build/' },
                     // LICENSE
                     { expand: true, cwd: '../', src: ['LICENSE'], dest: 'build/' }
                 ]
