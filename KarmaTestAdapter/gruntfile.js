@@ -118,6 +118,17 @@ module.exports = function (grunt) {
                 files: {
                     'build/[Content_Types].xml': 'Vsix/Content_Types.xml'
                 }
+            },
+            debugSettings: {
+                options: {
+                    xpath: '/Project/PropertyGroup/StartWorkingDirectory',
+                    value: function (node) {
+                        return path.resolve(__dirname, '..');
+                    }
+                },
+                files: {
+                    'KarmaTestAdapter.csproj.user': 'DebugSettings.xml'
+                }
             }
         },
 
@@ -178,6 +189,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask('startExperimentalHub', [
         'commands:startExperimentalHub'
+    ]);
+
+    grunt.registerTask('debugSettings', [
+        'xmlpoke:debugSettings'
     ]);
 
     // Add all plugins that your project needs here

@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="DebugSettings.xml" />
     <Content Include="gruntfile.js" />
     <Content Include="source.extension.vsixmanifest" />
     <Content Include="Vsix\Content_Types.xml" />
