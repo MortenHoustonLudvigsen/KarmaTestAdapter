@@ -91,7 +91,7 @@ module.exports = function (grunt) {
                     // Lib
                     { expand: true, cwd: '../KarmaServer/', src: ['lib/**/*.js'], dest: 'build/' },
                     // Binaries
-                    { expand: true, cwd: 'bin/Debug/', src: ['**'], dest: 'build/' },
+                    { expand: true, cwd: 'bin/Debug/', src: ['**', '!*.xml'], dest: 'build/' },
                     // LICENSE
                     { expand: true, cwd: '../', src: ['LICENSE'], dest: 'build/' }
                 ]
