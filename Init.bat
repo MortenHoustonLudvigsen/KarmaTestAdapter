@@ -9,7 +9,7 @@ echo ===========================================================================
 echo Clean %SolutionDir%
 echo ------------------------------------------------------------------------------------
 cd %SolutionDir%
-git clean -fdX
+git clean -f -x -d -e KarmaTestAdapter/BuildConfig.json -e .vs/ -e *.suo
 echo.
 echo.
 
@@ -41,7 +41,7 @@ echo ===========================================================================
 echo Create debug settings
 echo ------------------------------------------------------------------------------------
 cd %SolutionDir%\KarmaTestAdapter
-grunt debugSettings
+grunt xmlpoke:debugSettings
 echo.
 echo.
 

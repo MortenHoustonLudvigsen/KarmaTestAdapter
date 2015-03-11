@@ -1,6 +1,4 @@
-/// <vs AfterBuild='default' />
 /// <binding AfterBuild='default' />
-/// <vs AfterBuild='default' />
 /*global module */
 
 var path = require('path');
@@ -204,10 +202,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('startExperimentalHub', [
         'exec:startExperimentalHub'
-    ]);
-
-    grunt.registerTask('debugSettings', [
-        'xmlpoke:debugSettings'
     ]);
 
     // Add all plugins that your project needs here
