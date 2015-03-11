@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
 using Ude;
@@ -82,6 +83,58 @@ namespace KarmaTestAdapter.Helpers
             }
 
             return relativePath;
+        }
+
+        public static string GetPhysicalPath(string path)
+        {
+            path = Path.GetFullPath(path);
+            if (File.Exists(path))
+            {
+                return GetPhysicalPath(new FileInfo(path));
+            }
+            else if (Directory.Exists(path))
+            {
+                return GetPhysicalPath(new DirectoryInfo(path));
+            }
+            else
+            {
+                return path;
+            }
+        }
+
+        private static string GetPhysicalPath(FileSystemInfo info)
+        {
+            if (info is FileInfo)
+            {
+                return GetPhysicalPath(info as FileInfo);
+            }
+            else if (info is DirectoryInfo)
+            {
+                return GetPhysicalPath(info as DirectoryInfo);
+            }
+            else
+            {
+                throw new Exception(string.Format("Unknown FileSystemInfo: {0}", info));
+            }
+        }
+
+        private static string GetPhysicalPath(FileInfo info)
+        {
+            var name = info.Directory.EnumerateFiles(info.Name).First().Name;
+            return Path.Combine(GetPhysicalPath(info.Directory), name);
+        }
+
+        private static string GetPhysicalPath(DirectoryInfo info)
+        {
+            if (info.Parent != null)
+            {
+                var name = info.Parent.EnumerateDirectories(info.Name).First().Name;
+                return Path.Combine(GetPhysicalPath(info.Parent), name);
+            }
+            else
+            {
+                return info.Name;
+            }
         }
 
         public static Stream OpenRead(string path)

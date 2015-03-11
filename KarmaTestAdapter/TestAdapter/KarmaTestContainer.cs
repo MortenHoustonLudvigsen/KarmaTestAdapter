@@ -19,6 +19,7 @@ namespace KarmaTestAdapter.TestAdapter
             : base(containers.Discoverer, source)
         {
             Logger = new KarmaLogger(Discoverer.Logger, "Container");
+            BaseDirectory = Discoverer.BaseDirectory;
             KarmaLogger = new KarmaLogger(Logger, "Karma");
             Logger.Info("Creating KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
             Containers = containers;
@@ -57,7 +58,7 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaSourceSettings KarmaSourceSettings { get; private set; }
         public Task KarmaEvents { get; private set; }
         public int Port { get; private set; }
-        public string BaseDirectory { get { return Discoverer.BaseDirectory; } }
+        public string BaseDirectory { get; private set; }
         public IEnumerable<KarmaFileWatcher> FileWatchers { get; private set; }
 
         public bool IsValid { get; private set; }
@@ -148,10 +149,10 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private void StopKarmaServer(string reason)
+        private void StopKarmaServer(string reason, bool warn)
         {
             SetIsValid(false, "Stopping karma: " + reason);
-            KarmaServer.Kill(reason);
+            KarmaServer.Kill(reason, warn);
         }
 
         private void OnServerStarted(int port)
@@ -246,8 +247,8 @@ namespace KarmaTestAdapter.TestAdapter
 
             if (disposing)
             {
-                Logger.Debug("Disposing of KarmaTestContainer for {0}", Source);
-                StopKarmaServer("Disposing");
+                Logger.Debug("Disposing of KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
+                StopKarmaServer("Disposing", false);
                 
                 if (FileWatchers != null)
                 {

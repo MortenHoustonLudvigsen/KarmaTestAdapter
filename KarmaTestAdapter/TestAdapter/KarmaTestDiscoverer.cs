@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.TestAdapter
@@ -75,7 +76,13 @@ namespace KarmaTestAdapter.TestAdapter
 
         public static TestCase CreateTestCase(KarmaSourceSettings settings, KarmaSpec spec)
         {
-            var testCase = new TestCase(spec.UniqueName, Globals.ExecutorUri, settings.Source);
+            var sourceDir = Path.GetDirectoryName(PathUtils.GetRelativePath(settings.BaseDirectory, settings.Source));
+
+            var fullyQualifiedName = string.IsNullOrWhiteSpace(sourceDir)
+                ? spec.UniqueName
+                : string.Format("{0} / {1}", sourceDir.Replace(".", "-"), spec.UniqueName);
+
+            var testCase = new TestCase(fullyQualifiedName, Globals.ExecutorUri, settings.Source);
             testCase.DisplayName = spec.Description;
             if (spec.Source != null)
             {

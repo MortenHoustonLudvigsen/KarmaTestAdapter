@@ -109,13 +109,14 @@ namespace KarmaTestAdapter.TestAdapter
             {
                 if (e.ChangedReason == SolutionChangedReason.Load)
                 {
-                    Containers.CreateContainers(FindSources(e.Project));
+                    Containers.Clear();
+                    Containers.CreateContainers(FindSources());
                     RefreshTestContainers("Project loaded");
                 }
                 else if (e.ChangedReason == SolutionChangedReason.Unload)
                 {
-                    //Containers.Clear();
-                    Containers.Remove(FindSources(e.Project));
+                    Containers.Clear();
+                    Containers.CreateContainers(FindSources());
                     RefreshTestContainers("Project unloaded");
                 }
             }
@@ -148,9 +149,12 @@ namespace KarmaTestAdapter.TestAdapter
 
         private IEnumerable<string> FindSources()
         {
-            return ServiceProvider
+            var containers = ServiceProvider
                 .GetLoadedProjects()
-                .SelectMany(p => FindSources(p));
+                .SelectMany(p => FindSources(p))
+                .Select(f => PathUtils.GetPhysicalPath(f))
+                .ToList();
+            return containers;
         }
 
         private IEnumerable<string> FindSources(IVsProject project)

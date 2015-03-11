@@ -39,7 +39,7 @@ namespace KarmaTestAdapterTests.Expectations
                 Success = (bool?)spec["Success"] ?? false;
                 Skipped = (bool?)spec["Skipped"] ?? false;
                 Output = (string)spec["Output"];
-                StackTrace = FormatStackTrace(spec["StackTrace"] as JArray);
+                Stack = FormatStack(spec["StackTrace"] as JArray);
                 IsValid = true;
             }
             catch (Exception ex)
@@ -58,15 +58,16 @@ namespace KarmaTestAdapterTests.Expectations
         public bool Success { get; private set; }
         public bool Skipped { get; private set; }
         public string Output { get; private set; }
-        public string StackTrace { get; private set; }
+        public IEnumerable<string> Stack { get; private set; }
+        public string StackTrace { get { return Stack != null ? string.Join(Environment.NewLine, Stack) : null; } }
         public bool IsValid { get; private set; }
         public string InvalidReason { get; private set; }
 
-        private string FormatStackTrace(JArray stackTrace)
+        private IEnumerable<string> FormatStack(JArray stackTrace)
         {
             if (stackTrace != null)
             {
-                return string.Join(Environment.NewLine, stackTrace.Select(f => FormatStackFrame(f as JObject)));
+                return stackTrace.Select(f => FormatStackFrame(f as JObject)).ToList();
             }
             return null;
         }

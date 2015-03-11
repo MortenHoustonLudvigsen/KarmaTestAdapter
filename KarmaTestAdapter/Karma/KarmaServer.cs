@@ -192,11 +192,18 @@ namespace KarmaTestAdapter.Karma
             return portSource.Task;
         }
 
-        public void Kill(string reason)
+        public void Kill(string reason, bool warn)
         {
             if (_process != null)
             {
-                Logger.Warn("Killing karma server: {0}", reason);
+                if (warn)
+                {
+                    Logger.Warn("Killing karma server: {0}", reason);
+                }
+                else
+                {
+                    Logger.Debug("Killing karma server: {0}", reason);
+                }
                 _process.Cancel();
             }
         }

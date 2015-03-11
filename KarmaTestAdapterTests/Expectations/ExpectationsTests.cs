@@ -128,7 +128,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveFileNameData")]
         public void ShouldHaveFileName(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null);
+            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null, "Source missing");
             Assert.That(testCase.KarmaSpec.Source.FileName, Is.SamePath(testCase.Spec.FileName));
         }
 
@@ -142,7 +142,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveLineNumberData")]
         public void ShouldHaveLineNumber(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null);
+            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null, "Source missing");
             Assert.That(testCase.KarmaSpec.Source.LineNumber, Is.GreaterThanOrEqualTo(testCase.Spec.LineNumberFrom));
             Assert.That(testCase.KarmaSpec.Source.LineNumber, Is.LessThanOrEqualTo(testCase.Spec.LineNumberTo));
         }
@@ -173,7 +173,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
             string actualStack = null;
             if (testCase.KarmaResult.Failures != null && testCase.KarmaResult.Failures.Any())
             {
-                actualStack = string.Join(Environment.NewLine, testCase.KarmaResult.Failures.First().stack);
+                actualStack = string.Join(Environment.NewLine, testCase.KarmaResult.Failures.First().stack.Take(testCase.Spec.Stack.Count()));
             }
             Assert.That(actualStack, Is.EqualTo(testCase.Spec.StackTrace));
         }
