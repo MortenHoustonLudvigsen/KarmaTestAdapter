@@ -231,7 +231,7 @@ var Reporter = (function () {
     };
     Reporter.prototype.onBrowserStart = function (browser) {
         this.output = [];
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
+        browser.vsBrowser = new VsBrowser(browser);
     };
     Reporter.prototype.onBrowserError = function (browser, error) {
         var _this = this;

@@ -303,7 +303,7 @@ class Reporter {
 
     onBrowserStart(browser: Browser): void {
         this.output = [];
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
+        browser.vsBrowser = new VsBrowser(browser);
     }
 
     onBrowserError(browser: Browser, error: string): void {
