@@ -1,3 +1,4 @@
+/// <vs AfterBuild='default' />
 /// <binding AfterBuild='default' />
 /// <vs AfterBuild='default' />
 /*global module */
@@ -25,9 +26,9 @@ module.exports = function (grunt) {
         getDependencies().forEach(function (dependency) {
             result.push('node_modules/' + dependency + '/**');
         });
-        //result.push('!node_modules/source-map/bench/**');
-        //result.push('!node_modules/source-map/build/**');
-        //result.push('!node_modules/source-map/test/**');
+        result.push('!node_modules/source-map/bench/**');
+        result.push('!node_modules/source-map/build/**');
+        result.push('!node_modules/source-map/test/**');
         return result;
     }
 
