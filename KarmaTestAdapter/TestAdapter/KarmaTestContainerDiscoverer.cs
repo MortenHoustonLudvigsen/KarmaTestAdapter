@@ -2,7 +2,6 @@
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TestWindow.Controller;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace KarmaTestAdapter.TestAdapter
         [ImportingConstructor]
         public KarmaTestContainerDiscoverer(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
-            IRequestFactory requestFactory,
+            ITestsService testsService,
             SolutionListener solutionListener,
             KarmaTestSettingsProvider testSettingsService,
             ILogger logger
@@ -33,7 +32,7 @@ namespace KarmaTestAdapter.TestAdapter
             Containers = new KarmaTestContainerList(this);
 
             ServiceProvider = serviceProvider;
-            _requestFactory = requestFactory;
+            _testsService = testsService;
 
             SolutionListener = solutionListener;
             SolutionListener.SolutionLoaded += OnSolutionLoaded;
@@ -43,7 +42,7 @@ namespace KarmaTestAdapter.TestAdapter
         }
 
         private bool _initialContainerSearch = true;
-        private IRequestFactory _requestFactory;
+        private ITestsService _testsService;
 
         public KarmaTestContainerList Containers { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
@@ -60,9 +59,9 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<Guid> tests)
         {
-            if (_requestFactory != null)
+            if (_testsService != null)
             {
-                _requestFactory.ExecuteTestsAsync(tests, null);
+                _testsService.RunTestsAsync(tests);
             }
         }
 

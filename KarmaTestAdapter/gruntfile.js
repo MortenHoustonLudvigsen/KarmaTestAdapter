@@ -82,7 +82,7 @@ module.exports = function (grunt) {
         buildConfig: grunt.file.readJSON('./BuildConfig.json'),
 
         clean: {
-            dist: ['build', 'dist/KarmaTestAdapter.<%= buildConfig.VisualStudioVersion %>.vsix']
+            dist: ['build', 'dist']
         },
 
         copy: {
@@ -107,9 +107,6 @@ module.exports = function (grunt) {
                         {
                             xpath: '/PackageManifest/Metadata/Identity/@Version',
                             value: '<%= pkg.version %>'
-                        }, {
-                            xpath: '/PackageManifest/Installation/InstallationTarget/@Version',
-                            value: '[<%= buildConfig.VisualStudioVersion %>]'
                         }
                     ]
                 },
@@ -154,7 +151,7 @@ module.exports = function (grunt) {
                 options: {
                     level: 9,
                     mode: 'zip',
-                    archive: 'dist/KarmaTestAdapter.<%= buildConfig.VisualStudioVersion %>.vsix'
+                    archive: 'dist/KarmaTestAdapter.vsix'
                 },
                 files: [
                     { expand: true, cwd: 'build/', src: ['**/*'], dest: '/' }
@@ -162,7 +159,7 @@ module.exports = function (grunt) {
             }
         },
 
-        commands: {
+        exec: {
             resetExperimentalHub: {
                 cmd: 'ResetExperimentalHub.bat <%= buildConfig.VisualStudioVersion %>'
             },
@@ -197,16 +194,16 @@ module.exports = function (grunt) {
         'xmlpoke:vsixManifest',
         'xmlpoke:contentTypes',
         'compress:dist',
-        'commands:resetExperimentalHub',
+        'exec:resetExperimentalHub',
         'build-done'
     ]);
 
     grunt.registerTask('resetExperimentalHub', [
-        'commands:resetExperimentalHub'
+        'exec:resetExperimentalHub'
     ]);
 
     grunt.registerTask('startExperimentalHub', [
-        'commands:startExperimentalHub'
+        'exec:startExperimentalHub'
     ]);
 
     grunt.registerTask('debugSettings', [
@@ -218,5 +215,5 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-xmlpoke');
-    grunt.loadNpmTasks('grunt-commands');
+    grunt.loadNpmTasks('grunt-exec');
 };
