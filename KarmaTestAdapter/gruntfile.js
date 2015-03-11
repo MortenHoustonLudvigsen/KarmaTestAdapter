@@ -8,6 +8,8 @@ var flatten = require('flatten-packages');
 module.exports = function (grunt) {
     'use strict';
 
+    var buildConfig = grunt.file.readJSON('./BuildConfig.json');
+
     function getDependencies() {
         var karmaServerPackage = grunt.file.readJSON('../KarmaServer/package.json');
         var result = [];
@@ -77,7 +79,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         // read in the project settings from the package.json file into the pkg property
         pkg: grunt.file.readJSON('package.json'),
-        buildConfig: grunt.file.readJSON('./BuildConfig.json'),
+        buildConfig: buildConfig,
 
         clean: {
             dist: ['build', 'dist']
@@ -167,10 +169,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build-done', function () {
-        grunt.file.write('build/build-done', '');
-    });
-
     grunt.registerTask('flatten-packages', function () {
         var done = this.async();
         flatten('build', {}, function (err, res) {
@@ -185,16 +183,26 @@ module.exports = function (grunt) {
         });
     });
 
-    grunt.registerTask('default', [
-        'clean:dist',
-        'copy:dist',
-        'flatten-packages',
-        'xmlpoke:vsixManifest',
-        'xmlpoke:contentTypes',
-        'compress:dist',
-        'exec:resetExperimentalHub',
-        'build-done'
-    ]);
+    if (buildConfig.VisualStudioVersion === "12.0") {
+        grunt.registerTask('default', [
+            'clean:dist',
+            'copy:dist',
+            'flatten-packages',
+            'xmlpoke:vsixManifest',
+            'xmlpoke:contentTypes',
+            'compress:dist'
+        ]);
+    } else {
+        grunt.registerTask('default', [
+            'clean:dist',
+            'copy:dist',
+            'flatten-packages',
+            'xmlpoke:vsixManifest',
+            'xmlpoke:contentTypes',
+            'compress:dist',
+            'exec:resetExperimentalHub'
+        ]);
+    }
 
     grunt.registerTask('resetExperimentalHub', [
         'exec:resetExperimentalHub'
