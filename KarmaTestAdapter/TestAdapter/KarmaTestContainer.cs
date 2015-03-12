@@ -49,11 +49,11 @@ namespace KarmaTestAdapter.TestAdapter
             }
             if (!IsValid)
             {
-                Logger.Warn("KarmaTestContainer is invalid ({0}) for {1}", InvalidReason, PathUtils.GetRelativePath(BaseDirectory, Source));
+                Logger.Warn(InvalidReason);
             }
             else
             {
-                Logger.Info("KarmaTestContainer created for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
+                Logger.Info("KarmaTestContainer created");
             }
         }
 
@@ -160,8 +160,11 @@ namespace KarmaTestAdapter.TestAdapter
 
         private void StopKarmaServer(string reason, bool warn)
         {
-            SetIsValid(false, "Stopping karma: " + reason);
-            KarmaServer.Kill(reason, warn);
+            if (KarmaServer != null)
+            {
+                SetIsValid(false, "Stopping karma: " + reason);
+                KarmaServer.Kill(reason, warn);
+            }
         }
 
         private void OnServerStarted(int port)

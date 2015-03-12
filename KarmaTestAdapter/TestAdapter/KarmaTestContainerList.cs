@@ -1,4 +1,5 @@
 ﻿using KarmaTestAdapter.Helpers;
+using KarmaTestAdapter.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,15 +20,22 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void CreateContainer(string source)
         {
-            RemoveFromDirectory(Path.GetDirectoryName(source));
-            var container = new KarmaTestContainer(this, source);
-            if (container.IsValid)
+            try
             {
-                _containers.Add(container);
+                RemoveFromDirectory(Path.GetDirectoryName(source));
+                var container = new KarmaTestContainer(this, source);
+                if (container.IsValid)
+                {
+                    _containers.Add(container);
+                }
+                else
+                {
+                    container.Dispose();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                container.Dispose();
+                Discoverer.Logger.Error(ex, "Failed to create test container for {0}", source);
             }
         }
 
