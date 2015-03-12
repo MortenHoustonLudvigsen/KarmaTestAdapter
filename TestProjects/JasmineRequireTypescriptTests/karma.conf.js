@@ -16,8 +16,10 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'test-main.js',
-            { pattern: 'src/**/*.*', included: false },
-            { pattern: 'specs/**/*.*', included: false }
+            { pattern: 'src/**/*.js', included: false },
+            { pattern: 'specs/**/*.js', included: false },
+            { pattern: '**/*.ts', included: false, served: true, watched: false },
+            { pattern: '**/*.js.map', included: false, served: true, watched: false }
         ],
 
 
