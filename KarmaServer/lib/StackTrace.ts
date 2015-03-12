@@ -29,13 +29,18 @@ class StackTrace {
         if (filePath in this.sourceMapConsumers) {
             return this.sourceMapConsumers[filePath];
         }
-        var content = fs.readFileSync(filePath).toString();
-        var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
-        var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
-        if (consumer) {
-            consumer['resolvePath'] = (filePath: string) => path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath);
+        try {
+            var content = fs.readFileSync(filePath).toString();
+            var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
+            var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
+            if (consumer) {
+                consumer['resolvePath'] = (filePath: string) => path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath);
+            }
+            this.sourceMapConsumers[filePath] = consumer;
+            return consumer;
+        } catch (e) {
+            this.sourceMapConsumers[filePath] = undefined;
         }
-        return consumer;
     }
 
     getFilePath(fileName: string): string {

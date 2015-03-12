@@ -18,13 +18,19 @@ var StackTrace = (function () {
         if (filePath in this.sourceMapConsumers) {
             return this.sourceMapConsumers[filePath];
         }
-        var content = fs.readFileSync(filePath).toString();
-        var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
-        var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
-        if (consumer) {
-            consumer['resolvePath'] = function (filePath) { return path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath); };
+        try {
+            var content = fs.readFileSync(filePath).toString();
+            var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
+            var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
+            if (consumer) {
+                consumer['resolvePath'] = function (filePath) { return path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath); };
+            }
+            this.sourceMapConsumers[filePath] = consumer;
+            return consumer;
         }
-        return consumer;
+        catch (e) {
+            this.sourceMapConsumers[filePath] = undefined;
+        }
     };
     StackTrace.prototype.getFilePath = function (fileName) {
         if (typeof fileName === 'string') {
