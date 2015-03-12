@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseFixture.cs" />
+    <Compile Include="Expectations\BetweenConstraint.cs" />
     <Compile Include="Expectations\Expectations.cs" />
     <Compile Include="Expectations\ExpectationsTests.cs" />
     <Compile Include="Expectations\Expected.cs" />

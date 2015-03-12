@@ -14,6 +14,11 @@ export interface Config {
     parseConfig(configFilePath: any, cliOptions: any): any;
 }
 
+export interface KarmaConfig {
+    basePath: string;
+    urlRoot: string;
+}
+
 export interface Server {
     start(cliOptions: any, done: (exitCode: number) => void): void;
 }

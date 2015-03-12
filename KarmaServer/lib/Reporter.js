@@ -1,20 +1,5 @@
-var fs = require('fs');
-var util = require('util');
-var url = require('url');
-var path = require('path');
 var Karma = require('./Karma');
-var errorStackParser = require('error-stack-parser');
-var SourceMap = require("source-map");
-var SourceMapResolve = require("source-map-resolve");
-function pad(value, count) {
-    if (typeof value === 'number') {
-        return pad(value.toString(10), count);
-    }
-    if (typeof value === 'string') {
-        return (value + Array(count + 1).join(' ')).slice(0, count - 1);
-    }
-    return pad('', count);
-}
+var StackTrace = require('./StackTrace');
 var VsBrowser = (function () {
     function VsBrowser(browser) {
         this.browser = browser;
@@ -67,143 +52,18 @@ var VsBrowser = (function () {
 })();
 var Reporter = (function () {
     function Reporter(config, server, logger) {
-        var _this = this;
         this.config = config;
         this.server = server;
-        this.logValue = function (name, status, value) {
-            if (_this.logValue.enabled) {
-                var message = pad(name, 20) + " " + status;
-                if (typeof value !== 'undefined') {
-                    message += '\n' + util.inspect(value, { depth: null });
-                }
-                _this.logger.debug(message);
-            }
-        };
-        this.urlRoot = this.config.urlRoot || '/';
-        this.urlBase = url.parse(path.join(this.urlRoot, 'base')).pathname;
-        this.urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
-        this.basePath = this.config.basePath;
         this.specMap = {};
         this.specs = [];
         this.output = [];
-        this.sourceMapConsumers = {};
         this.logger = logger.create('VS Reporter', Karma.karma.Constants.LOG_DEBUG);
         this.logger.info("Created");
-        //this.logValue.enabled = true;
-        this.logValue("Reporter", "Created", {
-            basePath: this.basePath,
-            urlRoot: this.urlRoot,
-            urlBase: this.urlBase,
-            urlAbsoluteBase: this.urlAbsoluteBase,
-            logger: this.logger
-        });
     }
-    Reporter.prototype.getSourceMapConsumer = function (filePath) {
-        if (filePath in this.sourceMapConsumers) {
-            return this.sourceMapConsumers[filePath];
-        }
-        var content = fs.readFileSync(filePath).toString();
-        var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
-        var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
-        if (consumer) {
-            consumer['resolvePath'] = function (filePath) { return path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath); };
-        }
-        return consumer;
-    };
-    Reporter.prototype.resolveSource = function (source) {
-        if (source && source.fileName) {
-            source.fileName = this.getFilePath(source.fileName);
-            var consumer = this.getSourceMapConsumer(source.fileName);
-            if (consumer) {
-                var position = {
-                    line: Math.max(source.lineNumber || 1, 1),
-                    column: Math.max(source.columnNumber || 1, 1) - 1,
-                    bias: SourceMap.SourceMapConsumer.GREATEST_LOWER_BOUND
-                };
-                var orig = consumer.originalPositionFor(position);
-                if (!orig.source) {
-                    position.bias = SourceMap.SourceMapConsumer.LEAST_UPPER_BOUND;
-                    orig = consumer.originalPositionFor(position);
-                }
-                if (orig.source) {
-                    source.source = this.resolveSource({
-                        functionName: source.functionName,
-                        fileName: consumer['resolvePath'](orig.source),
-                        lineNumber: orig.line,
-                        columnNumber: orig.column + 1
-                    });
-                }
-            }
-        }
-        return source;
-    };
-    Reporter.prototype.getRealSource = function (source, relative) {
-        if (source) {
-            if (source.source) {
-                return this.getRealSource(source.source, relative);
-            }
-            if (relative && source.fileName) {
-                source.fileName = path.relative(this.basePath, source.fileName);
-            }
-        }
-        return source;
-    };
-    Reporter.prototype.getFilePath = function (fileName) {
-        if (typeof fileName === 'string') {
-            var filePath = url.parse(fileName).pathname;
-            if (filePath.indexOf(this.urlBase) === 0) {
-                return path.join(this.basePath, filePath.substring(this.urlBase.length));
-            }
-            else if (filePath.indexOf(this.urlAbsoluteBase) === 0) {
-                return filePath.substring(this.urlAbsoluteBase.length);
-            }
-        }
-        return fileName;
-    };
-    Reporter.prototype.parseStack = function (stack, relative) {
-        var _this = this;
-        var reporter = this;
-        try {
-            return errorStackParser.parse({ stack: stack }).map(function (frame) { return getSource(frame); }).map(function (frame) { return _this.resolveSource(frame); }).map(function (frame) { return _this.getRealSource(frame, relative); });
-        }
-        catch (e) {
-            this.logger.debug(e);
-            return;
-        }
-        function getSource(frame) {
-            return {
-                functionName: frame.functionName,
-                fileName: reporter.getFilePath(frame.fileName),
-                lineNumber: frame.lineNumber,
-                columnNumber: frame.columnNumber
-            };
-        }
-    };
-    Reporter.prototype.normalizeStack = function (stack) {
-        var relative = false;
-        var basePath = this.basePath;
-        var stackFrames = this.parseStack(stack, relative);
-        if (stackFrames) {
-            return stackFrames.map(function (frame) { return formatFrame(frame); });
-        }
-        else {
-            return stack.split(/\r\n|\n/g);
-        }
-        function formatFrame(frame) {
-            var result = '    at ';
-            result += frame.functionName || '<anonymous>';
-            result += ' in ';
-            result += frame.fileName;
-            if (typeof frame.lineNumber === 'number' && frame.lineNumber >= 0) {
-                result += ':line ' + frame.lineNumber.toString(10);
-            }
-            return result;
-        }
-    };
     Reporter.prototype.getSpec = function (browser, spec) {
         var existingSpec;
         if (existingSpec = this.specMap[spec.id]) {
-            existingSpec.source = existingSpec.source || this.getRealSource(spec.source, false);
+            existingSpec.source = existingSpec.source || this.stackTrace.getSource(spec.sourceStack);
         }
         else {
             existingSpec = this.specMap[spec.id] = {
@@ -211,7 +71,7 @@ var Reporter = (function () {
                 description: spec.description,
                 uniqueName: spec.uniqueName || browser.vsBrowser.getUniqueName(spec),
                 suite: spec.suite,
-                source: this.getRealSource(spec.source, false),
+                source: this.stackTrace.getSource(spec.sourceStack),
                 results: []
             };
             this.specs.push(existingSpec);
@@ -222,12 +82,11 @@ var Reporter = (function () {
         this.server.karmaStart();
         this.specMap = {};
         this.specs = [];
-        this.sourceMapConsumers = {};
         this.output = [];
+        this.stackTrace = new StackTrace(this.config, this.logger);
     };
     Reporter.prototype.onRunComplete = function (browsers, results) {
         this.server.karmaEnd(this.specs);
-        this.logValue("Karma", "Done", this.specs);
     };
     Reporter.prototype.onBrowserStart = function (browser) {
         this.output = [];
@@ -238,7 +97,7 @@ var Reporter = (function () {
         browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
         var failures;
         var source;
-        var stackFrames = this.parseStack(error, false);
+        var stackFrames = this.stackTrace.parseStack({ stack: error }, false);
         if (stackFrames) {
             source = stackFrames[0];
             failures = [{
@@ -274,7 +133,7 @@ var Reporter = (function () {
             log: event.log,
             failures: event.failures ? event.failures.map(function (failure) { return {
                 message: failure.message,
-                stack: _this.normalizeStack(failure.stack),
+                stack: _this.stackTrace.normalizeStack(failure.stack),
                 passed: failure.passed
             }; }) : undefined
         };
@@ -294,7 +153,7 @@ var Reporter = (function () {
         browser.vsBrowser.adjustResults();
     };
     Reporter.prototype.onSpecComplete = function (browser, result) {
-        result.source = this.resolveSource(result.source);
+        result.source = this.stackTrace.resolveSource(result.source);
         switch (result.event) {
             case 'suite-start':
                 this.onSuiteStart(browser, result);
@@ -336,7 +195,7 @@ var Reporter = (function () {
             log: event.log,
             failures: event.failures ? event.failures.map(function (exp) { return {
                 message: exp.message,
-                stack: _this.normalizeStack(exp.stack),
+                stack: _this.stackTrace.normalizeStack(exp.stack),
                 passed: exp.passed
             }; }) : undefined
         };

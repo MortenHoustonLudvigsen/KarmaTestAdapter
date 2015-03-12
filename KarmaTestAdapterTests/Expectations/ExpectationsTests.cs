@@ -143,8 +143,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         public void ShouldHaveLineNumber(SpecTestCase testCase)
         {
             Assert.That(testCase.KarmaSpec.Source, Is.Not.Null, "Source missing");
-            Assert.That(testCase.KarmaSpec.Source.LineNumber, Is.GreaterThanOrEqualTo(testCase.Spec.LineNumberFrom));
-            Assert.That(testCase.KarmaSpec.Source.LineNumber, Is.LessThanOrEqualTo(testCase.Spec.LineNumberTo));
+            Assert.That(testCase.KarmaSpec.Source.LineNumber, new BetweenConstraint(testCase.Spec.LineNumberFrom, testCase.Spec.LineNumberTo), "Line number");
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveLineNumberData()

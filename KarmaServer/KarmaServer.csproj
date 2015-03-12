@@ -64,6 +64,7 @@
     <TypeScriptCompile Include="lib\Reporter.ts" />
     <TypeScriptCompile Include="lib\Server.ts" />
     <TypeScriptCompile Include="lib\Specs.ts" />
+    <TypeScriptCompile Include="lib\StackTrace.ts" />
     <TypeScriptCompile Include="lib\Start.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\node\node.d.ts" />

@@ -161,6 +161,7 @@ module KarmaTestAdapter {
         isSuite?: boolean;
         suite?: SuiteResult;
         source?: any;
+        sourceStack?: any;
         uniqueName?: string;
         fullName?: string;
         description?: string;
@@ -179,7 +180,7 @@ module KarmaTestAdapter {
     /**
      * Very simple reporter for Jasmine.
      */
-    class KarmaReporter {
+    export class KarmaReporter {
         constructor(private karma, private jasmineEnv) {
         }
 
@@ -328,6 +329,7 @@ module KarmaTestAdapter {
                 endTime: spec.endTime,
                 uniqueName: spec.uniqueName,
                 source: spec.source,
+                sourceStack: spec.sourceStack,
                 failures: map(spec.failedExpectations, exp => getExpectation(exp))
             });
         }
@@ -366,7 +368,7 @@ module KarmaTestAdapter {
      * @param {Object} config The karma config
      * @param {Object} jasmineEnv jasmine environment object
      */
-    var createSpecFilter = function (config, jasmineEnv) {
+    export function createSpecFilter(config, jasmineEnv) {
         var specFilter = new KarmaSpecFilter({
             filterString: function () {
                 return getGrepOption(config.args);
@@ -376,7 +378,7 @@ module KarmaTestAdapter {
         jasmineEnv.specFilter = function (spec) {
             return specFilter.matches(spec.getFullName());
         };
-    };
+    }
 
     /**
      * Karma starter function factory.
@@ -388,17 +390,13 @@ module KarmaTestAdapter {
      * @param  {Object}   [jasmineEnv] Optional Jasmine environment for testing.
      * @return {Function}              Karma starter function.
      */
-    function createStartFn(karma, jasmineEnv?) {
+    export function createStartFn(karma, jasmineEnv?) {
         // This function will be assigned to `window.__karma__.start`:
         return function () {
             jasmineEnv = jasmineEnv || window.jasmine.getEnv();
 
-            jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
+            //jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
             jasmineEnv.execute();
         };
     }
-
-
-    createSpecFilter(window.__karma__.config, jasmine.getEnv());
-    window.__karma__.start = createStartFn(window.__karma__);
 }

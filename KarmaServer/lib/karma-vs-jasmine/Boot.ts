@@ -1,15 +1,12 @@
 ﻿declare var jasmineRequire: any;
 
+
 /**
  * Jasmine 2.0 standalone `boot.js` modified for Karma.
  * This file is registered in `index.js`. This version
  * does not include `HtmlReporter` setup.
  */
-(function (global) {
-
-    /*global jasmineRequire */
-    'use strict';
-
+module KarmaTestAdapter {
     /**
      * Require Jasmine's core files. Specifically, this requires and
      * attaches all of Jasmine's code to the `jasmine` reference.
@@ -24,7 +21,7 @@
     /**
      * Instrument jasmine functions.
      */
-    JasmineInstumentation.wrapFunctions(jasmineEnv);
+    wrapFunctions(jasmineEnv);
 
     /**
      * Obtain the public Jasmine API.
@@ -32,13 +29,18 @@
     var jasmineInterface = jasmineRequire.interface(jasmine, jasmineEnv);
 
     /**
+     * Add reporter
+     */
+    jasmineEnv.addReporter(new KarmaReporter(window.__karma__, jasmineEnv));
+
+    /**
      * Setting up timing functions to be able to be overridden.
      * Certain browsers (Safari, IE 8, PhantomJS) require this hack.
      */
-    global.setTimeout = global.setTimeout;
-    global.setInterval = global.setInterval;
-    global.clearTimeout = global.clearTimeout;
-    global.clearInterval = global.clearInterval;
+    window.setTimeout = window.setTimeout;
+    window.setInterval = window.setInterval;
+    window.clearTimeout = window.clearTimeout;
+    window.clearInterval = window.clearInterval;
 
     /**
      * Add all of the Jasmine global/public interface to the proper
@@ -48,8 +50,10 @@
      */
     for (var property in jasmineInterface) {
         if (jasmineInterface.hasOwnProperty(property)) {
-            global[property] = jasmineInterface[property];
+            window[property] = jasmineInterface[property];
         }
     }
 
-} (window));
+    createSpecFilter(window.__karma__.config, jasmineEnv);
+    window.__karma__.start = createStartFn(window.__karma__, jasmineEnv);
+}

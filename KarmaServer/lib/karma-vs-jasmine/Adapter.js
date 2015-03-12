@@ -253,11 +253,13 @@ var KarmaTestAdapter;
                 endTime: spec.endTime,
                 uniqueName: spec.uniqueName,
                 source: spec.source,
+                sourceStack: spec.sourceStack,
                 failures: map(spec.failedExpectations, function (exp) { return getExpectation(exp); })
             });
         };
         return KarmaReporter;
     })();
+    KarmaTestAdapter.KarmaReporter = KarmaReporter;
     /**
      * Extract grep option from karma config
      * @param {[Array|string]} clientArguments The karma client arguments
@@ -286,7 +288,7 @@ var KarmaTestAdapter;
      * @param {Object} config The karma config
      * @param {Object} jasmineEnv jasmine environment object
      */
-    var createSpecFilter = function (config, jasmineEnv) {
+    function createSpecFilter(config, jasmineEnv) {
         var specFilter = new KarmaSpecFilter({
             filterString: function () {
                 return getGrepOption(config.args);
@@ -295,7 +297,8 @@ var KarmaTestAdapter;
         jasmineEnv.specFilter = function (spec) {
             return specFilter.matches(spec.getFullName());
         };
-    };
+    }
+    KarmaTestAdapter.createSpecFilter = createSpecFilter;
     /**
      * Karma starter function factory.
      *
@@ -310,11 +313,10 @@ var KarmaTestAdapter;
         // This function will be assigned to `window.__karma__.start`:
         return function () {
             jasmineEnv = jasmineEnv || window.jasmine.getEnv();
-            jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
+            //jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
             jasmineEnv.execute();
         };
     }
-    createSpecFilter(window.__karma__.config, jasmine.getEnv());
-    window.__karma__.start = createStartFn(window.__karma__);
+    KarmaTestAdapter.createStartFn = createStartFn;
 })(KarmaTestAdapter || (KarmaTestAdapter = {}));
 //# sourceMappingURL=Adapter.js.map
