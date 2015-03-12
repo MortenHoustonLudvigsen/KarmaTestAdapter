@@ -10,11 +10,10 @@ namespace KarmaTestAdapter.Logging
 {
     public interface IKarmaLogger
     {
-        string Phase { get; }
+        IEnumerable<string> Context { get; }
         void Clear();
-        void Log(KarmaLogLevel level, string phase, string message);
-        string FormatMessage(KarmaLogLevel level, string phase, string message);
-        //IKarmaLogger Parent { get; set; }
+        void Log(KarmaLogLevel level, IEnumerable<string> context, string message);
+        string FormatMessage(KarmaLogLevel level, IEnumerable<string> context, string message);
         bool HasLogger<TLogger>(Func<TLogger, bool> predicate) where TLogger : IKarmaLogger;
         void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger) where TLogger : IKarmaLogger;
         void RemoveLogger<TLogger>(Func<TLogger, bool> predicate) where TLogger : IKarmaLogger;

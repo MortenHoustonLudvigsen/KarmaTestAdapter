@@ -38,14 +38,14 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public override void Log(KarmaLogLevel level, string phase, string message)
+        public override void Log(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             try
             {
                 var testMessageLevel = GetTestMessageLevel(level);
                 if (testMessageLevel.HasValue)
                 {
-                    Logger.SendMessage(testMessageLevel.Value, FormatMessage(level, phase, message));
+                    Logger.SendMessage(testMessageLevel.Value, FormatMessage(level, context, message));
                 }
             }
             catch { }

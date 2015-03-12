@@ -21,7 +21,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            var karmaLogger = new KarmaLogger(frameworkHandle, "Run");
+            var karmaLogger = new KarmaLogger(frameworkHandle);
+            var runLogger = new KarmaLogger(karmaLogger, "Run");
             var testSettings = runContext.RunSettings.GetKarmaTestSettings();
 
             foreach (var source in sources)
@@ -33,7 +34,7 @@ namespace KarmaTestAdapter.TestAdapter
                 }
                 else
                 {
-                    karmaLogger.Debug("Could not get karma settings for {0}", source);
+                    runLogger.Debug("Could not get karma settings for {0}", source);
                 }
             }
         }
@@ -45,7 +46,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         private async Task RunTests(KarmaSourceSettings settings, IKarmaLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            logger.Info("Running tests for {0}", PathUtils.GetRelativePath(settings.BaseDirectory, settings.Source));
+            logger = new KarmaLogger(logger, settings.Name, "Run");
+            logger.Info("Running tests");
             if (settings.Port > 0)
             {
                 var discoverCommand = new KarmaDiscoverCommand(settings.Port);

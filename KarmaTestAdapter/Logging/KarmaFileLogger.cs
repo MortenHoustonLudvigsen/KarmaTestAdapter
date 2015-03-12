@@ -27,24 +27,24 @@ namespace KarmaTestAdapter.Logging
             catch { }
         }
 
-        public override void Log(KarmaLogLevel level, string phase, string message)
+        public override void Log(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             try
             {
                 using (var file = File.AppendText(Filename))
                 {
-                    file.WriteLine(FormatMessage(level, phase, message));
+                    file.WriteLine(FormatMessage(level, context, message));
                 }
             }
             catch { }
         }
 
-        protected override string FormatMessageInternal(KarmaLogLevel level, string phase, string message)
+        protected override string FormatMessageInternal(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             return FormatMessage(
                 DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss.fff"),
-                phase,
                 level.LevelText(),
+                context,
                 message
             );
         }

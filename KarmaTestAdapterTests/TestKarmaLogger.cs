@@ -9,16 +9,16 @@ namespace KarmaTestAdapterTests
 {
     public class TestKarmaLogger : KarmaLoggerBase
     {
-        public TestKarmaLogger(Action<KarmaLogLevel, string, string> logMessage)
+        public TestKarmaLogger(Action<string> logMessage)
         {
             LogMessage = logMessage;
         }
 
-        public Action<KarmaLogLevel, string, string> LogMessage { get; private set; }
+        public Action<string> LogMessage { get; private set; }
 
-        public override void Log(KarmaLogLevel level, string phase, string message)
+        public override void Log(KarmaLogLevel level, IEnumerable<string> phase, string message)
         {
-            LogMessage(level, phase, message);
+            LogMessage(FormatMessage(level, phase, message));
         }
     }
 }

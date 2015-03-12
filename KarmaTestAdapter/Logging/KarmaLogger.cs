@@ -13,25 +13,25 @@ namespace KarmaTestAdapter.Logging
     {
         private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
 
-        public KarmaLogger(ILogger logger, string phase, bool newGlobalLog = false)
-            : this(logger, null, phase, newGlobalLog)
+        public KarmaLogger(ILogger logger, bool newGlobalLog = false)
+            : this(logger, null, newGlobalLog)
         {
         }
 
-        public KarmaLogger(IMessageLogger messageLogger, string phase, bool newGlobalLog = false)
-            : this(null, messageLogger, phase, newGlobalLog)
+        public KarmaLogger(IMessageLogger messageLogger, bool newGlobalLog = false)
+            : this(null, messageLogger, newGlobalLog)
         {
         }
 
-        public KarmaLogger(IKarmaLogger karmaLogger, string phase)
+        public KarmaLogger(IKarmaLogger karmaLogger, params string[] context)
         {
-            _phase = phase;
+            AddContext(karmaLogger.Context);
+            AddContext(context);
             this.AddLogger(karmaLogger);
         }
 
-        private KarmaLogger(ILogger logger, IMessageLogger messageLogger, string phase, bool newGlobalLog)
+        private KarmaLogger(ILogger logger, IMessageLogger messageLogger, bool newGlobalLog)
         {
-            _phase = phase;
             if (Globals.Debug)
             {
                 if (!Directory.Exists(Globals.GlobalLogDir))
@@ -47,12 +47,6 @@ namespace KarmaTestAdapter.Logging
             }
             this.AddLogger(logger);
             this.AddLogger(messageLogger);
-        }
-
-        private string _phase;
-        public override string Phase
-        {
-            get { return _phase ?? base.Phase; }
         }
 
         public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
@@ -97,13 +91,13 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        public override void Log(KarmaLogLevel level, string phase, string message)
+        public override void Log(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             foreach (var logger in _loggers)
             {
                 try
                 {
-                    logger.Log(level, phase, message);
+                    logger.Log(level, context, message);
                 }
                 catch { }
             }

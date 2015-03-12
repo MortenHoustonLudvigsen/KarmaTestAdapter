@@ -25,7 +25,7 @@ namespace KarmaTestAdapter.TestAdapter
             ILogger logger
             )
         {
-            Logger = new KarmaLogger(logger, "ContainerDiscoverer", true);
+            Logger = new KarmaLogger(logger, true);
             Logger.Info("KarmaTestContainerDiscoverer created");
             TestSettingsProvider = testSettingsService;
 

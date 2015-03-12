@@ -92,6 +92,9 @@ namespace KarmaTestAdapter.TestAdapter
         [XmlAttribute]
         public int Port { get; set; }
 
+        [XmlIgnore]
+        public string Name { get { return Path.GetDirectoryName(PathUtils.GetRelativePath(BaseDirectory, Source)); } }
+
         public static string SettingsFilePath(string source)
         {
             return Path.Combine(Globals.GlobalLogDir, Sha1Utils.GetHash(source.ToLowerInvariant()) + ".xml");

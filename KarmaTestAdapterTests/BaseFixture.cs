@@ -18,19 +18,7 @@ namespace KarmaTestAdapterTests
 
         public BaseFixture()
         {
-            Logger = new TestKarmaLogger((level, phase, message) =>
-            {
-                var levelText = level.LevelText();
-                foreach (var line in message.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n'))
-                {
-                    Console.WriteLine(string.Join(" ", new[]{
-                        string.Format("[{0:0.0}]", Elapsed),
-                        string.IsNullOrWhiteSpace(levelText) ? null : string.Format("[{0}]", levelText),
-                        string.IsNullOrWhiteSpace(phase) ? null : string.Format("[{0}]", phase),
-                        line
-                    }.Where(s => !string.IsNullOrWhiteSpace(s))));
-                }
-            });
+            Logger = new TestKarmaLogger(message => Console.WriteLine("[{0:0.0}] {1}", Elapsed, message));
         }
 
         [SetUp]

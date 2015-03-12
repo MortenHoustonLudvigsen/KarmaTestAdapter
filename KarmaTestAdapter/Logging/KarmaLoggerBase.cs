@@ -19,26 +19,23 @@ namespace KarmaTestAdapter.Logging
 
         public ulong Id { get; private set; }
 
-        //private IKarmaLogger _parent = null;
-        //public IKarmaLogger Parent
-        //{
-        //    get { return _parent; }
-        //    set
-        //    {
-        //        if (value != _parent)
-        //        {
-        //            if (_parent != null)
-        //            {
-        //                _parent.RemoveLogger(this);
-        //            }
-        //            _parent = value;
-        //        }
-        //    }
-        //}
-
-        public virtual string Phase
+        protected void AddContext(string context)
         {
-            get { return null; }
+            if (!string.IsNullOrWhiteSpace(context))
+            {
+                _context.Add(context);
+            }
+        }
+
+        protected void AddContext(IEnumerable<string> context)
+        {
+            _context.AddRange(context.Where(p => !string.IsNullOrWhiteSpace(p)));
+        }
+
+        private List<string> _context = new List<string>();
+        public IEnumerable<string> Context
+        {
+            get { return _context; }
         }
 
         public virtual void Clear()
@@ -46,28 +43,50 @@ namespace KarmaTestAdapter.Logging
             // Do nothing
         }
 
-        public abstract void Log(KarmaLogLevel level, string phase, string message);
+        public abstract void Log(KarmaLogLevel level, IEnumerable<string> context, string message);
 
-        public string FormatMessage(KarmaLogLevel level, string phase, string message)
+        public string FormatMessage(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
-            return FormatMessageInternal(level, phase, message);
+            return FormatMessageInternal(level, context, message);
         }
 
-        protected string FormatMessage(params string[] parts)
+        private IEnumerable<string> FlattenParts(object p)
         {
+            if (p is string)
+            {
+                var partStr = p as string;
+                if (!string.IsNullOrWhiteSpace(partStr))
+                {
+                    yield return partStr;
+                }
+            }
+            else if (p is IEnumerable<object>)
+            {
+                var partList = p as IEnumerable<object>;
+
+                foreach (var child in partList.SelectMany(c => FlattenParts(c)))
+                {
+                    yield return child;
+                }
+            }
+        }
+
+        protected string FormatMessage(params object[] parts)
+        {
+            var message = FlattenParts(parts);
+
             return string.Format("{0} {1}",
-                string.Join(" ", parts.Take(parts.Length - 1).Where(p => !string.IsNullOrWhiteSpace(p)).Select(p => "[" + p + "]")),
-                parts.Last()
+                string.Join(" ", message.Take(message.Count() - 1).Where(p => !string.IsNullOrWhiteSpace(p)).Select(p => "[" + p + "]")),
+                message.Last()
             );
         }
 
-        protected virtual string FormatMessageInternal(KarmaLogLevel level, string phase, string message)
+        protected virtual string FormatMessageInternal(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             return FormatMessage(
                 "karma",
-                //DateTime.Now.ToString("HH:mm:ss"),
-                phase,
                 level.LevelText(),
+                context,
                 message
             );
         }

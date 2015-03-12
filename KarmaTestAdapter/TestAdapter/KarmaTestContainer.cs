@@ -18,9 +18,10 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaTestContainer(KarmaTestContainerList containers, string source)
             : base(containers.Discoverer, source)
         {
-            Logger = new KarmaLogger(Discoverer.Logger, "Container");
             BaseDirectory = Discoverer.BaseDirectory;
-            KarmaLogger = new KarmaLogger(Logger, "Karma");
+            Name = Path.GetDirectoryName(PathUtils.GetRelativePath(BaseDirectory, Source));
+            Logger = new KarmaLogger(Discoverer.Logger, string.IsNullOrWhiteSpace(Name) ? "Container" : Name);
+            KarmaLogger = new KarmaServerLogger(Logger);
             Logger.Info("Creating KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
             Containers = containers;
             KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
@@ -46,12 +47,20 @@ namespace KarmaTestAdapter.TestAdapter
                 KarmaSourceSettings.Save();
                 StartKarmaServer();
             }
-            Logger.Info("{0} KarmaTestContainer created for {1}", IsValid ? "Valid" : "Invalid", PathUtils.GetRelativePath(BaseDirectory, Source));
+            if (!IsValid)
+            {
+                Logger.Warn("KarmaTestContainer is invalid ({0}) for {1}", InvalidReason, PathUtils.GetRelativePath(BaseDirectory, Source));
+            }
+            else
+            {
+                Logger.Info("KarmaTestContainer created for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
+            }
         }
 
+        public string Name { get; private set; }
         public KarmaTestContainerList Containers { get; private set; }
         public IKarmaLogger Logger { get; private set; }
-        public IKarmaLogger KarmaLogger { get; private set; }
+        public KarmaServerLogger KarmaLogger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public KarmaServer KarmaServer { get; private set; }
         public KarmaEventCommand KarmaEventCommand { get; private set; }
@@ -136,7 +145,7 @@ namespace KarmaTestAdapter.TestAdapter
             try
             {
                 KarmaServer = new KarmaServer(Settings, Logger);
-                KarmaServer.OutputReceived += line => KarmaLogger.Info(line);
+                KarmaServer.OutputReceived += line => KarmaLogger.Log(line);
                 KarmaServer.ErrorReceived += line => KarmaLogger.Error(line);
                 KarmaServer.Started += port => OnServerStarted(port);
                 KarmaServer.Stopped += (exitCode, ex) => OnServerStopped(exitCode, ex);
@@ -249,7 +258,7 @@ namespace KarmaTestAdapter.TestAdapter
             {
                 Logger.Debug("Disposing of KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
                 StopKarmaServer("Disposing", false);
-                
+
                 if (FileWatchers != null)
                 {
                     foreach (var watcher in FileWatchers)

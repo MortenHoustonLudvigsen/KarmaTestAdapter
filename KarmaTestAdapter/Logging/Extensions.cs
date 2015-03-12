@@ -62,19 +62,19 @@ namespace KarmaTestAdapter.Logging
 
         public static string FormatMessage(this IKarmaLogger logger, TestMessageLevel level, string message)
         {
-            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Phase, message);
+            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Context, message);
         }
 
         public static string FormatMessage(this IKarmaLogger logger, MessageLevel level, string message)
         {
-            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Phase, message);
+            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Context, message);
         }
 
         public static void Info(this IKarmaLogger logger, string message)
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                logger.Log(KarmaLogLevel.Informational, logger.Phase, message);
+                logger.Log(KarmaLogLevel.Informational, logger.Context, message);
             }
         }
 
@@ -87,7 +87,7 @@ namespace KarmaTestAdapter.Logging
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                logger.Log(KarmaLogLevel.Warning, logger.Phase, message);
+                logger.Log(KarmaLogLevel.Warning, logger.Context, message);
             }
         }
 
@@ -100,7 +100,7 @@ namespace KarmaTestAdapter.Logging
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                logger.Log(KarmaLogLevel.Diagnostic, logger.Phase, message);
+                logger.Log(KarmaLogLevel.Diagnostic, logger.Context, message);
             }
         }
 
@@ -113,7 +113,7 @@ namespace KarmaTestAdapter.Logging
         {
             if (!string.IsNullOrWhiteSpace(message))
             {
-                logger.Log(KarmaLogLevel.Error, logger.Phase, message);
+                logger.Log(KarmaLogLevel.Error, logger.Context, message);
             }
         }
 

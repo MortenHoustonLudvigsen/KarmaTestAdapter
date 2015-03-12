@@ -104,6 +104,7 @@
     <Compile Include="Logging\KarmaLogger.cs" />
     <Compile Include="Logging\KarmaLoggerBase.cs" />
     <Compile Include="Logging\KarmaLogLevel.cs" />
+    <Compile Include="Logging\KarmaServerLogger.cs" />
     <Compile Include="Logging\KarmaTestMessageLogger.cs" />
     <Compile Include="Helpers\PathUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

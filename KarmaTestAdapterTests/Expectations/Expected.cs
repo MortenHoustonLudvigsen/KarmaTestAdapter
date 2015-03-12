@@ -21,15 +21,7 @@ namespace KarmaTestAdapterTests.Expectations
         public Expected(string name, string file)
         {
             KarmaOutput = new List<string>();
-            Logger = new TestKarmaLogger((level, phase, message) =>
-            {
-                var levelText = level.LevelText();
-                Console.WriteLine(string.Join(" ", new[]{
-                    string.IsNullOrWhiteSpace(levelText) ? null : string.Format("[{0}]", levelText),
-                    string.IsNullOrWhiteSpace(phase) ? null : string.Format("[{0}]", phase),
-                    message
-                }.Where(s => !string.IsNullOrWhiteSpace(s))));
-            });
+            Logger = new TestKarmaLogger(message => Console.WriteLine(message));
             Name = name ?? "";
             try
             {
