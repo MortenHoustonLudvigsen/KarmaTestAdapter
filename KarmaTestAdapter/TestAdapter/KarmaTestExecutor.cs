@@ -34,7 +34,7 @@ namespace KarmaTestAdapter.TestAdapter
                 }
                 else
                 {
-                    runLogger.Debug("Could not get karma settings for {0}", source);
+                    runLogger.Warn("Could not get karma settings for {0}", source);
                 }
             }
         }
@@ -47,12 +47,10 @@ namespace KarmaTestAdapter.TestAdapter
         private async Task RunTests(KarmaSourceSettings settings, IKarmaLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             logger = new KarmaLogger(logger, settings.Name, "Run");
-            logger.Info("Running tests");
+            logger.Info("Getting test results");
             if (settings.Port > 0)
             {
                 var discoverCommand = new KarmaDiscoverCommand(settings.Port);
-                discoverCommand.Connected += () => logger.Debug("Connected to karma");
-                discoverCommand.Disconnected += () => logger.Debug("Disconnected from karma");
                 await discoverCommand.Run(spec => RunTest(settings, logger, runContext, frameworkHandle, spec));
             }
             else

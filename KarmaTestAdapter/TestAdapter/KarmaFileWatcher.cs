@@ -12,8 +12,7 @@ namespace KarmaTestAdapter.TestAdapter
         None,
         Added,
         Removed,
-        Changed,
-        Saved,
+        Changed
     }
 
     public class FileChangedEventArgs : System.EventArgs
@@ -75,31 +74,21 @@ namespace KarmaTestAdapter.TestAdapter
             new EventTransition(FileChangedReason.None, FileChangedReason.None, FileChangedReason.None),
             new EventTransition(FileChangedReason.None, FileChangedReason.Added, FileChangedReason.Added),
             new EventTransition(FileChangedReason.None, FileChangedReason.Changed, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.None, FileChangedReason.Saved, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.None, FileChangedReason.Removed, FileChangedReason.Removed),
 
             new EventTransition(FileChangedReason.Added, FileChangedReason.None, FileChangedReason.Added),
             new EventTransition(FileChangedReason.Added, FileChangedReason.Added, FileChangedReason.Added),
             new EventTransition(FileChangedReason.Added, FileChangedReason.Changed, FileChangedReason.Added),
-            new EventTransition(FileChangedReason.Added, FileChangedReason.Saved, FileChangedReason.Added),
             new EventTransition(FileChangedReason.Added, FileChangedReason.Removed, FileChangedReason.None),
 
             new EventTransition(FileChangedReason.Changed, FileChangedReason.None, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.Changed, FileChangedReason.Added, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.Changed, FileChangedReason.Changed, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Changed, FileChangedReason.Saved, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.Changed, FileChangedReason.Removed, FileChangedReason.Removed),
-
-            new EventTransition(FileChangedReason.Saved, FileChangedReason.None, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Saved, FileChangedReason.Added, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Saved, FileChangedReason.Changed, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Saved, FileChangedReason.Saved, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Saved, FileChangedReason.Removed, FileChangedReason.Removed),
 
             new EventTransition(FileChangedReason.Removed, FileChangedReason.None, FileChangedReason.Removed),
             new EventTransition(FileChangedReason.Removed, FileChangedReason.Added, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.Removed, FileChangedReason.Changed, FileChangedReason.Changed),
-            new EventTransition(FileChangedReason.Removed, FileChangedReason.Saved, FileChangedReason.Changed),
             new EventTransition(FileChangedReason.Removed, FileChangedReason.Removed, FileChangedReason.Removed)
         };
 

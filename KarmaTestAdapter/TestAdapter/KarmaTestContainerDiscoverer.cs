@@ -20,7 +20,7 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaTestContainerDiscoverer(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
             ITestsService testsService,
-            SolutionListener solutionListener,
+            ISolutionListener solutionListener,
             KarmaTestSettingsProvider testSettingsService,
             ILogger logger
             )
@@ -39,6 +39,12 @@ namespace KarmaTestAdapter.TestAdapter
             SolutionListener.SolutionUnloaded += OnSolutionUnloaded;
             SolutionListener.ProjectChanged += OnSolutionProjectChanged;
             SolutionListener.StartListening();
+
+            ProjectListener = new ProjectListener(serviceProvider, Logger);
+            ProjectListener.FileAdded += (source, e) => OnProjectFileAdded(e.Project, e.File);
+            ProjectListener.FileRemoved += (source, e) => OnProjectFileRemoved(e.Project, e.File);
+            ProjectListener.FileRenamed += (source, e) => OnProjectFileRenamed(e.Project, e.OldFile, e.NewFile);
+            ProjectListener.StartListening();
         }
 
         private bool _initialContainerSearch = true;
@@ -46,7 +52,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         public KarmaTestContainerList Containers { get; private set; }
         public IServiceProvider ServiceProvider { get; private set; }
-        public SolutionListener SolutionListener { get; private set; }
+        public ISolutionListener SolutionListener { get; private set; }
+        public IProjectListener ProjectListener { get; private set; }
         public IKarmaLogger Logger { get; set; }
         public KarmaTestSettingsProvider TestSettingsProvider { get; private set; }
         public KarmaTestSettings TestSettings { get { return TestSettingsProvider.Settings; } }
@@ -57,12 +64,33 @@ namespace KarmaTestAdapter.TestAdapter
             get { return Globals.ExecutorUri; }
         }
 
-        public void RunTests(IEnumerable<Guid> tests)
+        private void RunTestsInternal()
         {
             if (_testsService != null)
             {
-                _testsService.RunTestsAsync(tests);
+                _testsService.RunTestsAsync(Containers.Where(c => c.IsValid && c.Tests != null).SelectMany(c => c.Tests));
             }
+        }
+
+        private bool _shouldRun = false;
+        private object _runLock = new object();
+        public void RunTests()
+        {
+            lock (_runLock)
+            {
+                _shouldRun = true;
+            }
+            TPL.Task.Delay(500).ContinueWith(t =>
+            {
+                lock (_runLock)
+                {
+                    if (_shouldRun)
+                    {
+                        _shouldRun = false;
+                        RunTestsInternal();
+                    }
+                }
+            });
         }
 
         public IEnumerable<ITestContainer> TestContainers
@@ -107,19 +135,63 @@ namespace KarmaTestAdapter.TestAdapter
         {
             if (e != null)
             {
-                if (e.ChangedReason == SolutionChangedReason.Load)
+                switch (e.ChangedReason)
                 {
-                    Containers.Clear();
-                    Containers.CreateContainers(FindSources());
-                    RefreshTestContainers("Project loaded");
-                }
-                else if (e.ChangedReason == SolutionChangedReason.Unload)
-                {
-                    Containers.Clear();
-                    Containers.CreateContainers(FindSources());
-                    RefreshTestContainers("Project unloaded");
+                    case SolutionChangedReason.Load:
+                        Containers.CreateContainers(FindSources(e.Project));
+                        RefreshTestContainers(string.Format("{0} loaded", e.Project.GetProjectName()));
+                        break;
+                    case SolutionChangedReason.Unload:
+                        Containers.Remove(e.Project);
+                        RefreshTestContainers(string.Format("{0} unloaded", e.Project.GetProjectName()));
+                        break;
+                    case SolutionChangedReason.Open:
+                        Containers.CreateContainers(FindSources(e.Project));
+                        RefreshTestContainers(string.Format("{0} opened", e.Project.GetProjectName()));
+                        break;
+                    case SolutionChangedReason.Close:
+                        Containers.Remove(e.Project);
+                        RefreshTestContainers(string.Format("{0} closed", e.Project.GetProjectName()));
+                        break;
                 }
             }
+        }
+
+        private void OnProjectFileAdded(IVsProject project, string file)
+        {
+            Logger.Debug("Project file added: {0}", file);
+            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) && !Containers.Any(c => c.HasFile(file)))
+            {
+                Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, file));
+            }
+        }
+
+        private void OnProjectFileRemoved(IVsProject project, string file)
+        {
+            Logger.Debug("Project file removed: {0}", file);
+            if (PathUtils.IsSettingsFile(file))
+            {
+                Containers.Remove(file);
+
+                TPL.Task.Delay(100).ContinueWith(t =>
+                {
+                    var karmaConfigFile = Path.Combine(Path.GetDirectoryName(file), Globals.KarmaConfigFilename);
+                    if (project.GetSources().Any(s => PathUtils.PathsEqual(s, karmaConfigFile)) && !Containers.Any(c => c.HasFile(karmaConfigFile)))
+                    {
+                        Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, karmaConfigFile));
+                    }
+                });
+            }
+            else if (PathUtils.IsKarmaConfigFile(file))
+            {
+                Containers.Remove(file);
+            }
+        }
+
+        private void OnProjectFileRenamed(IVsProject project, string oldFile, string newFile)
+        {
+            OnProjectFileRemoved(project, oldFile);
+            OnProjectFileAdded(project, newFile);
         }
 
         private bool _shouldRefresh = false;
@@ -147,28 +219,23 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private IEnumerable<string> FindSources()
+        private IEnumerable<KarmaTestContainerSourceInfo> FindSources()
         {
-            var containers = ServiceProvider
+            return ServiceProvider
                 .GetLoadedProjects()
-                .SelectMany(p => FindSources(p))
-                .Select(f => PathUtils.GetPhysicalPath(f))
-                .ToList();
-            return containers;
+                .SelectMany(p => FindSources(p));
         }
 
-        private IEnumerable<string> FindSources(IVsProject project)
+        private IEnumerable<KarmaTestContainerSourceInfo> FindSources(IVsProject project)
         {
-            var containers = project
-                .GetProjectItems()
-                .Where(f => PathUtils.PathHasFileName(f, Globals.SettingsFilename) || PathUtils.PathHasFileName(f, Globals.KarmaConfigFilename))
-                .Where(f => File.Exists(f))
-                .ToList();
+            Logger.Debug("Finding sources for {0}", project.GetProjectName());
+
+            var containers = project.GetSources().ToList();
 
             return from c in containers
                    let s = Path.Combine(Path.GetDirectoryName(c), Globals.SettingsFilename)
                    where PathUtils.PathsEqual(c, s) || !containers.Any(d => PathUtils.PathsEqual(d, s))
-                   select c;
+                   select new KarmaTestContainerSourceInfo(project, c);
         }
 
         #region IDisposable
@@ -197,6 +264,12 @@ namespace KarmaTestAdapter.TestAdapter
                 {
                     Containers.Dispose();
                     Containers = null;
+                }
+
+                if (ProjectListener != null)
+                {
+                    ProjectListener.Dispose();
+                    ProjectListener = null;
                 }
 
                 if (SolutionListener != null)

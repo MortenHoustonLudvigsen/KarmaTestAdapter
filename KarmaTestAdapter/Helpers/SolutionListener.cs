@@ -12,12 +12,13 @@ namespace KarmaTestAdapter.Helpers
 {
     public enum SolutionChangedReason
     {
-        None,
         Load,
         Unload,
+        Open,
+        Close
     }
 
-    public class SolutionListenerEventArgs : System.EventArgs
+    public class SolutionListenerEventArgs : EventArgs
     {
         public IVsProject Project { get; private set; }
         public SolutionChangedReason ChangedReason { get; private set; }
@@ -29,10 +30,19 @@ namespace KarmaTestAdapter.Helpers
         }
     }
 
-    [Export(typeof(SolutionListener))]
-    public class SolutionListener : IVsSolutionEvents, IDisposable
+    public interface ISolutionListener : IDisposable
     {
-        private readonly IVsSolution _solution;
+        void StartListening();
+        void StopListening();
+        event EventHandler<SolutionListenerEventArgs> ProjectChanged;
+        event EventHandler SolutionLoaded;
+        event EventHandler SolutionUnloaded;
+    }
+
+    [Export(typeof(ISolutionListener))]
+    public class SolutionListener : IVsSolutionEvents, ISolutionListener, IDisposable
+    {
+        private IVsSolution _solution;
         private uint _cookie = VSConstants.VSCOOKIE_NIL;
 
         [ImportingConstructor]
@@ -41,6 +51,7 @@ namespace KarmaTestAdapter.Helpers
             ValidateArg.NotNull(serviceProvider, "serviceProvider");
             _solution = serviceProvider.GetService(typeof(SVsSolution)) as IVsSolution;
         }
+
 
         /// <summary>
         /// Fires an event when a project is opened/closed/loaded/unloaded
@@ -67,6 +78,7 @@ namespace KarmaTestAdapter.Helpers
                 ErrorHandler.Succeeded(hr); // do nothing if this fails
 
                 _cookie = VSConstants.VSCOOKIE_NIL;
+                _solution = null;
             }
         }
 
@@ -111,8 +123,7 @@ namespace KarmaTestAdapter.Helpers
         /// </summary>
         public int OnBeforeUnloadProject(IVsHierarchy pRealHierarchy, IVsHierarchy pStubHierarchy)
         {
-            var project = pRealHierarchy as IVsProject;
-            OnSolutionProjectUpdated(project, SolutionChangedReason.Unload);
+            OnSolutionProjectUpdated(pRealHierarchy as IVsProject, SolutionChangedReason.Unload);
             return VSConstants.S_OK;
         }
 
@@ -138,11 +149,13 @@ namespace KarmaTestAdapter.Helpers
         /// <returns></returns>
         public int OnAfterOpenProject(IVsHierarchy pHierarchy, int fAdded)
         {
+            OnSolutionProjectUpdated(pHierarchy as IVsProject, SolutionChangedReason.Open);
             return VSConstants.S_OK;
         }
 
         public int OnBeforeCloseProject(IVsHierarchy pHierarchy, int fRemoved)
         {
+            OnSolutionProjectUpdated(pHierarchy as IVsProject, SolutionChangedReason.Close);
             return VSConstants.S_OK;
         }
 

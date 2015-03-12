@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -102,24 +103,51 @@ namespace KarmaTestAdapter.TestAdapter
 
         public static KarmaSourceSettings Load(string source)
         {
-            try
+            var i = 0;
+            while (true)
             {
-                using (var reader = XmlReader.Create(SettingsFilePath(source)))
+                try
                 {
-                    return _serializer.Deserialize(reader) as KarmaSourceSettings;
+                    using (var reader = XmlReader.Create(SettingsFilePath(source)))
+                    {
+                        return _serializer.Deserialize(reader) as KarmaSourceSettings;
+                    }
                 }
-            }
-            catch
-            {
-                return null;
+                catch (Exception)
+                {
+                    i += 1;
+                    if (i >= 10)
+                    {
+                        return null;
+                    }
+                    Thread.Sleep(100);
+                }
             }
         }
 
         public void Save()
         {
-            using (var writer = XmlWriter.Create(SettingsFilePath(Source)))
+            var saved = false;
+            var i = 0;
+            while (!saved)
             {
-                _serializer.Serialize(writer, this, _serializerNamespaces);
+                try
+                {
+                    using (var writer = XmlWriter.Create(SettingsFilePath(Source)))
+                    {
+                        _serializer.Serialize(writer, this, _serializerNamespaces);
+                    }
+                    saved = true;
+                }
+                catch (Exception)
+                {
+                    i += 1;
+                    if (i >= 10)
+                    {
+                        throw;
+                    }
+                    Thread.Sleep(100);
+                }
             }
         }
 

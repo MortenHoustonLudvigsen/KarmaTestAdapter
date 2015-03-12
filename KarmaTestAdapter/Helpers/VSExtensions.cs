@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -27,6 +28,13 @@ namespace KarmaTestAdapter.Helpers
         public static IEnumerable<IVsProject> GetLoadedProjects(this IVsSolution solution)
         {
             return solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
+        }
+
+        public static string GetProjectName(this IVsProject project)
+        {
+            object nameObj = null;
+            var hr = ((IVsHierarchy)project).GetProperty((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID.VSHPROPID_Name, out nameObj);
+            return nameObj as string;
         }
 
         public static IEnumerable<IVsHierarchy> EnumerateLoadedProjects(this IVsSolution solution, __VSENUMPROJFLAGS enumFlags)
@@ -79,6 +87,14 @@ namespace KarmaTestAdapter.Helpers
                 pVar = GetPropertyValue((int)__VSHPROPID.VSHPROPID_NextSibling, childId, project);
                 childId = GetItemId(pVar);
             }
+        }
+
+        public static IEnumerable<string> GetSources(this IVsProject project)
+        {
+            return project
+                .GetProjectItems()
+                .Where(f => PathUtils.IsSettingsFile(f) || PathUtils.IsKarmaConfigFile(f))
+                .Where(f => File.Exists(f));
         }
 
         public static uint GetItemId(object pvar)

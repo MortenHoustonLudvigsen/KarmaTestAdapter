@@ -21,7 +21,6 @@ namespace KarmaTestAdapter.TestAdapter
         {
             var karmaLogger = new KarmaLogger(logger);
             var discoverLogger = new KarmaLogger(karmaLogger, "Discover");
-            discoverLogger.Debug("Start");
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             foreach (var source in sources)
             {
@@ -32,10 +31,9 @@ namespace KarmaTestAdapter.TestAdapter
                 }
                 else
                 {
-                    discoverLogger.Debug("Could not get karma settings for {0}", source);
+                    discoverLogger.Warn("Could not get karma settings for {0}", source);
                 }
             }
-            discoverLogger.Debug("Finished");
         }
 
         public static KarmaSourceSettings GetKarmaSourceSettings(string source, KarmaTestSettings testSettings)
@@ -60,8 +58,6 @@ namespace KarmaTestAdapter.TestAdapter
             if (settings.Port > 0)
             {
                 var discoverCommand = new KarmaDiscoverCommand(settings.Port);
-                discoverCommand.Connected += () => logger.Debug("Connected to karma");
-                discoverCommand.Disconnected += () => logger.Debug("Disconnected from karma");
                 await discoverCommand.Run(spec =>
                 {
                     var testCase = CreateTestCase(settings, spec);

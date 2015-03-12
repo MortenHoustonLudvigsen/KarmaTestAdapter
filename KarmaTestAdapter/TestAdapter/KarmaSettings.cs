@@ -20,30 +20,20 @@ namespace KarmaTestAdapter.TestAdapter
             try
             {
                 Directory = Path.GetDirectoryName(configFile);
+                KarmaConfigFile = GetFullPath(Globals.KarmaConfigFilename);
+                SettingsFile = GetFullPath(Globals.SettingsFilename);
 
                 if (PathUtils.PathHasFileName(configFile, Globals.SettingsFilename) && File.Exists(configFile))
                 {
-                    try
-                    {
-                        Json.PopulateFromFile(configFile, this);
-                        SettingsFile = configFile;
-                        KarmaConfigFile = GetFullPath(KarmaConfigFile ?? Globals.KarmaConfigFilename);
-                        AreValid = true;
-                        HasSettingsFile = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        SettingsFile = GetFullPath(configFile);
-                        KarmaConfigFile = GetFullPath(Globals.KarmaConfigFilename);
-                        throw ex;
-                    }
+                    Json.PopulateFromFile(configFile, this);
+                    AreValid = true;
+                    HasSettingsFile = true;
                 }
-                else
+                else if (PathUtils.PathHasFileName(configFile, Globals.KarmaConfigFilename) && File.Exists(configFile))
                 {
-                    SettingsFile = GetFullPath(Globals.SettingsFilename);
-                    KarmaConfigFile = configFile;
                     AreValid = true;
                 }
+
                 if (AreValid)
                 {
                     LogDirectory = GetFullPath(LogDirectory ?? "");

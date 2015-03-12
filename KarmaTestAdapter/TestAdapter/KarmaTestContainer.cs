@@ -1,6 +1,7 @@
 ﻿using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using Microsoft.VisualStudio.TestWindow.Extensibility.Model;
@@ -15,9 +16,10 @@ namespace KarmaTestAdapter.TestAdapter
 {
     public class KarmaTestContainer : KarmaTestContainerBase<KarmaTestContainerDiscoverer>
     {
-        public KarmaTestContainer(KarmaTestContainerList containers, string source)
+        public KarmaTestContainer(KarmaTestContainerList containers, IVsProject project, string source)
             : base(containers.Discoverer, source)
         {
+            Project = project;
             BaseDirectory = Discoverer.BaseDirectory;
             Name = Path.GetDirectoryName(PathUtils.GetRelativePath(BaseDirectory, Source));
             Logger = new KarmaLogger(Discoverer.Logger, string.IsNullOrWhiteSpace(Name) ? "Container" : Name);
@@ -37,7 +39,7 @@ namespace KarmaTestAdapter.TestAdapter
             catch (Exception ex)
             {
                 SetIsValid(false, "Error: " + ex.Message);
-                Logger.Error(ex, string.Format("Could not load tests from {0}", PathUtils.GetRelativePath(BaseDirectory, source)));
+                Logger.Error(ex, "Could not load tests");
             }
             FileWatchers = GetFileWatchers().ToList();
             if (IsValid)
@@ -47,6 +49,7 @@ namespace KarmaTestAdapter.TestAdapter
                 KarmaSourceSettings.Save();
                 StartKarmaServer();
             }
+            RefreshContainer("KarmaTestContainer created");
             if (!IsValid)
             {
                 Logger.Warn(InvalidReason);
@@ -57,6 +60,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
+        public IVsProject Project { get; private set; }
         public string Name { get; private set; }
         public KarmaTestContainerList Containers { get; private set; }
         public IKarmaLogger Logger { get; private set; }
@@ -69,6 +73,12 @@ namespace KarmaTestAdapter.TestAdapter
         public int Port { get; private set; }
         public string BaseDirectory { get; private set; }
         public IEnumerable<KarmaFileWatcher> FileWatchers { get; private set; }
+        public IEnumerable<Guid> Tests { get; private set; }
+
+        public bool HasFile(string file)
+        {
+            return PathUtils.PathsEqual(file, Settings.SettingsFile) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile);
+        }
 
         public bool IsValid { get; private set; }
         public string InvalidReason { get; private set; }
@@ -120,19 +130,8 @@ namespace KarmaTestAdapter.TestAdapter
             Logger.Debug("File {0}: {1}", e.ChangedReason, PathUtils.GetRelativePath(BaseDirectory, e.File));
             switch (e.ChangedReason)
             {
-                case FileChangedReason.Added:
-                    if (PathUtils.PathsEqual(e.File, Settings.SettingsFile))
-                    {
-                        Containers.CreateContainer(e.File);
-                    }
-                    else
-                    {
-                        Containers.CreateContainer(Source);
-                    }
-                    break;
                 case FileChangedReason.Changed:
-                case FileChangedReason.Saved:
-                    Containers.CreateContainer(Source);
+                    Containers.CreateContainer(new KarmaTestContainerSourceInfo(Project, Source));
                     break;
                 case FileChangedReason.Removed:
                     Containers.Remove(this);
@@ -149,7 +148,7 @@ namespace KarmaTestAdapter.TestAdapter
                 KarmaServer.ErrorReceived += line => KarmaLogger.Error(line);
                 KarmaServer.Started += port => OnServerStarted(port);
                 KarmaServer.Stopped += (exitCode, ex) => OnServerStopped(exitCode, ex);
-                KarmaServer.StartServer(10000); // Timeout after 10 seconds
+                KarmaServer.StartServer(); // No timeout
             }
             catch (Exception ex)
             {
@@ -173,10 +172,8 @@ namespace KarmaTestAdapter.TestAdapter
             Port = port;
             KarmaSourceSettings.Port = port;
             KarmaEventCommand = new KarmaEventCommand(port);
-            KarmaEventCommand.Connected += () => Logger.Info("Listening to karma events");
-            KarmaEventCommand.Disconnected += () => Logger.Info("Stopped listening to karma events");
             KarmaEvents = KarmaEventCommand.Run(OnKarmaEvent);
-            RefreshContainer("Karma started");
+            RefreshContainer(string.Format("Karma started for {0}", Name));
         }
 
         private void OnServerStopped(int? exitCode, Exception ex)
@@ -211,17 +208,17 @@ namespace KarmaTestAdapter.TestAdapter
 
         private void OnKarmaEvent(KarmaEvent evt)
         {
-            Logger.Debug("Event: {0}", evt);
             switch (evt.Event)
             {
                 case "Karma run start":
-                    RefreshContainer("Karma run started");
+                    RefreshContainer(string.Format("Karma run started for {0}", Name));
                     break;
                 case "Karma run requested":
                     if (IsValid && _refreshing)
                     {
                         _refreshing = false;
-                        Discoverer.RunTests(evt.Tests);
+                        Tests = evt.Tests.ToList();
+                        Discoverer.RunTests();
                     }
                     break;
             }
@@ -259,7 +256,7 @@ namespace KarmaTestAdapter.TestAdapter
 
             if (disposing)
             {
-                Logger.Debug("Disposing of KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
+                Logger.Debug("Disposing of KarmaTestContainer");
                 StopKarmaServer("Disposing", false);
 
                 if (FileWatchers != null)

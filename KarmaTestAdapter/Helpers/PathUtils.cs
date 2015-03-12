@@ -51,6 +51,16 @@ namespace KarmaTestAdapter.Helpers
             return string.Equals(Path.GetFileName(path), fileName, StringComparison.OrdinalIgnoreCase);
         }
 
+        public static bool IsSettingsFile(string path)
+        {
+            return PathHasFileName(path, Globals.SettingsFilename);
+        }
+
+        public static bool IsKarmaConfigFile(string path)
+        {
+            return PathHasFileName(path, Globals.KarmaConfigFilename);
+        }
+
         public static bool IsInDirectory(string path, string directory)
         {
             if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(directory))
