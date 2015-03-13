@@ -29,7 +29,20 @@ namespace KarmaTestAdapter.TestAdapter
             KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
             try
             {
-                Settings = new KarmaSettings(Source, f => Project.HasFile(f), BaseDirectory, Logger);
+                Settings = new KarmaSettings(Source, f =>
+                {
+                    if (!File.Exists(f))
+                    {
+                        Logger.Debug("File does not exist: {0}", f);
+                        return false;
+                    }
+                    if (!Project.HasFile(f))
+                    {
+                        Logger.Debug("File is not included in project {0}: {1}", Project.GetProjectName(), f);
+                        return false;
+                    }
+                    return false;
+                }, BaseDirectory, Logger);
                 _validator.Validate(Settings.AreValid, Settings.InvalidReason);
                 if (Settings.Disabled)
                 {
