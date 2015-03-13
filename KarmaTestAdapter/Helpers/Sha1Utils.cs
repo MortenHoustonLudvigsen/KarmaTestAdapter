@@ -10,13 +10,26 @@ namespace KarmaTestAdapter.Helpers
 {
     public static class Sha1Utils
     {
-        public static string GetHash(string path)
+        public static string GetHash(string value)
         {
-            return GetHashInternal(path);
+            return GetHash(Encoding.UTF8.GetBytes(value));
+        }
+
+        public static string GetHash(byte[] bytes)
+        {
+            using (var sha1 = new SHA1Managed())
+            {
+                return string.Join("", sha1.ComputeHash(bytes).Select(b => b.ToString("x2")));
+            }
+        }
+
+        public static string GetHashFromFile(string path)
+        {
+            return GetHashFromFileInternal(path);
             //return GetHash(path, 5, 10).Result;
         }
 
-        private static string GetHashInternal(string path)
+        private static string GetHashFromFileInternal(string path)
         {
             if (!File.Exists(path))
             {
@@ -30,11 +43,11 @@ namespace KarmaTestAdapter.Helpers
             }
         }
 
-        private async static Task<string> GetHash(string path, int attempts, int retryDelay)
+        private async static Task<string> GetHashFromFile(string path, int attempts, int retryDelay)
         {
             try
             {
-                return GetHashInternal(path);
+                return GetHashFromFileInternal(path);
             }
             catch (IOException ex)
             {
@@ -44,7 +57,7 @@ namespace KarmaTestAdapter.Helpers
                 }
             }
             await Task.Delay(TimeSpan.FromMilliseconds(retryDelay));
-            return GetHash(path, attempts - 1, retryDelay).Result;
+            return GetHashFromFile(path, attempts - 1, retryDelay).Result;
         }
     }
 }

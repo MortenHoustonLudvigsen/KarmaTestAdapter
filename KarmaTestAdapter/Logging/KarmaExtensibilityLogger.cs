@@ -17,11 +17,6 @@ namespace KarmaTestAdapter.Logging
 
         public ILogger Logger { get; private set; }
 
-        public override void SendMessage(TestMessageLevel testMessageLevel, string message)
-        {
-            Log(GetMessageLevel(testMessageLevel), message);
-        }
-
         public override void Clear()
         {
             try
@@ -31,11 +26,30 @@ namespace KarmaTestAdapter.Logging
             catch { }
         }
 
-        public override void Log(MessageLevel messageLevel, string message)
+        protected MessageLevel? GetMessageLevel(KarmaLogLevel level)
+        {
+            switch (level)
+            {
+                case KarmaLogLevel.Informational:
+                    return MessageLevel.Informational;
+                case KarmaLogLevel.Warning:
+                    return MessageLevel.Warning;
+                case KarmaLogLevel.Error:
+                    return MessageLevel.Error;
+                default:
+                    return null;
+            }
+        }
+
+        public override void Log(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             try
             {
-                Logger.Log(messageLevel, FormatMessage(messageLevel, message));
+                var messageLevel = GetMessageLevel(level);
+                if (messageLevel.HasValue)
+                {
+                    Logger.Log(messageLevel.Value, FormatMessage(level, context, message));
+                }
             }
             catch { }
         }

@@ -1,2 +1,0 @@
-﻿#!/usr/bin/env node
-require('./src/Cli').run();

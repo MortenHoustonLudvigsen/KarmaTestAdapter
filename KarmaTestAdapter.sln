@@ -3,27 +3,61 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapter", "KarmaTestAdapter\KarmaTestAdapter.csproj", "{BB346128-C136-44D1-B9B9-D7D166AE719F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapter.Package", "KarmaTestAdapter.Package\KarmaTestAdapter.Package.csproj", "{D83F2592-2A34-486C-A2D8-486C6062CD05}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution files", "Solution files", "{65BE6DB2-1FC4-4221-BECD-6231D28B3F70}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		Changes.md = Changes.md
-		karma-vs-reporter.schema.json = karma-vs-reporter.schema.json
+		Init.bat = Init.bat
+		KarmaTestAdapter.schema.json = KarmaTestAdapter.schema.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaVSReporter", "karma-vs-reporter\KarmaVSReporter.csproj", "{96A41FAE-2C77-4386-A93D-F9EFD9A46030}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{592DF928-C74B-4CB2-8B55-C00BB2304673}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapterTests", "KarmaTestAdapterTests\KarmaTestAdapterTests.csproj", "{CE8A247D-0D24-4158-AE8E-4C151FE7547F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}"
+	ProjectSection(SolutionItems) = preProject
+		TestProjects\package.json = TestProjects\package.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineTypescriptTests", "TestProjects\JasmineTypescriptTests\JasmineTypescriptTests.csproj", "{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B624A6AE-2C96-48E5-8D80-C6E89FAB082C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonServerClient", "JsonServerClient\JsonServerClient.csproj", "{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapter", "KarmaTestAdapter\KarmaTestAdapter.csproj", "{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaTestAdapterTests", "KarmaTestAdapterTests\KarmaTestAdapterTests.csproj", "{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KarmaServer", "KarmaServer\KarmaServer.csproj", "{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX-12.0", "Root-VSIX-12.0", "{FF6C9F55-FA4A-4755-8754-7F17A2B2969E}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\Root-VSIX-12.0\.gitignore = Tools\Root-VSIX-12.0\.gitignore
+		Tools\Root-VSIX-12.0\Root-VSIX.exe = Tools\Root-VSIX-12.0\Root-VSIX.exe
+		Tools\Root-VSIX-12.0\Root-VSIX.exe.config = Tools\Root-VSIX-12.0\Root-VSIX.exe.config
+		Tools\Root-VSIX-12.0\Root-VSIX.pdb = Tools\Root-VSIX-12.0\Root-VSIX.pdb
+		Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe = Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe
+		Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe.manifest = Tools\Root-VSIX-12.0\Root-VSIX.vshost.exe.manifest
+		Tools\Root-VSIX-12.0\Shell.Interop.dll = Tools\Root-VSIX-12.0\Shell.Interop.dll
+		Tools\Root-VSIX-12.0\Shell.Interop.pdb = Tools\Root-VSIX-12.0\Shell.Interop.pdb
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX-14.0", "Root-VSIX-14.0", "{3E68A5D1-8C11-4096-B355-7FF2CF4F3D9E}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\Root-VSIX-14.0\.gitignore = Tools\Root-VSIX-14.0\.gitignore
+		Tools\Root-VSIX-14.0\Root-VSIX.exe = Tools\Root-VSIX-14.0\Root-VSIX.exe
+		Tools\Root-VSIX-14.0\Root-VSIX.exe.config = Tools\Root-VSIX-14.0\Root-VSIX.exe.config
+		Tools\Root-VSIX-14.0\Root-VSIX.pdb = Tools\Root-VSIX-14.0\Root-VSIX.pdb
+		Tools\Root-VSIX-14.0\Shell.Interop.dll = Tools\Root-VSIX-14.0\Shell.Interop.dll
+		Tools\Root-VSIX-14.0\Shell.Interop.pdb = Tools\Root-VSIX-14.0\Shell.Interop.pdb
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineRequireTypescriptTests", "TestProjects\JasmineRequireTypescriptTests\JasmineRequireTypescriptTests.csproj", "{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,24 +65,38 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BB346128-C136-44D1-B9B9-D7D166AE719F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB346128-C136-44D1-B9B9-D7D166AE719F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB346128-C136-44D1-B9B9-D7D166AE719F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB346128-C136-44D1-B9B9-D7D166AE719F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D83F2592-2A34-486C-A2D8-486C6062CD05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D83F2592-2A34-486C-A2D8-486C6062CD05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D83F2592-2A34-486C-A2D8-486C6062CD05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D83F2592-2A34-486C-A2D8-486C6062CD05}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96A41FAE-2C77-4386-A93D-F9EFD9A46030}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CE8A247D-0D24-4158-AE8E-4C151FE7547F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
+		{FF6C9F55-FA4A-4755-8754-7F17A2B2969E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
+		{3E68A5D1-8C11-4096-B355-7FF2CF4F3D9E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
+		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
 	EndGlobalSection
 EndGlobal

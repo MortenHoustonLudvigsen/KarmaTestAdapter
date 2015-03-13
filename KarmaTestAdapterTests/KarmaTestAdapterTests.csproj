@@ -1,19 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.core.2.0.0-rc1-build2826\build\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.0.0-rc1-build2826\build\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" />
-  <Import Project="..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE8A247D-0D24-4158-AE8E-4C151FE7547F}</ProjectGuid>
+    <ProjectGuid>{4E8EA2B4-03F6-46F7-861B-C2BAF15BAFF2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KarmaTestAdapterTests</RootNamespace>
     <AssemblyName>KarmaTestAdapterTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>81790fe3</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>f92ae986</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +31,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnitTestAdapter.1.2\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\packages\NUnitTestAdapter.1.2\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\packages\NUnitTestAdapter.1.2\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ProcessRunner">
+      <HintPath>..\packages\ProcessRunner.1.0.7\lib\net40\ProcessRunner.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,134 +60,41 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Core">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestWindow.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.0-rc1-build2826\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.0.0.2826, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\xunit.assert.2.0.0-rc1-build2826\lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.0.0.2826, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\xunit.extensibility.core.2.0.0-rc1-build2826\lib\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.dll</HintPath>
+    <Reference Include="Ude">
+      <HintPath>..\packages\UDE.CSharp.1.1.0\lib\Ude.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestKarmaLogger.cs" />
-    <Compile Include="TestResults\ConfigTests\BasePath.cs" />
-    <Compile Include="TestResults\ConfigTests\Frameworks.cs" />
-    <Compile Include="TestResults\ConfigTests\Port.cs" />
-    <Compile Include="TestResults\ConfigTests\_Tests.cs" />
-    <Compile Include="TestResults\Constants.cs" />
-    <Compile Include="TestResults\FilesTests\Enumerable.cs" />
-    <Compile Include="TestResults\FilesTests\Suites.cs" />
-    <Compile Include="TestResults\FilesTests\AllTests.cs" />
-    <Compile Include="TestResults\FilesTests\Tests.cs" />
-    <Compile Include="TestResults\FilesTests\_Tests.cs" />
-    <Compile Include="TestResults\FileTests\Included.cs" />
-    <Compile Include="TestResults\FileTests\Name.cs" />
-    <Compile Include="TestResults\FileTests\FullPath.cs" />
-    <Compile Include="TestResults\FileTests\Served.cs" />
-    <Compile Include="TestResults\FileTests\Path.cs" />
-    <Compile Include="TestResults\FileTests\_Tests.cs" />
-    <Compile Include="TestResults\Helper.cs" />
-    <Compile Include="TestResults\ItemTests\Elements.cs" />
-    <Compile Include="TestResults\ItemTests\GetChild.cs" />
-    <Compile Include="TestResults\ItemTests\GetAllChildren.cs" />
-    <Compile Include="TestResults\ItemTests\GetChildren.cs" />
-    <Compile Include="TestResults\ItemTests\GetParent.cs" />
-    <Compile Include="TestResults\ItemTests\Root.cs" />
-    <Compile Include="TestResults\ItemTests\Attribute.cs" />
-    <Compile Include="TestResults\ItemTests\Children.cs" />
-    <Compile Include="TestResults\ItemTests\Create.cs" />
-    <Compile Include="TestResults\ItemTests\Item.cs" />
-    <Compile Include="TestResults\ItemTests\_Tests.cs" />
+    <Compile Include="BaseFixture.cs" />
+    <Compile Include="Expectations\BetweenConstraint.cs" />
+    <Compile Include="Expectations\Expectations.cs" />
+    <Compile Include="Expectations\ExpectationsTests.cs" />
+    <Compile Include="Expectations\Expected.cs" />
+    <Compile Include="Expectations\ExpectedSpec.cs" />
+    <Compile Include="Expectations\TestCase.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Karma\KarmaServer.cs" />
+    <Compile Include="Karma\KarmaSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestResults\ItemTests\Parent.cs" />
-    <Compile Include="TestResults\ItemTests\Name.cs" />
-    <Compile Include="TestResults\ItemTests\ValueOfElement.cs" />
-    <Compile Include="TestResults\KarmaTests\ConsolidateResults.cs" />
-    <Compile Include="TestResults\KarmaTests\CreateTestCase.cs" />
-    <Compile Include="TestResults\KarmaTests\Files.cs" />
-    <Compile Include="TestResults\KarmaTests\GetTestCases.cs" />
-    <Compile Include="TestResults\KarmaTests\KarmaConfig.cs" />
-    <Compile Include="TestResults\KarmaTests\Results.cs" />
-    <Compile Include="TestResults\KarmaTests\_Tests.cs" />
-    <Compile Include="TestResults\ResultsTests\AllTestResults.cs" />
-    <Compile Include="TestResults\ResultsTests\Browsers.cs" />
-    <Compile Include="TestResults\ResultsTests\Suites.cs" />
-    <Compile Include="TestResults\ResultsTests\TestResults.cs" />
-    <Compile Include="TestResults\ResultsTests\_Tests.cs" />
-    <Compile Include="TestResults\SourceTests\Column.cs" />
-    <Compile Include="TestResults\SourceTests\Line.cs" />
-    <Compile Include="TestResults\SourceTests\FullPath.cs" />
-    <Compile Include="TestResults\SourceTests\Path.cs" />
-    <Compile Include="TestResults\SourceTests\_Tests.cs" />
-    <Compile Include="TestResults\StringExtensionsTests\ToBool.cs" />
-    <Compile Include="TestResults\StringExtensionsTests\ToInt.cs" />
-    <Compile Include="TestResults\SuiteResultTests\AllTestResults.cs" />
-    <Compile Include="TestResults\SuiteResultTests\DisplayName.cs" />
-    <Compile Include="TestResults\SuiteResultTests\ParentSuite.cs" />
-    <Compile Include="TestResults\SuiteResultTests\Suites.cs" />
-    <Compile Include="TestResults\SuiteResultTests\TestResults.cs" />
-    <Compile Include="TestResults\SuiteResultTests\_Tests.cs" />
-    <Compile Include="TestResults\SuiteTests\AllTests.cs" />
-    <Compile Include="TestResults\SuiteTests\Source.cs" />
-    <Compile Include="TestResults\SuiteTests\Column.cs" />
-    <Compile Include="TestResults\SuiteTests\Line.cs" />
-    <Compile Include="TestResults\SuiteTests\Framework.cs" />
-    <Compile Include="TestResults\SuiteTests\Suites.cs" />
-    <Compile Include="TestResults\SuiteTests\Tests.cs" />
-    <Compile Include="TestResults\SuiteTests\_Tests.cs" />
-    <Compile Include="TestResults\TestResultTests\DisplayName.cs" />
-    <Compile Include="TestResults\TestResultTests\Message.cs" />
-    <Compile Include="TestResults\TestResultTests\Log.cs" />
-    <Compile Include="TestResults\TestResultTests\Outcome.cs" />
-    <Compile Include="TestResults\TestResultTests\Id.cs" />
-    <Compile Include="TestResults\TestResultTests\ParentSuite.cs" />
-    <Compile Include="TestResults\TestResultTests\Time.cs" />
-    <Compile Include="TestResults\TestResultTests\_Tests.cs" />
-    <Compile Include="TestResults\TestTests\Column.cs" />
-    <Compile Include="TestResults\TestTests\DisplayName.cs" />
-    <Compile Include="TestResults\TestTests\Framework.cs" />
-    <Compile Include="TestResults\TestTests\Line.cs" />
-    <Compile Include="TestResults\TestTests\File.cs" />
-    <Compile Include="TestResults\TestTests\ParentSuite.cs" />
-    <Compile Include="TestResults\TestTests\Source.cs" />
-    <Compile Include="TestResults\TestTests\_Tests.cs" />
-    <Compile Include="XElementComparer.cs" />
+    <Compile Include="TestKarmaLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JsonServerClient\JsonServerClient.csproj">
+      <Project>{f15c2463-e70b-435a-9de6-69d6dedad66f}</Project>
+      <Name>JsonServerClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KarmaTestAdapter\KarmaTestAdapter.csproj">
-      <Project>{bb346128-c136-44d1-b9b9-d7d166ae719f}</Project>
+      <Project>{7810c732-f9a2-40ec-910d-de3b9f50f8e1}</Project>
       <Name>KarmaTestAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.core.2.0.0-rc1-build2826\build\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.0.0-rc1-build2826\build\portable-net45+aspnetcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.props'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using KarmaTestAdapter.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
 namespace KarmaTestAdapter.Helpers
 {

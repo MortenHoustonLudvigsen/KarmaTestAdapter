@@ -1,22 +1,38 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Summerset.SemanticVersion;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Web;
 
 namespace KarmaTestAdapter
 {
     public static class Globals
     {
-        public static readonly TestProperty FileIndexProperty = TestProperty.Register("KarmaTestCaseFileIndex", "Index in file", typeof(int?), typeof(KarmaTestDiscoverer));
+        /// <summary>
+        /// The Uri string used to identify the KarmaTestAdapter executor.
+        /// </summary>
+        public const string ExecutorUriString = "executor://KarmaTestAdapter";
 
         /// <summary>
-        /// The minimum version of karma-vs-reporter
+        /// The Uri used to identify the KarmaTestAdapter executor.
         /// </summary>
-        public static readonly ISemanticVersion ReporterMinVersion = new SemanticVersion("0.8.0");
+        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
+
+        /// <summary>
+        /// The file name for KarmaTestAdapter settings files
+        /// </summary>
+        public const string SettingsFilename = @"KarmaTestAdapter.json";
+
+        /// <summary>
+        /// The standard file name for the karma configuration file
+        /// </summary>
+        public const string KarmaConfigFilename = @"karma.conf.js";
+
+        /// <summary>
+        /// The file to log to when Settings.LogToFile == true
+        /// </summary>
+        public const string LogFilename = "KarmaTestAdapter.log";
 
         /// <summary>
         /// Whether to log to a global log file
@@ -34,59 +50,38 @@ namespace KarmaTestAdapter
         public static readonly string GlobalLogFile = Path.Combine(GlobalLogDir, LogFilename);
 
         /// <summary>
-        /// The file to log to when Settings.LogToFile == true
+        /// Indicates whether we are running automated tests
         /// </summary>
-        public const string LogFilename = "KarmaTestAdapter.log";
+        public static bool IsTest = false;
 
         /// <summary>
-        /// The directory name for karma output when Settings.LogToFile == true
+        /// The directory in which this assembly resides
         /// </summary>
-        public const string OutputDirectoryName = "KarmaTestAdapter.Output";
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                var uri = new UriBuilder(codeBase);
+                var path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetFullPath(Path.GetDirectoryName(path));
+            }
+        }
 
         /// <summary>
-        /// The file name for karma output when Settings.LogToFile == true
+        /// The directory from which to find node modules and KarmaTestAdapter javascript files
         /// </summary>
-        public const string OutputFilename = "KarmaTestAdapter.xml";
+        public static string RootDirectory
+        {
+            get { return Path.GetFullPath(IsTest ? Path.Combine(AssemblyDirectory, @"..\..\..\KarmaServer") : AssemblyDirectory); }
+        }
 
         /// <summary>
-        /// The file name for VsConfig when Settings.LogToFile == true
+        /// The directory from which to find KarmaTestAdapter javascript files
         /// </summary>
-        public const string VsConfigFilename = "KarmaTestAdapter.VsConfig.json";
-
-        /// <summary>
-        /// The file name for karma output when Settings.LogToFile == true
-        /// </summary>
-        public const string ConfigFilename = "KarmaTestAdapter.config.json";
-
-        /// <summary>
-        /// The Uri string used to identify the XmlTestExecutor.
-        /// </summary>
-        public const string ExecutorUriString = "executor://KarmaTestAdapterTestExecutor";
-
-        /// <summary>
-        /// The Uri used to identify the XmlTestExecutor.
-        /// </summary>
-        public static readonly Uri ExecutorUri = new Uri(ExecutorUriString);
-
-        /// <summary>
-        /// The file name to log to
-        /// </summary>
-        public const string SettingsFilename = @"karma-vs-reporter.json";
-
-        /// <summary>
-        /// The standard file name for the karma configuration file
-        /// </summary>
-        public const string KarmaConfigFilename = @"karma.conf.js";
-
-        /// <summary>
-        /// Known file extensions
-        /// </summary>
-        public const string JavaScriptExtension = ".js";
-        public const string TypeScriptExtension = ".ts";
-        public const string TypeScriptDefExtension = ".d.ts";
-        public const string CoffeeScriptExtension = ".coffee";
-        public const string HtmScriptExtension = ".htm";
-        public const string HtmlScriptExtension = ".html";
-        public const string JsonExtension = ".json";
+        public static string LibDirectory
+        {
+            get { return Path.GetFullPath(Path.Combine(RootDirectory, "lib")); }
+        }
     }
 }

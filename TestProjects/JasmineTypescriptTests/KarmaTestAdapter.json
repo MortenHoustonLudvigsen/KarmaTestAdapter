@@ -1,0 +1,9 @@
+﻿{
+    "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/KarmaTestAdapter.schema.json",
+    "Disabled": false,
+    "config": {
+        "browsers": [
+            "PhantomJS"
+        ]
+    }
+}

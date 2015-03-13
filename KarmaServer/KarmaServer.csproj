@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>KarmaServer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>59979</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:59979/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\FreePort.ts" />
+    <TypeScriptCompile Include="lib\GlobalLog.ts" />
+    <TypeScriptCompile Include="lib\Index.ts" />
+    <TypeScriptCompile Include="lib\JsonServer.ts" />
+    <TypeScriptCompile Include="lib\karma-vs-jasmine\Adapter.ts" />
+    <TypeScriptCompile Include="lib\karma-vs-jasmine\Boot.ts" />
+    <TypeScriptCompile Include="lib\karma-vs-jasmine\Init.ts" />
+    <TypeScriptCompile Include="lib\karma-vs-jasmine\Instumentation.ts" />
+    <TypeScriptCompile Include="lib\Karma.ts" />
+    <TypeScriptCompile Include="lib\Reporter.ts" />
+    <TypeScriptCompile Include="lib\Server.ts" />
+    <TypeScriptCompile Include="lib\Specs.ts" />
+    <TypeScriptCompile Include="lib\StackTrace.ts" />
+    <TypeScriptCompile Include="lib\Start.ts" />
+    <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
+    <TypeScriptCompile Include="typings\node\node.d.ts" />
+    <TypeScriptCompile Include="typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="typings\source-map\source-map.d.ts" />
+    <TypeScriptCompile Include="typings\tsd.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\FreePort.js">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\GlobalLog.js">
+      <DependentUpon>GlobalLog.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Index.js">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\JsonServer.js">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\karma-vs-jasmine\Adapter.js">
+      <DependentUpon>Adapter.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\karma-vs-jasmine\Boot.js">
+      <DependentUpon>Boot.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\karma-vs-jasmine\Init.js">
+      <DependentUpon>Init.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\karma-vs-jasmine\Instumentation.js">
+      <DependentUpon>Instumentation.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Karma.js">
+      <DependentUpon>Karma.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Reporter.js">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Specs.js">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\Start.js">
+      <DependentUpon>Start.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\FreePort.js.map">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\GlobalLog.js.map">
+      <DependentUpon>GlobalLog.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Index.js.map">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\JsonServer.js.map">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-vs-jasmine\Adapter.js.map">
+      <DependentUpon>Adapter.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-vs-jasmine\Boot.js.map">
+      <DependentUpon>Boot.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-vs-jasmine\Init.js.map">
+      <DependentUpon>Init.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-vs-jasmine\Instumentation.js.map">
+      <DependentUpon>Instumentation.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Karma.js.map">
+      <DependentUpon>Karma.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Reporter.js.map">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Server.js.map">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Specs.js.map">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\Start.js.map">
+      <DependentUpon>Start.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

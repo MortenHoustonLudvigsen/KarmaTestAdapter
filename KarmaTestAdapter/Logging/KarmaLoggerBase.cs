@@ -10,270 +10,109 @@ namespace KarmaTestAdapter.Logging
 {
     public abstract class KarmaLoggerBase : IKarmaLogger, IDisposable
     {
-        private IKarmaLogger _parent = null;
-        public IKarmaLogger Parent
+        private static ulong _nextId = 1;
+
+        public KarmaLoggerBase()
         {
-            get { return _parent; }
-            set
+            Id = _nextId++;
+        }
+
+        public ulong Id { get; private set; }
+
+        protected void AddContext(string context)
+        {
+            if (!string.IsNullOrWhiteSpace(context))
             {
-                if (value != _parent)
+                _context.Add(context);
+            }
+        }
+
+        protected void AddContext(IEnumerable<string> context)
+        {
+            _context.AddRange(context.Where(p => !string.IsNullOrWhiteSpace(p)));
+        }
+
+        private List<string> _context = new List<string>();
+        public IEnumerable<string> Context
+        {
+            get { return _context; }
+        }
+
+        public virtual void Clear()
+        {
+            // Do nothing
+        }
+
+        public abstract void Log(KarmaLogLevel level, IEnumerable<string> context, string message);
+
+        public string FormatMessage(KarmaLogLevel level, IEnumerable<string> context, string message)
+        {
+            return FormatMessageInternal(level, context, message);
+        }
+
+        private IEnumerable<string> FlattenParts(object p)
+        {
+            if (p is string)
+            {
+                var partStr = p as string;
+                if (!string.IsNullOrWhiteSpace(partStr))
                 {
-                    if (_parent != null)
-                    {
-                        _parent.RemoveLogger(this);
-                    }
-                    _parent = value;
+                    yield return partStr;
+                }
+            }
+            else if (p is IEnumerable<object>)
+            {
+                var partList = p as IEnumerable<object>;
+
+                foreach (var child in partList.SelectMany(c => FlattenParts(c)))
+                {
+                    yield return child;
                 }
             }
         }
 
-        public virtual string Phase
+        protected string FormatMessage(params object[] parts)
         {
-            get { return Parent == null ? null : Parent.Phase; }
-        }
+            var message = FlattenParts(parts);
 
-        public abstract void SendMessage(Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging.TestMessageLevel testMessageLevel, string message);
-        public abstract void Clear();
-        public abstract void Log(Microsoft.VisualStudio.TestWindow.Extensibility.MessageLevel messageLevel, string message);
-
-        public virtual void Info(string message)
-        {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                Log(MessageLevel.Informational, message);
-            }
-        }
-
-        public virtual void Info(string message, params object[] args)
-        {
-            Info(string.Format(message, args));
-        }
-
-        public virtual void Warn(string message)
-        {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                Log(MessageLevel.Warning, message);
-            }
-        }
-
-        public virtual void Warn(string message, params object[] args)
-        {
-            Warn(string.Format(message, args));
-        }
-
-        public virtual void Error(string message)
-        {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                Log(MessageLevel.Error, message);
-            }
-        }
-
-        public virtual void Error(string message, params object[] args)
-        {
-            Error(string.Format(message, args));
-        }
-
-        protected StringBuilder ExceptionText(Exception ex, StringBuilder text, string message = null)
-        {
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                text.AppendLine(message);
-            }
-            text.AppendLine(ex.Message);
-            text.AppendLine(ex.StackTrace);
-            if (ex.InnerException != null)
-            {
-                ExceptionText(ex.InnerException, text);
-            }
-            return text;
-        }
-
-        public virtual void Error(Exception ex, string message = null)
-        {
-            Error(ExceptionText(ex, new StringBuilder(), message).ToString());
-        }
-
-        public virtual void Error(Exception ex, string message = null, params object[] args)
-        {
-            Error(ex, string.Format(message, args));
-        }
-
-        public virtual bool HasLogger(IKarmaLogger logger)
-        {
-            return HasLogger<IKarmaLogger>(l => l == logger);
-        }
-
-        public virtual bool HasLogger(ILogger logger)
-        {
-            return HasLogger<KarmaExtensibilityLogger>(l => l.Logger == logger);
-        }
-
-        public virtual bool HasLogger(IMessageLogger logger)
-        {
-            return HasLogger<KarmaTestMessageLogger>(l => l.Logger == logger);
-        }
-
-        public virtual bool HasLogger(string filename)
-        {
-            return HasLogger<KarmaFileLogger>(l => l.Filename == filename);
-        }
-
-        public virtual bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
-            where TLogger : IKarmaLogger
-        {
-            return false;
-        }
-
-        public virtual void AddLogger(IKarmaLogger logger)
-        {
-            if (logger != null)
-            {
-                AddLogger<IKarmaLogger>(l => l == logger, () => logger);
-            }
-        }
-
-        public virtual void AddLogger(ILogger logger)
-        {
-            if (logger != null)
-            {
-                AddLogger<KarmaExtensibilityLogger>(l => l.Logger == logger, () => new KarmaExtensibilityLogger(logger));
-            }
-        }
-
-        public virtual void AddLogger(IMessageLogger logger)
-        {
-            if (logger != null)
-            {
-                AddLogger<KarmaTestMessageLogger>(l => l.Logger == logger, () => new KarmaTestMessageLogger(logger));
-            }
-        }
-
-        public virtual void AddLogger(string filename)
-        {
-            if (!string.IsNullOrWhiteSpace(filename))
-            {
-                AddLogger<KarmaFileLogger>(l => l.Filename == filename, () => new KarmaFileLogger(filename));
-            }
-        }
-
-        public virtual void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger)
-            where TLogger : IKarmaLogger
-        {
-            // Do nothing
-        }
-
-        public virtual void RemoveLogger(IKarmaLogger logger)
-        {
-            RemoveLogger<IKarmaLogger>(l => l == logger);
-        }
-
-        public virtual void RemoveLogger(ILogger logger)
-        {
-            RemoveLogger<KarmaExtensibilityLogger>(l => l.Logger == logger);
-        }
-
-        public virtual void RemoveLogger(IMessageLogger logger)
-        {
-            RemoveLogger<KarmaTestMessageLogger>(l => l.Logger == logger);
-        }
-
-        public virtual void RemoveLogger(string filename)
-        {
-            RemoveLogger<KarmaFileLogger>(l => l.Filename == filename);
-        }
-
-        public virtual void RemoveLogger<TLogger>(Func<TLogger, bool> predicate)
-            where TLogger : IKarmaLogger
-        {
-            // Do nothing
-        }
-
-        public string FormatMessage(TestMessageLevel level, string message)
-        {
-            return FormatMessage(GetMessageLevel(level), message);
-        }
-
-        public string FormatMessage(MessageLevel level, string message)
-        {
-            return FormatMessageInternal(level, message);
-        }
-
-        protected string FormatMessage(params string[] parts)
-        {
             return string.Format("{0} {1}",
-                string.Join(" ", parts.Take(parts.Length - 1).Where(p => !string.IsNullOrWhiteSpace(p)).Select(p => "[" + p + "]")),
-                parts.Last()
+                string.Join(" ", message.Take(message.Count() - 1).Where(p => !string.IsNullOrWhiteSpace(p)).Select(p => "[" + p + "]")),
+                message.Last()
             );
         }
 
-        protected virtual string FormatMessageInternal(MessageLevel level, string message)
+        protected virtual string FormatMessageInternal(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
             return FormatMessage(
                 "karma",
-                //DateTime.Now.ToString("HH:mm:ss"),
-                Phase,
-                LevelText(level),
+                level.LevelText(),
+                context,
                 message
             );
         }
 
-        protected string LevelText(TestMessageLevel level)
+        public virtual bool HasLogger<TLogger>(Func<TLogger, bool> predicate) where TLogger : IKarmaLogger
         {
-            return LevelText(GetMessageLevel(level));
+            return false;
         }
 
-        protected string LevelText(MessageLevel level)
+        public virtual void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger) where TLogger : IKarmaLogger
         {
-            switch (level)
-            {
-                case MessageLevel.Informational:
-                    //return "Info";
-                    return "";
-                case MessageLevel.Warning:
-                    return "Warning";
-                case MessageLevel.Error:
-                    return "Error";
-                case MessageLevel.Diagnostic:
-                    return "Debug";
-                default:
-                    return "Error";
-            }
+            // Do nothing
         }
 
-        protected MessageLevel GetMessageLevel(TestMessageLevel level)
+        public virtual void RemoveLogger<TLogger>(Func<TLogger, bool> predicate) where TLogger : IKarmaLogger
         {
-            switch (level)
-            {
-                case TestMessageLevel.Informational:
-                    return MessageLevel.Informational;
-                case TestMessageLevel.Warning:
-                    return MessageLevel.Warning;
-                case TestMessageLevel.Error:
-                    return MessageLevel.Error;
-                default:
-                    return MessageLevel.Error;
-            }
-        }
-
-        protected TestMessageLevel GetTestMessageLevel(MessageLevel level)
-        {
-            switch (level)
-            {
-                case MessageLevel.Informational:
-                    return TestMessageLevel.Informational;
-                case MessageLevel.Warning:
-                    return TestMessageLevel.Warning;
-                case MessageLevel.Error:
-                    return TestMessageLevel.Error;
-                default:
-                    return TestMessageLevel.Error;
-            }
+            // Do nothing
         }
 
         public virtual void Dispose()
         {
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{1}({0})", Id, GetType().Name);
         }
     }
 }
