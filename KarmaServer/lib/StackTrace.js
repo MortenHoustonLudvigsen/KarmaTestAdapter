@@ -123,7 +123,7 @@ var StackTrace = (function () {
         var basePath = this.basePath;
         var stackFrames = this.parseStack({ stack: stack }, relative);
         if (stackFrames) {
-            return stackFrames.map(function (frame) { return formatFrame(frame); });
+            return stackFrames.filter(function (frame) { return !/\/require\.js$/.test(frame.fileName); }).map(function (frame) { return formatFrame(frame); });
         }
         else {
             return stack.split(/\r\n|\n/g);

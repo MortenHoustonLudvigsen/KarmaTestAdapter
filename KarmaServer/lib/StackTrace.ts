@@ -140,7 +140,9 @@ class StackTrace {
 
         var stackFrames = this.parseStack({ stack: stack }, relative);
         if (stackFrames) {
-            return stackFrames.map(frame => formatFrame(frame));
+            return stackFrames
+                .filter(frame => !/\/require\.js$/.test(frame.fileName))
+                .map(frame => formatFrame(frame));
         } else {
             return stack.split(/\r\n|\n/g);
         }
