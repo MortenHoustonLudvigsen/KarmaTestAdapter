@@ -1,0 +1,19 @@
+﻿{
+    "KarmaConfig": "KarmaTestAdapter.json",
+    "Specs": [
+        {
+            "Description": "(3, 3) should return 6",
+            "UniqueName": "Adder / add.(3, 3) should return 6",
+            "FileName": "specs\\AdderSpec.ts",
+            "LineNumber": 6,
+            "Success": true
+        },
+        {
+            "Description": "(3, 6) should return 9",
+            "UniqueName": "Adder / add.(3, 6) should return 9",
+            "FileName": "specs\\AdderSpec.ts",
+            "LineNumber": 6,
+            "Success": true
+        }
+    ]
+}
