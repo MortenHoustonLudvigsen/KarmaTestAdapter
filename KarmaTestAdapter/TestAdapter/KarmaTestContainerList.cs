@@ -14,11 +14,23 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaTestContainerSourceInfo(IVsProject project, string source)
         {
             Project = project;
-            Source = PathUtils.GetPhysicalPath(source);
+            source = PathUtils.GetPhysicalPath(source);
+            SourceDirectory = Directory.Exists(source) ? source : Path.GetDirectoryName(source);
         }
 
         public IVsProject Project { get; private set; }
-        public string Source { get; private set; }
+        public string SourceDirectory { get; private set; }
+        public string Source
+        {
+            get
+            {
+                var candidates = new[]{
+                    Path.Combine(SourceDirectory, Globals.SettingsFilename),
+                    Path.Combine(SourceDirectory, Globals.KarmaConfigFilename)
+                };
+                return candidates.FirstOrDefault(f => Project.HasFile(f));
+            }
+        }
     }
 
     public class KarmaTestContainerList : IEnumerable<KarmaTestContainer>, IDisposable
@@ -35,12 +47,16 @@ namespace KarmaTestAdapter.TestAdapter
         {
             try
             {
-                RemoveFromDirectory(Path.GetDirectoryName(source.Source));
-                _containers.Add(new KarmaTestContainer(this, source.Project, source.Source));
+                RemoveFromDirectory(source.SourceDirectory);
+                if (!string.IsNullOrWhiteSpace(source.Source))
+                {
+                    _containers.Add(new KarmaTestContainer(this, source.Project, source.Source));
+                }
+                Discoverer.RefreshTestContainers();
             }
             catch (Exception ex)
             {
-                Discoverer.Logger.Error(ex, "Failed to create test container for {0}", source);
+                Discoverer.Logger.Error(ex, "Failed to create test container for {0}", source.Source);
             }
         }
 
@@ -92,12 +108,14 @@ namespace KarmaTestAdapter.TestAdapter
         {
             _containers.Remove(container);
             container.Dispose();
+            Discoverer.RefreshTestContainers();
         }
 
         public void Clear()
         {
             _containers.ToList().ForEach(c => c.Dispose());
             _containers.Clear();
+            Discoverer.RefreshTestContainers();
         }
 
         public IEnumerator<KarmaTestContainer> GetEnumerator()

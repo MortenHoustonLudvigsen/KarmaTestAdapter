@@ -1,5 +1,6 @@
 ﻿using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Logging;
+using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,27 +12,31 @@ namespace KarmaTestAdapter.TestAdapter
 {
     public class KarmaSettings
     {
-        public KarmaSettings(string configFile, IKarmaLogger logger)
+        public KarmaSettings(string configFile, Func<string, bool> fileExists, string baseDirectory, IKarmaLogger logger)
         {
-            AreValid = false;
             HasSettingsFile = false;
             Logger = logger;
 
             try
             {
                 Directory = Path.GetDirectoryName(configFile);
-                KarmaConfigFile = GetFullPath(Globals.KarmaConfigFilename);
                 SettingsFile = GetFullPath(Globals.SettingsFilename);
+                KarmaConfigFile = GetFullPath(Globals.KarmaConfigFilename);
 
-                if (PathUtils.PathHasFileName(configFile, Globals.SettingsFilename) && File.Exists(configFile))
+                if (PathUtils.PathHasFileName(configFile, Globals.SettingsFilename))
                 {
                     Json.PopulateFromFile(configFile, this);
-                    AreValid = true;
+                    _validator.Validate(fileExists(SettingsFile), "Settings file not found: {0}", PathUtils.GetRelativePath(baseDirectory, SettingsFile));
+                    _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
                     HasSettingsFile = true;
                 }
-                else if (PathUtils.PathHasFileName(configFile, Globals.KarmaConfigFilename) && File.Exists(configFile))
+                else if (PathUtils.PathHasFileName(configFile, Globals.KarmaConfigFilename) && fileExists(configFile))
                 {
-                    AreValid = true;
+                    _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
+                }
+                else
+                {
+                    _validator.Validate(false, "Source is not a settings file or a Karma configuration file: {0}", PathUtils.GetRelativePath(baseDirectory, configFile));
                 }
 
                 if (AreValid)
@@ -50,7 +55,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
             catch (Exception ex)
             {
-                AreValid = false;
+                _validator.Validate(false, "Could not read settings: {0}", ex.Message);
                 logger.Error(ex, "Could not read settings");
             }
         }
@@ -76,11 +81,19 @@ namespace KarmaTestAdapter.TestAdapter
         /// </summary>
         public string LogDirectory { get; set; }
 
+        private readonly Validator _validator = new Validator();
+
         /// <summary>
         /// Indicates whether settings have been loaded successfully
         /// </summary>
         [JsonIgnore]
-        public bool AreValid { get; private set; }
+        public bool AreValid { get { return _validator.IsValid; } }
+
+        /// <summary>
+        /// Indicates the reason why the settings are invalid
+        /// </summary>
+        /// [JsonIgnore]
+        public string InvalidReason { get { return _validator.InvalidReason; } }
 
         /// <summary>
         /// The path of the adapter settings file
@@ -110,7 +123,6 @@ namespace KarmaTestAdapter.TestAdapter
         /// The file to log to when LogToFile == true
         /// </summary>
         public string LogFilePath { get { return GetFullPath(LogDirectory, Globals.LogFilename); } }
-
 
         private string GetFullPath(params string[] paths)
         {

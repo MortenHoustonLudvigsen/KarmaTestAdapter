@@ -97,6 +97,15 @@ namespace KarmaTestAdapter.Helpers
                 .Where(f => File.Exists(f));
         }
 
+        public static bool HasFile(this IVsProject project, string file)
+        {
+            return project
+                .GetProjectItems()
+                .Where(f => PathUtils.PathsEqual(f, file))
+                .Where(f => File.Exists(f))
+                .Any();
+        }
+
         public static uint GetItemId(object pvar)
         {
             if (pvar == null) return VSConstants.VSITEMID_NIL;

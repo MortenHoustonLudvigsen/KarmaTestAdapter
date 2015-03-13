@@ -18,8 +18,9 @@ namespace KarmaTestAdapterTests.Expectations
 {
     public class Expected
     {
-        public Expected(string name, string file)
+        public Expected(string name, string file, string baseDirectory)
         {
+            BaseDirectory = baseDirectory;
             KarmaOutput = new List<string>();
             Logger = new TestKarmaLogger(message => Console.WriteLine(message));
             Name = name ?? "";
@@ -51,18 +52,6 @@ namespace KarmaTestAdapterTests.Expectations
                     Specs = Enumerable.Empty<ExpectedSpec>();
                 }
                 Globals.IsTest = true;
-                //var buildDoneFile = Path.Combine(Globals.RootDirectory, "build-done");
-                //var tries = 0;
-                //do
-                //{
-                //    Task.Delay(100).Wait();
-                //    tries += 1;
-                //}
-                //while (tries < 300 && !File.Exists(buildDoneFile));
-                //if (!File.Exists(buildDoneFile))
-                //{
-                //    throw new Exception(string.Format("Could not find {0}", buildDoneFile));
-                //}
                 PopulateKarmaSpecs().Wait();
                 IsValid = true;
             }
@@ -76,6 +65,7 @@ namespace KarmaTestAdapterTests.Expectations
         public IKarmaLogger Logger { get; private set; }
         public string KarmaConfig { get; set; }
         public IEnumerable<ExpectedSpec> Specs { get; set; }
+        public string BaseDirectory { get; private set; }
         public string Directory { get; set; }
         public string Name { get; set; }
         public IEnumerable<KarmaSpec> KarmaSpecs { get; private set; }
@@ -85,7 +75,7 @@ namespace KarmaTestAdapterTests.Expectations
         public async Task PopulateKarmaSpecs()
         {
             var karmaSpecs = new List<KarmaSpec>();
-            var settings = new KarmaSettings(KarmaConfig, Logger);
+            var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
             var server = new KarmaServer(settings, Logger);
             server.OutputReceived += line => Logger.Info("[OUT] {0}", line);
             server.ErrorReceived += line => Logger.Info("[ERR] {0}", line);

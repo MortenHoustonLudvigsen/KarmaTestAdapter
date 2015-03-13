@@ -13,9 +13,11 @@ namespace KarmaTestAdapterTests.Expectations
     {
         public Expectations(string directory)
         {
+            BaseDirectory = directory;
             Expected = GetExpected(directory).ToList();
         }
 
+        public string BaseDirectory { get; private set; }
         public IEnumerable<Expected> Expected { get; set; }
 
         public IEnumerable<ProjectTestCase> GetProjectTestCases()
@@ -52,7 +54,7 @@ namespace KarmaTestAdapterTests.Expectations
             var file = Path.Combine(directory, "Expected.json");
             if (File.Exists(file))
             {
-                yield return new Expected(name, file);
+                yield return new Expected(name, file, BaseDirectory);
             }
 
             foreach (var childDirectory in Directory.GetDirectories(directory))

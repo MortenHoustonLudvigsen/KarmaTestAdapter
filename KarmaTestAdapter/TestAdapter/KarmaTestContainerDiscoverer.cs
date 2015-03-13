@@ -119,16 +119,15 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnSolutionLoaded(object sender, EventArgs e)
         {
             Logger.Info("Solution loaded");
-            Containers.Clear();
-            Containers.CreateContainers(FindSources());
             _initialContainerSearch = true;
+            Containers.Clear();
         }
 
         private void OnSolutionUnloaded(object sender, EventArgs e)
         {
             Logger.Info("Solution unloaded");
-            Containers.Clear();
             _initialContainerSearch = true;
+            Containers.Clear();
         }
 
         private void OnSolutionProjectChanged(object sender, SolutionListenerEventArgs e)
@@ -160,7 +159,7 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnProjectFileAdded(IVsProject project, string file)
         {
             Logger.Debug("Project file added: {0}", file);
-            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) && !Containers.Any(c => c.HasFile(file)))
+            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
             {
                 Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, file));
             }
@@ -169,22 +168,9 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnProjectFileRemoved(IVsProject project, string file)
         {
             Logger.Debug("Project file removed: {0}", file);
-            if (PathUtils.IsSettingsFile(file))
+            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
             {
-                Containers.Remove(file);
-
-                TPL.Task.Delay(100).ContinueWith(t =>
-                {
-                    var karmaConfigFile = Path.Combine(Path.GetDirectoryName(file), Globals.KarmaConfigFilename);
-                    if (project.GetSources().Any(s => PathUtils.PathsEqual(s, karmaConfigFile)) && !Containers.Any(c => c.HasFile(karmaConfigFile)))
-                    {
-                        Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, karmaConfigFile));
-                    }
-                });
-            }
-            else if (PathUtils.IsKarmaConfigFile(file))
-            {
-                Containers.Remove(file);
+                Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, file));
             }
         }
 
@@ -196,14 +182,20 @@ namespace KarmaTestAdapter.TestAdapter
 
         private bool _shouldRefresh = false;
         private object _refreshLock = new object();
-        public void RefreshTestContainers(string reason)
+        public void RefreshTestContainers(string reason = null)
         {
             if (!_initialContainerSearch)
             {
                 lock (_refreshLock)
                 {
-                    _shouldRefresh = true;
-                    Logger.Info("Refreshing containers: {0}", reason);
+                    if (!_shouldRefresh)
+                    {
+                        _shouldRefresh = true;
+                        if (!string.IsNullOrWhiteSpace(reason))
+                        {
+                            Logger.Info("Refreshing containers: {0}", reason);
+                        }
+                    }
                 }
                 TPL.Task.Delay(500).ContinueWith(t =>
                 {

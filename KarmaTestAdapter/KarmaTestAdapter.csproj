@@ -90,6 +90,7 @@
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\ProjectListener.cs" />
     <Compile Include="Helpers\Sha1Utils.cs" />
+    <Compile Include="Helpers\Validator.cs" />
     <Compile Include="Karma\KarmaClient.cs" />
     <Compile Include="Karma\KarmaDiscoverCommand.cs" />
     <Compile Include="Karma\KarmaEvent.cs" />

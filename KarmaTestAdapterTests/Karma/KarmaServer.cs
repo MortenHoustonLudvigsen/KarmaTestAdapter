@@ -22,7 +22,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
         {
             base.Init();
             var karmaConfFile = Path.Combine(SolutionDir, @"TestProjects\JasmineTypescriptTests\karma.conf.js");
-            var settings = new KarmaTestAdapter.TestAdapter.KarmaSettings(karmaConfFile, Logger);
+            var settings = new KarmaTestAdapter.TestAdapter.KarmaSettings(karmaConfFile, f => File.Exists(f), TestProjectsDir, Logger);
             Server = new KarmaTestAdapter.Karma.KarmaServer(settings, Logger);
             _startTime = DateTime.Now;
             Server.OutputReceived += line => Logger.Info("[Karma] {0}", line);

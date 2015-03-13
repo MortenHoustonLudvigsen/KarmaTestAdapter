@@ -29,16 +29,16 @@ namespace KarmaTestAdapter.TestAdapter
             KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
             try
             {
-                Settings = new KarmaSettings(Source, Logger);
-                SetIsValid(Settings.AreValid, "Settings are not valid");
+                Settings = new KarmaSettings(Source, f => Project.HasFile(f), BaseDirectory, Logger);
+                _validator.Validate(Settings.AreValid, Settings.InvalidReason);
                 if (Settings.Disabled)
                 {
-                    SetIsValid(false, string.Format("Karma is disabled in {0}", PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile)));
+                    _validator.Validate(false, string.Format("Karma is disabled in {0}", PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile)));
                 }
             }
             catch (Exception ex)
             {
-                SetIsValid(false, "Error: " + ex.Message);
+                _validator.Validate(false, "Error: " + ex.Message);
                 Logger.Error(ex, "Could not load tests");
             }
             FileWatchers = GetFileWatchers().ToList();
@@ -75,36 +75,24 @@ namespace KarmaTestAdapter.TestAdapter
         public IEnumerable<KarmaFileWatcher> FileWatchers { get; private set; }
         public IEnumerable<Guid> Tests { get; private set; }
 
+        private readonly Validator _validator = new Validator();
+        public bool IsValid { get { return _validator.IsValid; } }
+        public string InvalidReason { get { return _validator.InvalidReason; } }
+
         public bool HasFile(string file)
         {
             return PathUtils.PathsEqual(file, Settings.SettingsFile) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile);
         }
 
-        public bool IsValid { get; private set; }
-        public string InvalidReason { get; private set; }
-        private void SetIsValid(bool isValid, string reason)
-        {
-            IsValid = isValid;
-            if (IsValid)
-            {
-                InvalidReason = "";
-            }
-            else if (string.IsNullOrWhiteSpace(InvalidReason))
-            {
-                InvalidReason = reason;
-            }
-        }
-
         private IEnumerable<KarmaFileWatcher> GetFileWatchers()
         {
-            if (IsValid)
+            if (Project.HasFile(Settings.SettingsFile))
             {
                 yield return CreateFileWatcher(Settings.SettingsFile);
-                yield return CreateFileWatcher(Settings.KarmaConfigFile);
             }
-            else
+            if (Project.HasFile(Settings.KarmaConfigFile))
             {
-                yield return CreateFileWatcher(Source);
+                yield return CreateFileWatcher(Settings.SettingsFile);
             }
         }
 
@@ -152,7 +140,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
             catch (Exception ex)
             {
-                SetIsValid(false, "Could not start karma: " + ex.Message);
+                _validator.Validate(false, "Could not start karma: {0}", ex.Message);
                 Logger.Error(ex, "Could not start karma");
             }
         }
@@ -161,7 +149,7 @@ namespace KarmaTestAdapter.TestAdapter
         {
             if (KarmaServer != null)
             {
-                SetIsValid(false, "Stopping karma: " + reason);
+                _validator.Validate(false, "Stopping karma: {0}", reason);
                 KarmaServer.Kill(reason, warn);
             }
         }
@@ -273,7 +261,7 @@ namespace KarmaTestAdapter.TestAdapter
                 Containers.Remove(this);
             }
 
-            SetIsValid(false, "Disposing");
+            _validator.Validate(false, "Disposing");
         }
 
         #endregion
