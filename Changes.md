@@ -4,6 +4,22 @@ title: Changes
 permalink: /changes/
 ---
 
+## Version 1.0.0
+
+### This is a complete rewrite of the Karma Test Adapter
+
+Some of the major changes are:
+
+* The node package `karma-vs-reporter` is deprecated, and is no longer used
+
+* The settings file `karma-vs-reporter.json` is now `KarmaTestAdapter.json`
+
+* Karma is now always run in the background, and the settings `ServerMode` and `ServerPort` are no longer used.
+
+* Deciding when to run tests is now left up to Karma. The adapter only watches configuration files.
+ 
+* Test results are shown in the Test Explorer as soon as Karma has completed a test run.
+ 
 ## Version 0.8.3
 
 ### Bug fixes
