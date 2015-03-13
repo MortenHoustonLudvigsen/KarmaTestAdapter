@@ -251,7 +251,7 @@ namespace KarmaTestAdapter.TestAdapter
                 {
                     foreach (var watcher in FileWatchers)
                     {
-                        Logger.Debug(@"Stop watching {0}", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching, true));
+                        Logger.Debug(@"Stop watching {0}", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching));
                         watcher.Dispose();
                     }
                     FileWatchers = null;

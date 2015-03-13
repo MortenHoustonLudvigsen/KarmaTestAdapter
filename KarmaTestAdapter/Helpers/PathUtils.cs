@@ -70,7 +70,7 @@ namespace KarmaTestAdapter.Helpers
             return string.Equals(Path.GetDirectoryName(path), directory, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static string GetRelativePath(string basePath, string fullPath, bool onlyLocal = true)
+        public static string GetRelativePath(string basePath, string fullPath)
         {
             if (string.IsNullOrWhiteSpace(basePath) || string.IsNullOrWhiteSpace(fullPath))
             {
@@ -82,17 +82,11 @@ namespace KarmaTestAdapter.Helpers
                 basePath += Path.DirectorySeparatorChar;
             }
 
-            var relativePath = new Uri(basePath)
-                .MakeRelativeUri(new Uri(fullPath))
-                .ToString()
-                .Replace('/', Path.DirectorySeparatorChar);
-
-            if (onlyLocal && relativePath.StartsWith("."))
+            if (fullPath.StartsWith(basePath, StringComparison.InvariantCultureIgnoreCase))
             {
-                return fullPath;
+                return fullPath.Substring(basePath.Length);
             }
-
-            return relativePath;
+            return fullPath;
         }
 
         public static string GetPhysicalPath(string path)
