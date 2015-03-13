@@ -101,9 +101,14 @@ namespace KarmaTestAdapter.TestAdapter
                             string.Join(Environment.NewLine, extraFailure.message, string.Join(Environment.NewLine, extraFailure.stack))
                         ));
                     }
+                    if (result.Log != null && result.Log.Any())
+                    {
+                        testResult.Messages.Add(new TestResultMessage(TestResultMessage.StandardErrorCategory, string.Join(Environment.NewLine, result.Log)));
+                    }
                 }
                 else if (result.Log != null && result.Log.Any())
                 {
+                    testResult.Messages.Add(new TestResultMessage(TestResultMessage.StandardErrorCategory, string.Join(Environment.NewLine, result.Log)));
                     testResult.ErrorMessage = string.Join(Environment.NewLine, result.Log);
                 }
 
