@@ -76,7 +76,7 @@ namespace KarmaTestAdapterTests.Expectations
         {
             if (frame != null)
             {
-                var line = string.Format("    at {0} in {1}", frame["FunctionName"], FullPath((string)frame["FileName"]));
+                var line = string.Format("at {0} in {1}", frame["FunctionName"], FullPath((string)frame["FileName"]));
                 var lineNumber = frame["LineNumber"];
                 if (lineNumber is JValue)
                 {

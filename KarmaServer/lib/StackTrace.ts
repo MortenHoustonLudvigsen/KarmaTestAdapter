@@ -146,7 +146,7 @@ class StackTrace {
         }
 
         function formatFrame(frame: Specs.Source): string {
-            var result = '    at ';
+            var result = 'at ';
             result += frame.functionName || '<anonymous>';
             result += ' in ';
             result += frame.fileName;

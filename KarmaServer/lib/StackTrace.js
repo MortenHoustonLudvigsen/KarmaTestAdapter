@@ -129,7 +129,7 @@ var StackTrace = (function () {
             return stack.split(/\r\n|\n/g);
         }
         function formatFrame(frame) {
-            var result = '    at ';
+            var result = 'at ';
             result += frame.functionName || '<anonymous>';
             result += ' in ';
             result += frame.fileName;
