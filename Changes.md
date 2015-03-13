@@ -14,7 +14,9 @@ Some of the major changes are:
  
 * Test results are shown in the Test Explorer as soon as Karma has completed a test run.
 
-Download: [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.0/KarmaTestAdapter.vsix)
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.0/KarmaTestAdapter.vsix)
  
 ## Version 0.8.3
 
@@ -22,7 +24,9 @@ Download: [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/Karm
 
 * Ignore tests with no names
 
-Download: [KarmaTestAdapter.Package.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v0.8.3/KarmaTestAdapter.Package.vsix)
+### Download
+
+[KarmaTestAdapter.Package.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v0.8.3/KarmaTestAdapter.Package.vsix)
 
 ## Version 0.8.2
 
