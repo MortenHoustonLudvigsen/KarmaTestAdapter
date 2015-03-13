@@ -26,7 +26,7 @@ namespace KarmaTestAdapter.TestAdapter
                 if (PathUtils.PathHasFileName(configFile, Globals.SettingsFilename))
                 {
                     Json.PopulateFromFile(configFile, this);
-                    KarmaConfigFile = GetFullPath(KarmaConfigFile);
+                    KarmaConfigFile = string.IsNullOrWhiteSpace(KarmaConfigFile) ? GetFullPath(Globals.KarmaConfigFilename) : GetFullPath(KarmaConfigFile);
                     _validator.Validate(fileExists(SettingsFile), "Settings file not found: {0}", PathUtils.GetRelativePath(baseDirectory, SettingsFile));
                     _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
                     HasSettingsFile = true;

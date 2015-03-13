@@ -29,21 +29,17 @@ namespace KarmaTestAdapter.TestAdapter
             KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
             try
             {
-                Settings = new KarmaSettings(Source, f =>
-                {
-                    if (!File.Exists(f))
-                    {
-                        Logger.Debug("File does not exist: {0}", f);
-                        return false;
-                    }
-                    if (!Project.HasFile(f))
-                    {
-                        Logger.Debug("File is not included in project {0}: {1}", Project.GetProjectName(), f);
-                        return false;
-                    }
-                    return false;
-                }, BaseDirectory, Logger);
+                Settings = new KarmaSettings(Source, f => File.Exists(f), BaseDirectory, Logger);
                 _validator.Validate(Settings.AreValid, Settings.InvalidReason);
+                if (Settings.AreValid)
+                {
+                    if (Settings.HasSettingsFile)
+                    {
+                        _validator.Validate(Project.HasFile(Settings.SettingsFile), "File {1} is not included in project {0}", Project.GetProjectName(), PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile));
+                    }
+                    _validator.Validate(Project.HasFile(Settings.KarmaConfigFile), "File {1} is not included in project {0}", Project.GetProjectName(), PathUtils.GetRelativePath(BaseDirectory, Settings.KarmaConfigFile));
+                }
+
                 if (Settings.Disabled)
                 {
                     _validator.Validate(false, string.Format("Karma is disabled in {0}", PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile)));
@@ -105,7 +101,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
             if (Project.HasFile(Settings.KarmaConfigFile))
             {
-                yield return CreateFileWatcher(Settings.SettingsFile);
+                yield return CreateFileWatcher(Settings.KarmaConfigFile);
             }
         }
 
