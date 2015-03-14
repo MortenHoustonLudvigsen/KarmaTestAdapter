@@ -1,3 +1,18 @@
+## Version 1.0.1
+
+### Bug fixes
+
+* [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
+
+* [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
+
+* The adapter now works with globally installed modules
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.1/KarmaTestAdapter.vsix)
+ 
+
 ## Version 1.0.0
 
 ### This is a complete rewrite of the Karma Test Adapter

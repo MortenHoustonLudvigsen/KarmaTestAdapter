@@ -25,6 +25,11 @@ namespace KarmaTestAdapter.Helpers
             return serviceProvider.GetSolution().GetSolutionDirectory();
         }
 
+        public static bool HasFile(this IServiceProvider serviceProvider, string file)
+        {
+            return serviceProvider.GetLoadedProjects().Any(p => p.HasFile(file));
+        }
+
         public static IEnumerable<IVsProject> GetLoadedProjects(this IVsSolution solution)
         {
             return solution.EnumerateLoadedProjects(__VSENUMPROJFLAGS.EPF_LOADEDINSOLUTION).OfType<IVsProject>();
@@ -32,9 +37,12 @@ namespace KarmaTestAdapter.Helpers
 
         public static string GetProjectName(this IVsProject project)
         {
-            object nameObj = null;
-            var hr = ((IVsHierarchy)project).GetProperty((uint)VSConstants.VSITEMID.Root, (int)__VSHPROPID.VSHPROPID_Name, out nameObj);
-            return nameObj as string;
+            return project.GetPropertyValue(__VSHPROPID.VSHPROPID_Name, VSConstants.VSITEMID.Root) as string;
+        }
+
+        public static string GetProjectDir(this IVsProject project)
+        {
+            return project.GetPropertyValue(__VSHPROPID.VSHPROPID_ProjectDir, VSConstants.VSITEMID.Root) as string;
         }
 
         public static IEnumerable<IVsHierarchy> EnumerateLoadedProjects(this IVsSolution solution, __VSENUMPROJFLAGS enumFlags)
@@ -66,6 +74,11 @@ namespace KarmaTestAdapter.Helpers
             return null;
         }
 
+        public static bool HasFile(this IVsSolution solution, string file)
+        {
+            return solution.GetLoadedProjects().Any(p => p.HasFile(file));
+        }
+
         public static IEnumerable<string> GetProjectItems(this IVsProject project)
         {
             // Each item in VS OM is IVSHierarchy. 
@@ -74,7 +87,7 @@ namespace KarmaTestAdapter.Helpers
 
         public static IEnumerable<string> GetProjectItems(IVsHierarchy project, uint itemId)
         {
-            object pVar = GetPropertyValue((int)__VSHPROPID.VSHPROPID_FirstChild, itemId, project);
+            object pVar = GetPropertyValue(project, (int)__VSHPROPID.VSHPROPID_FirstChild, itemId);
 
             uint childId = GetItemId(pVar);
             while (childId != VSConstants.VSITEMID_NIL)
@@ -84,7 +97,7 @@ namespace KarmaTestAdapter.Helpers
 
                 foreach (var childNodePath in GetProjectItems(project, childId)) yield return childNodePath;
 
-                pVar = GetPropertyValue((int)__VSHPROPID.VSHPROPID_NextSibling, childId, project);
+                pVar = GetPropertyValue(project, (int)__VSHPROPID.VSHPROPID_NextSibling, childId);
                 childId = GetItemId(pVar);
             }
         }
@@ -99,11 +112,14 @@ namespace KarmaTestAdapter.Helpers
 
         public static bool HasFile(this IVsProject project, string file)
         {
-            return project
-                .GetProjectItems()
-                .Where(f => PathUtils.PathsEqual(f, file))
-                .Where(f => File.Exists(f))
-                .Any();
+            int found;
+            uint projectItemID;
+            var priority = new VSDOCUMENTPRIORITY[1];
+            if (ErrorHandler.Succeeded(project.IsDocumentInProject(file, out found, priority, out projectItemID)))
+            {
+                return found != 0;
+            }
+            return false;
         }
 
         public static uint GetItemId(object pvar)
@@ -117,7 +133,17 @@ namespace KarmaTestAdapter.Helpers
             return VSConstants.VSITEMID_NIL;
         }
 
-        public static object GetPropertyValue(int propid, uint itemId, IVsHierarchy vsHierarchy)
+        public static object GetPropertyValue(this IVsProject project, __VSHPROPID propid, VSConstants.VSITEMID itemId = VSConstants.VSITEMID.Root)
+        {
+            return GetPropertyValue((IVsHierarchy)project, propid, itemId);
+        }
+
+        public static object GetPropertyValue(this IVsHierarchy vsHierarchy, __VSHPROPID propid, VSConstants.VSITEMID itemId = VSConstants.VSITEMID.Root)
+        {
+            return GetPropertyValue(vsHierarchy, (int)propid, (uint)itemId);
+        }
+
+        public static object GetPropertyValue(this IVsHierarchy vsHierarchy, int propid, uint itemId)
         {
             if (itemId == VSConstants.VSITEMID_NIL)
             {

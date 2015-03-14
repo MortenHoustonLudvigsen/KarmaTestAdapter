@@ -20,20 +20,37 @@ namespace KarmaTestAdapter.TestAdapter
             : base(containers.Discoverer, source)
         {
             Project = project;
+            ProjectDirectory = project.GetProjectDir();
             BaseDirectory = Discoverer.BaseDirectory;
-            Name = Path.GetDirectoryName(PathUtils.GetRelativePath(BaseDirectory, Source));
-            Logger = new KarmaLogger(Discoverer.Logger, string.IsNullOrWhiteSpace(Name) ? "Container" : Name);
+            Name = string.Join("/", new[] {
+                Project.GetProjectName(),
+                Path.GetDirectoryName(GetRelativePath(Source)).Replace('\\', '/')
+            }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            Logger = new KarmaLogger(Discoverer.Logger, Name);
             KarmaLogger = new KarmaServerLogger(Logger);
-            Logger.Info("Creating KarmaTestContainer for {0}", PathUtils.GetRelativePath(BaseDirectory, Source));
+            Logger.Info("Creating KarmaTestContainer for {0}", GetRelativePath(Source));
             Containers = containers;
-            KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
+            KarmaSourceSettings = Discoverer.TestSettings.AddSource(Name, Source);
             try
             {
-                Settings = new KarmaSettings(Source, f => Project.HasFile(f), BaseDirectory, Logger);
+                Settings = new KarmaSettings(Source, f => File.Exists(f), BaseDirectory, Logger);
                 _validator.Validate(Settings.AreValid, Settings.InvalidReason);
+                if (Settings.AreValid)
+                {
+                    if (Settings.HasSettingsFile)
+                    {
+                        _validator.Validate(Project.HasFile(Settings.SettingsFile), "File {1} is not included in project {0}", Project.GetProjectName(), GetRelativePath(Settings.SettingsFile));
+                        _validator.Validate(Discoverer.ServiceProvider.HasFile(Settings.KarmaConfigFile), "File {0} is not included in solution", GetRelativePath(Settings.KarmaConfigFile));
+                    }
+                    else
+                    {
+                        _validator.Validate(Project.HasFile(Settings.KarmaConfigFile), "File {1} is not included in project {0}", Project.GetProjectName(), GetRelativePath(Settings.KarmaConfigFile));
+                    }
+                }
+
                 if (Settings.Disabled)
                 {
-                    _validator.Validate(false, string.Format("Karma is disabled in {0}", PathUtils.GetRelativePath(BaseDirectory, Settings.SettingsFile)));
+                    _validator.Validate(false, string.Format("Karma is disabled in {0}", GetRelativePath(Settings.SettingsFile)));
                 }
             }
             catch (Exception ex)
@@ -41,11 +58,9 @@ namespace KarmaTestAdapter.TestAdapter
                 _validator.Validate(false, "Error: " + ex.Message);
                 Logger.Error(ex, "Could not load tests");
             }
-            FileWatchers = GetFileWatchers().ToList();
+            FileWatchers = GetFileWatchers().Where(f => f != null).ToList();
             if (IsValid)
             {
-                KarmaSourceSettings = Discoverer.TestSettings.AddSource(Source);
-                KarmaSourceSettings.BaseDirectory = BaseDirectory;
                 KarmaSourceSettings.Save();
                 StartKarmaServer();
             }
@@ -61,6 +76,7 @@ namespace KarmaTestAdapter.TestAdapter
         }
 
         public IVsProject Project { get; private set; }
+        public string ProjectDirectory { get; private set; }
         public string Name { get; private set; }
         public KarmaTestContainerList Containers { get; private set; }
         public IKarmaLogger Logger { get; private set; }
@@ -86,14 +102,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         private IEnumerable<KarmaFileWatcher> GetFileWatchers()
         {
-            if (Project.HasFile(Settings.SettingsFile))
-            {
-                yield return CreateFileWatcher(Settings.SettingsFile);
-            }
-            if (Project.HasFile(Settings.KarmaConfigFile))
-            {
-                yield return CreateFileWatcher(Settings.SettingsFile);
-            }
+            yield return CreateFileWatcher(Settings.SettingsFile);
+            yield return CreateFileWatcher(Settings.KarmaConfigFile);
         }
 
         private KarmaFileWatcher CreateFileWatcher(string file)
@@ -107,15 +117,19 @@ namespace KarmaTestAdapter.TestAdapter
 
         private KarmaFileWatcher CreateFileWatcher(string directory, string filter, bool includeSubdirectories)
         {
-            var watcher = new KarmaFileWatcher(directory, filter, includeSubdirectories);
-            watcher.Changed += FileWatcherChanged;
-            Logger.Info(@"Watching {0}", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching));
-            return watcher;
+            if (Directory.Exists(directory))
+            {
+                var watcher = new KarmaFileWatcher(directory, filter, includeSubdirectories);
+                watcher.Changed += FileWatcherChanged;
+                Logger.Info(@"Watching {0}", GetRelativePath(watcher.Watching));
+                return watcher;
+            }
+            return null;
         }
 
         private void FileWatcherChanged(object sender, FileChangedEventArgs e)
         {
-            Logger.Debug("File {0}: {1}", e.ChangedReason, PathUtils.GetRelativePath(BaseDirectory, e.File));
+            Logger.Debug("File {0}: {1}", e.ChangedReason, GetRelativePath(e.File));
             switch (e.ChangedReason)
             {
                 case FileChangedReason.Changed:
@@ -157,6 +171,7 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnServerStarted(int port)
         {
             Logger.Debug("Karma started using port {0}", port);
+            KarmaServer.Attempts = 0;
             Port = port;
             KarmaSourceSettings.Port = port;
             KarmaEventCommand = new KarmaEventCommand(port);
@@ -173,8 +188,17 @@ namespace KarmaTestAdapter.TestAdapter
             else if (IsValid)
             {
                 Logger.Warn("Karma stopped - exit code: {0}", exitCode);
-                Logger.Warn("Restarting karma");
-                Task.Delay(250).ContinueWith(t => StartKarmaServer());
+                if (KarmaServer.Attempts < 3)
+                {
+                    Logger.Warn("Restarting karma");
+                    Task.Delay(250).ContinueWith(t => StartKarmaServer());
+                }
+                else
+                {
+                    _validator.Validate(false, "Could not start karma after {0} attempts", KarmaServer.Attempts);
+                    Logger.Error(InvalidReason);
+                    RefreshContainer("");
+                }
             }
             else
             {
@@ -210,6 +234,11 @@ namespace KarmaTestAdapter.TestAdapter
                     }
                     break;
             }
+        }
+
+        private string GetRelativePath(string path)
+        {
+            return PathUtils.GetRelativePath(Project.GetProjectDir(), path);
         }
 
         public override string ToString()
@@ -251,7 +280,7 @@ namespace KarmaTestAdapter.TestAdapter
                 {
                     foreach (var watcher in FileWatchers)
                     {
-                        Logger.Debug(@"Stop watching {0}", PathUtils.GetRelativePath(BaseDirectory, watcher.Watching));
+                        Logger.Debug(@"Stop watching {0}", GetRelativePath(watcher.Watching));
                         watcher.Dispose();
                     }
                     FileWatchers = null;

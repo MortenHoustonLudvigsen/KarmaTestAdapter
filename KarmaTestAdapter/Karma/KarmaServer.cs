@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using TwoPS.Processes;
+using NpmProxy;
 
 namespace KarmaTestAdapter.Karma
 {
@@ -27,7 +28,7 @@ namespace KarmaTestAdapter.Karma
     {
         public KarmaServer(KarmaSettings settings, IKarmaLogger logger)
         {
-            Logger = logger;
+            Logger = new KarmaLogger(logger, "Server");
 
             if (!settings.AreValid)
             {
@@ -36,20 +37,31 @@ namespace KarmaTestAdapter.Karma
 
             Settings = settings;
             State = KarmaServerState.None;
+            Attempts = 0;
         }
 
         public IKarmaLogger Logger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public string StartScript { get { return Path.Combine(Globals.LibDirectory, "Start.js"); } }
         public string WorkingDirectory { get { return Path.GetDirectoryName(Settings.KarmaConfigFile); } }
-        public string NodePath { get { return string.Join(";", GetNodePath(WorkingDirectory)); } }
+        public string NodePath { get { return string.Join(";", GetNodePath(WorkingDirectory).Where(d => !string.IsNullOrWhiteSpace(d))); } }
         public KarmaServerState State { get; private set; }
         public int Port { get; private set; }
+        public int Attempts { get; set; }
 
         private TaskCompletionSource<int> _finishedSource;
         public Task<int> Finished { get { return _finishedSource.Task; } }
 
         private IEnumerable<string> GetNodePath(string directory)
+        {
+            foreach (var dir in GetNodeDirs(directory))
+            {
+                yield return dir;
+            }
+            yield return _npm.Root(global: true);
+        }
+
+        private IEnumerable<string> GetNodeDirs(string directory)
         {
             if (!string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory))
             {
@@ -57,12 +69,14 @@ namespace KarmaTestAdapter.Karma
                 {
                     yield return Path.Combine(directory, "node_modules");
                 }
-                foreach (var path in GetNodePath(Path.GetDirectoryName(directory)))
+                foreach (var path in GetNodeDirs(Path.GetDirectoryName(directory)))
                 {
                     yield return path;
                 }
             }
         }
+
+        private static Npm _npm = new Npm();
 
         public ProcessOptions GetProcessOptions()
         {
@@ -84,6 +98,8 @@ namespace KarmaTestAdapter.Karma
             };
 
             options.EnvironmentVariables["NODE_PATH"] = NodePath;
+
+            Logger.Debug("NODE_PATH: {0}", NodePath);
 
             options.Add(StartScript);
             options.Add("--karma", PathUtils.GetRelativePath(WorkingDirectory, Settings.KarmaConfigFile));
@@ -144,6 +160,7 @@ namespace KarmaTestAdapter.Karma
 
             Port = 0;
             State = KarmaServerState.Starting;
+            Attempts += 1;
 
             _finishedSource = new TaskCompletionSource<int>();
 

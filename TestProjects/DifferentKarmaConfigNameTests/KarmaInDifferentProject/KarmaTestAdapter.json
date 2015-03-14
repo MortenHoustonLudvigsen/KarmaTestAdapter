@@ -1,0 +1,10 @@
+{
+    "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/KarmaTestAdapter.schema.json",
+    "KarmaConfigFile": "../../JasmineRequireTypescriptTests/karma.conf.js",
+    "Disabled": false,
+    "config": {
+        "browsers": [
+            "PhantomJS"
+        ]
+    }
+}

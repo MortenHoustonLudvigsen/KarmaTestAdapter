@@ -31,6 +31,11 @@ namespace KarmaTestAdapter.TestAdapter
                 return candidates.FirstOrDefault(f => Project.HasFile(f));
             }
         }
+
+        public override string ToString()
+        {
+            return Source;
+        }
     }
 
     public class KarmaTestContainerList : IEnumerable<KarmaTestContainer>, IDisposable
@@ -52,6 +57,7 @@ namespace KarmaTestAdapter.TestAdapter
                 {
                     _containers.Add(new KarmaTestContainer(this, source.Project, source.Source));
                 }
+                RemoveDuplicates();
                 Discoverer.RefreshTestContainers();
             }
             catch (Exception ex)
@@ -65,6 +71,15 @@ namespace KarmaTestAdapter.TestAdapter
             foreach (var source in sources)
             {
                 CreateContainer(source);
+            }
+        }
+
+        public void RemoveDuplicates()
+        {
+            var containersToRemove = this.Where(c => !c.Settings.HasSettingsFile && this.Any(d => d.Settings.HasSettingsFile && PathUtils.PathsEqual(c.Settings.KarmaConfigFile, d.Settings.KarmaConfigFile))).ToList();
+            foreach (var container in containersToRemove)
+            {
+                Remove(container);
             }
         }
 

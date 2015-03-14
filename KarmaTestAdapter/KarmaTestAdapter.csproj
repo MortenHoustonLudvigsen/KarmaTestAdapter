@@ -156,6 +156,10 @@
       <Project>{f15c2463-e70b-435a-9de6-69d6dedad66f}</Project>
       <Name>JsonServerClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NpmProxy\NpmProxy.csproj">
+      <Project>{65f8ef17-76cf-4f2f-9d3e-55cc1c95d065}</Project>
+      <Name>NpmProxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
