@@ -1,5 +1,27 @@
 ## Version 1.0.1
 
+### Improved identification of test containers:
+
+* Test containers specify which Karma configuration files to use when running tests.
+
+* A project can contain more than one test container.
+
+* A directory can contain at most one test container.
+
+* Test containers are files named `karma.conf.js` or `KarmaTestAdapter.json`.
+
+* If a test container is named `karma.conf.js` it specifies itself as the Karma configuration file to use.
+
+* If a test container is named `KarmaTestAdapter.json` it specifies the Karma configuration file to use in the optional `KarmaConfigFile` setting. If the `KarmaConfigFile` setting is not specified, then `karma.conf.js` in the same directory is used.
+
+* A test container, which specifies a Karma configuration file that is not included in a project in the current solution or does not exist, will be disabled. I.e. no tests will be run for the container.
+
+* Only test containers, that are included in a project in the current solution, are used.
+
+* If there is a `KarmaTestAdapter.json` file in a project, then any `karma.conf.js` file in the same directory is not used as a test container.
+
+* If there is a `KarmaTestAdapter.json` in a project in the current solution, that specifies a Karma configuration file in a different directory or project, then that Karma configuration file is not used as a test container.
+
 ### Bug fixes
 
 * [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
