@@ -171,6 +171,7 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnServerStarted(int port)
         {
             Logger.Debug("Karma started using port {0}", port);
+            KarmaServer.Attempts = 0;
             Port = port;
             KarmaSourceSettings.Port = port;
             KarmaEventCommand = new KarmaEventCommand(port);
@@ -187,8 +188,17 @@ namespace KarmaTestAdapter.TestAdapter
             else if (IsValid)
             {
                 Logger.Warn("Karma stopped - exit code: {0}", exitCode);
-                Logger.Warn("Restarting karma");
-                Task.Delay(250).ContinueWith(t => StartKarmaServer());
+                if (KarmaServer.Attempts < 3)
+                {
+                    Logger.Warn("Restarting karma");
+                    Task.Delay(250).ContinueWith(t => StartKarmaServer());
+                }
+                else
+                {
+                    _validator.Validate(false, "Could not start karma after {0} attempts", KarmaServer.Attempts);
+                    Logger.Error(InvalidReason);
+                    RefreshContainer("");
+                }
             }
             else
             {

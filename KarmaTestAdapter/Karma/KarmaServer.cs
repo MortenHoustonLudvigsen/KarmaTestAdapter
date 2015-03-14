@@ -37,6 +37,7 @@ namespace KarmaTestAdapter.Karma
 
             Settings = settings;
             State = KarmaServerState.None;
+            Attempts = 0;
         }
 
         public IKarmaLogger Logger { get; private set; }
@@ -46,6 +47,7 @@ namespace KarmaTestAdapter.Karma
         public string NodePath { get { return string.Join(";", GetNodePath(WorkingDirectory).Where(d => !string.IsNullOrWhiteSpace(d))); } }
         public KarmaServerState State { get; private set; }
         public int Port { get; private set; }
+        public int Attempts { get; set; }
 
         private TaskCompletionSource<int> _finishedSource;
         public Task<int> Finished { get { return _finishedSource.Task; } }
@@ -158,6 +160,7 @@ namespace KarmaTestAdapter.Karma
 
             Port = 0;
             State = KarmaServerState.Starting;
+            Attempts += 1;
 
             _finishedSource = new TaskCompletionSource<int>();
 
