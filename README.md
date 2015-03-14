@@ -80,7 +80,11 @@ These are the possible properties (all properties are optional):
 
 # Test containers
 
-A test container specifies which Karma configuration file to use when running tests.
+Test containers specifies which Karma configuration files to use when running tests.
+
+* A project can contain more than one test container.
+
+* A directory can contain at most one test container.
 
 * Test containers are files named `karma.conf.js` or `KarmaTestAdapter.json`.
 
