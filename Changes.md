@@ -12,6 +12,8 @@ permalink: /changes/
 
 * [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
 
+* The adapter now works with globally installed modules
+
 ### Download
 
 [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.1/KarmaTestAdapter.vsix)
