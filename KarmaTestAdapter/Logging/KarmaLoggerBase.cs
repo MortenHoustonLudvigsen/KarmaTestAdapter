@@ -71,7 +71,7 @@ namespace KarmaTestAdapter.Logging
             }
         }
 
-        protected string FormatMessage(params object[] parts)
+        protected string FormatMessage(IEnumerable<object> parts)
         {
             var message = FlattenParts(parts);
 
@@ -83,12 +83,15 @@ namespace KarmaTestAdapter.Logging
 
         protected virtual string FormatMessageInternal(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
-            return FormatMessage(
+            context = context ?? Enumerable.Empty<string>();
+            var parts = new object[]{
                 "karma",
+                context.FirstOrDefault(),
                 level.LevelText(),
-                context,
+                context.Skip(1),
                 message
-            );
+            };
+            return FormatMessage(parts);
         }
 
         public virtual bool HasLogger<TLogger>(Func<TLogger, bool> predicate) where TLogger : IKarmaLogger

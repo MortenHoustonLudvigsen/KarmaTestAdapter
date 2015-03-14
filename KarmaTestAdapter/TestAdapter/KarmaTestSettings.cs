@@ -26,9 +26,9 @@ namespace KarmaTestAdapter.TestAdapter
 
         public List<KarmaSourceSettings> Sources { get; set; }
 
-        public KarmaSourceSettings AddSource(string source)
+        public KarmaSourceSettings AddSource(string name, string source)
         {
-            return AddSource(new KarmaSourceSettings { Source = source });
+            return AddSource(new KarmaSourceSettings { Name = name, Source = source });
         }
 
         private KarmaSourceSettings AddSource(KarmaSourceSettings source)
@@ -85,16 +85,13 @@ namespace KarmaTestAdapter.TestAdapter
         private static XmlSerializerNamespaces _serializerNamespaces = new XmlSerializerNamespaces(new[] { new XmlQualifiedName("", "") });
 
         [XmlAttribute]
-        public string BaseDirectory { get; set; }
+        public string Name { get; set; }
 
         [XmlAttribute]
         public string Source { get; set; }
 
         [XmlAttribute]
         public int Port { get; set; }
-
-        [XmlIgnore]
-        public string Name { get { return Path.GetDirectoryName(PathUtils.GetRelativePath(BaseDirectory, Source)); } }
 
         public static string SettingsFilePath(string source)
         {

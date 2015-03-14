@@ -41,12 +41,15 @@ namespace KarmaTestAdapter.Logging
 
         protected override string FormatMessageInternal(KarmaLogLevel level, IEnumerable<string> context, string message)
         {
-            return FormatMessage(
+            context = context ?? Enumerable.Empty<string>();
+            var parts = new object[]{
                 DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss.fff"),
+                context.FirstOrDefault(),
                 level.LevelText(),
-                context,
+                context.Skip(1),
                 message
-            );
+            };
+            return FormatMessage(parts);
         }
     }
 }

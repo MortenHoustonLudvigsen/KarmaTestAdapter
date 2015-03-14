@@ -20,7 +20,6 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaTestContainerDiscoverer(
             [Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider,
             ITestsService testsService,
-            ISolutionListener solutionListener,
             KarmaTestSettingsProvider testSettingsService,
             ILogger logger
             )
@@ -34,7 +33,7 @@ namespace KarmaTestAdapter.TestAdapter
             ServiceProvider = serviceProvider;
             _testsService = testsService;
 
-            SolutionListener = solutionListener;
+            SolutionListener = new SolutionListener(serviceProvider);
             SolutionListener.SolutionLoaded += OnSolutionLoaded;
             SolutionListener.SolutionUnloaded += OnSolutionUnloaded;
             SolutionListener.ProjectChanged += OnSolutionProjectChanged;
@@ -199,6 +198,10 @@ namespace KarmaTestAdapter.TestAdapter
                 }
                 TPL.Task.Delay(500).ContinueWith(t =>
                 {
+                    if (_shouldRefresh)
+                    {
+                        Containers.CreateContainers(FindMissingSources());
+                    }
                     lock (_refreshLock)
                     {
                         if (_shouldRefresh)
@@ -211,14 +214,21 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private IEnumerable<KarmaTestContainerSourceInfo> FindSources()
+        public IEnumerable<KarmaTestContainerSourceInfo> FindMissingSources()
+        {
+            return FindSources()
+                .Where(s => !Containers.Any(c => c.HasFile(s.Source)))
+                .ToList();
+        }
+
+        public IEnumerable<KarmaTestContainerSourceInfo> FindSources()
         {
             return ServiceProvider
                 .GetLoadedProjects()
                 .SelectMany(p => FindSources(p));
         }
 
-        private IEnumerable<KarmaTestContainerSourceInfo> FindSources(IVsProject project)
+        public IEnumerable<KarmaTestContainerSourceInfo> FindSources(IVsProject project)
         {
             Logger.Debug("Finding sources for {0}", project.GetProjectName());
 

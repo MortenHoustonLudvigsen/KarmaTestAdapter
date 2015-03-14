@@ -74,12 +74,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         public static TestCase CreateTestCase(KarmaSourceSettings settings, KarmaSpec spec)
         {
-            var sourceDir = Path.GetDirectoryName(PathUtils.GetRelativePath(settings.BaseDirectory, settings.Source));
-
-            var fullyQualifiedName = string.IsNullOrWhiteSpace(sourceDir)
-                ? spec.UniqueName
-                : string.Format("{0} / {1}", sourceDir.Replace(".", "-"), spec.UniqueName);
-
+            var fullyQualifiedName = string.Format("{0} / {1}", settings.Name, spec.UniqueName);
             var testCase = new TestCase(fullyQualifiedName, Globals.ExecutorUri, settings.Source);
             testCase.DisplayName = spec.Description;
             if (spec.Source != null)
