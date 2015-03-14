@@ -18,13 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{592DF9
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestProjects", "TestProjects", "{60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}"
-	ProjectSection(SolutionItems) = preProject
-		TestProjects\package.json = TestProjects\package.json
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineTypescriptTests", "TestProjects\JasmineTypescriptTests\JasmineTypescriptTests.csproj", "{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{B624A6AE-2C96-48E5-8D80-C6E89FAB082C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonServerClient", "JsonServerClient\JsonServerClient.csproj", "{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}"
@@ -57,20 +50,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root-VSIX-14.0", "Root-VSIX
 		Tools\Root-VSIX-14.0\Shell.Interop.pdb = Tools\Root-VSIX-14.0\Shell.Interop.pdb
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineRequireTypescriptTests", "TestProjects\JasmineRequireTypescriptTests\JasmineRequireTypescriptTests.csproj", "{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DifferentKarmaConfigNameTests", "TestProjects\DifferentKarmaConfigNameTests\DifferentKarmaConfigNameTests.csproj", "{51471B65-879A-4E57-9F71-B641019BDB3F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F15C2463-E70B-435A-9DE6-69D6DEDAD66F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,23 +72,12 @@ Global
 		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F305C5A5-7382-4A0C-A88D-FA6EFD52592B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51471B65-879A-4E57-9F71-B641019BDB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51471B65-879A-4E57-9F71-B641019BDB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51471B65-879A-4E57-9F71-B641019BDB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51471B65-879A-4E57-9F71-B641019BDB3F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
 		{FF6C9F55-FA4A-4755-8754-7F17A2B2969E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
 		{3E68A5D1-8C11-4096-B355-7FF2CF4F3D9E} = {B624A6AE-2C96-48E5-8D80-C6E89FAB082C}
-		{52D3B0DC-4C96-4D9E-90AE-02ACCB396307} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
-		{51471B65-879A-4E57-9F71-B641019BDB3F} = {60D81BFA-39CA-4C72-882D-3AD3B3FD1CC9}
 	EndGlobalSection
 EndGlobal
