@@ -3,7 +3,7 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProjectGuid>{51471B65-879A-4E57-9F71-B641019BDB3F}</ProjectGuid>
+    <ProjectGuid>{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <OutputPath>bin</OutputPath>
@@ -21,7 +21,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>DifferentKarmaConfigNameTests</RootNamespace>
+    <RootNamespace>NoKarmaTestAdapterSettings</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
@@ -31,9 +31,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>64226</DevelopmentServerPort>
+          <DevelopmentServerPort>58170</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:64226/</IISUrl>
+          <IISUrl>http://localhost:58170/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
@@ -52,50 +52,35 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="karma.conf.src.js" />
-    <Content Include="SecondKarma\karma.conf.src.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Expected.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="KarmaTestAdapter.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="specs\AdderSpec.js">
-      <DependentUpon>AdderSpec.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Adder.js">
-      <DependentUpon>Adder.ts</DependentUpon>
-    </Content>
-    <Content Include="Start.cmd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="SecondKarma\KarmaTestAdapter.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="specs\AdderSpec.js.map">
-      <DependentUpon>AdderSpec.ts</DependentUpon>
-    </Content>
-    <Content Include="src\Adder.js.map">
-      <DependentUpon>Adder.ts</DependentUpon>
-    </Content>
-    <Content Include="tsd.json" />
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="specs\AdderSpec.ts" />
     <TypeScriptCompile Include="src\Adder.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="KarmaInDifferentDirectory\KarmaTestAdapter.json" />
+    <Content Include="karma.conf.js" />
+    <Content Include="specs\AdderSpec.js">
+      <DependentUpon>AdderSpec.ts</DependentUpon>
+    </Content>
+    <Content Include="src\Adder.js">
+      <DependentUpon>Adder.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="KarmaInDifferentProject\KarmaTestAdapter.json" />
+    <Content Include="specs\AdderSpec.js.map">
+      <DependentUpon>AdderSpec.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Adder.js.map">
+      <DependentUpon>Adder.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

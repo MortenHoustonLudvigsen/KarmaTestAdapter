@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineRequireTypescriptTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasmineTypescriptTests", "JasmineTypescriptTests\JasmineTypescriptTests.csproj", "{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoKarmaTestAdapterSettings", "NoKarmaTestAdapterSettings\NoKarmaTestAdapterSettings.csproj", "{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A632FA9A-5CC6-432E-9F49-4808B6A0BFD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E39E37-6FF1-4F38-88A3-D6C97E7183A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
