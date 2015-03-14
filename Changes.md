@@ -6,20 +6,6 @@ permalink: /changes/
 
 ## Version 1.0.1
 
-### Bug fixes
-
-* [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
-
-* [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
-
-* The adapter now works with globally installed modules
-
-### Download
-
-[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.1/KarmaTestAdapter.vsix)
-
-## Version 1.0.0
-
 ### Improved identification of test containers:
 
 * Test containers specify which Karma configuration files to use when running tests.
@@ -41,6 +27,20 @@ permalink: /changes/
 * If there is a `KarmaTestAdapter.json` file in a project, then any `karma.conf.js` file in the same directory is not used as a test container.
 
 * If there is a `KarmaTestAdapter.json` in a project in the current solution, that specifies a Karma configuration file in a different directory or project, then that Karma configuration file is not used as a test container.
+
+### Bug fixes
+
+* [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
+
+* [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
+
+* The adapter now works with globally installed modules
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.1/KarmaTestAdapter.vsix)
+
+## Version 1.0.0
 
 ### This is a complete rewrite of the Karma Test Adapter
 
