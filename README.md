@@ -80,7 +80,7 @@ These are the possible properties (all properties are optional):
 
 # Test containers
 
-Test containers specifies which Karma configuration files to use when running tests.
+Test containers specify which Karma configuration files to use when running tests.
 
 * A project can contain more than one test container.
 
