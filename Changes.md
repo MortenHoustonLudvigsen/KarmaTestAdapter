@@ -3,7 +3,9 @@
 ### Bug fixes
 
 * Fixed: [Can not read KarmaTestAdapter.json if it is encoded with a BOM](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/12).
+
   From now on `KarmaTestAdapter.json` must be encoded in one of the following encodings:
+
   * UTF-8
   * UTF-8 with BOM / Signature
   * UTF-16 Big-Endian with BOM / Signature
