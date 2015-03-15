@@ -25,9 +25,6 @@ This extension integrates [Karma - Spectacular Test Runner for Javascript](http:
 
 * The stack trace of a failed test is shown as a list of function names that link to the relevant line and file. As with the position of of tests, source maps are used to link to the original source.
 
-
-
-
 # Prerequisites
 
 * Install [NodeJS](http://nodejs.org/)
@@ -80,6 +77,14 @@ These are the possible properties (all properties are optional):
 * `LogDirectory` Where the log file should be saved (if LogToFile is true). If this property is not specified the directory in which `KarmaTestAdapter.json` resides is used.
 
 * `config` This property overwrites any configurations from the karma configuration file.
+
+
+`KarmaTestAdapter.json` must be encoded in one of the following encodings:
+
+* UTF-8
+* UTF-8 with BOM / Signature
+* UTF-16 Big-Endian with BOM / Signature
+* UTF-16 Little-Endian with BOM / Signature
 
 # Test containers
 
