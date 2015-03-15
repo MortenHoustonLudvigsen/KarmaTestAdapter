@@ -4,6 +4,17 @@ title: Changes
 permalink: /changes/
 ---
 
+## Version 1.0.2
+
+### Bug fixes
+
+* [Can not read KarmaTestAdapter.json if it is encoded with a BOM](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/12).
+  From now on `KarmaTestAdapter.json` must be encoded in one of the following encodings:
+  * UTF-8
+  * UTF-8 with BOM / Signature
+  * UTF-16 Big-Endian with BOM / Signature
+  * UTF-16 Little-Endian with BOM / Signature
+
 ## Version 1.0.1
 
 ### Improved identification of test containers:
