@@ -3,13 +3,14 @@ GlobalLog.info('starting karma server');
 var path = require('path');
 var Karma = require('./Karma');
 var freePort = require('./FreePort');
+var TextFile = require('./TextFile');
 var argv = require('yargs').argv;
 var extend = require('extend');
 try {
     var karmaConfigFile = path.resolve(argv.karma);
     var config = {};
     if (argv.settings) {
-        var settings = require(path.resolve(argv.settings));
+        var settings = TextFile.readJson(argv.settings);
         if (settings.config) {
             extend(config, settings.config);
         }

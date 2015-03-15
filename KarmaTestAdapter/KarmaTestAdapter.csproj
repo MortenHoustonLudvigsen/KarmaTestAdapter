@@ -80,9 +80,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Ude">
-      <HintPath>..\packages\UDE.CSharp.1.1.0\lib\Ude.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ExceptionExtensions.cs" />

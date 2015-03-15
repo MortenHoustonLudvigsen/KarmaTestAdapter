@@ -14,7 +14,7 @@ namespace KarmaTestAdapter.Helpers
     {
         public static string ReadFileText(string path)
         {
-            return PathUtils.ReadFileText(path, Encoding.UTF8);
+            return PathUtils.ReadFileText(path);
         }
 
         public static T ReadFile<T>(string path, T anonymousTypeObject)

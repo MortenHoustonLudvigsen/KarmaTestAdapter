@@ -78,6 +78,12 @@ These are the possible properties (all properties are optional):
 
 * `config` This property overwrites any configurations from the karma configuration file.
 
+`KarmaTestAdapter.json` must be encoded in one of the following encodings:
+* UTF-8
+* UTF-8 with BOM / Signature
+* UTF-16 Big-Endian with BOM / Signature
+* UTF-16 Little-Endian with BOM / Signature
+
 # Test containers
 
 Test containers specify which Karma configuration files to use when running tests.
