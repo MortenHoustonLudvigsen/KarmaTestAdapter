@@ -2,7 +2,7 @@
 
 ### Bug fixes
 
-* [Can not read KarmaTestAdapter.json if it is encoded with a BOM](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/12).
+* Fixed: [Can not read KarmaTestAdapter.json if it is encoded with a BOM](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/12).
   From now on `KarmaTestAdapter.json` must be encoded in one of the following encodings:
   * UTF-8
   * UTF-8 with BOM / Signature
@@ -35,9 +35,9 @@
 
 ### Bug fixes
 
-* [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
+* Fixed: [The adapter does not work with karma configuration files not called karma.conf.js](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/15).
 
-* [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
+* Fixed: [The format of the URI could not be determined](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/13).
 
 * The adapter now works with globally installed modules
 
