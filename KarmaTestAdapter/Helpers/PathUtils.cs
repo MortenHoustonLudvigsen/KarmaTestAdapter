@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
-using Ude;
 
 namespace KarmaTestAdapter.Helpers
 {
@@ -146,37 +145,12 @@ namespace KarmaTestAdapter.Helpers
             return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         }
 
-        public static string ReadFileText(string path, Encoding defaultEncoding = null)
+        public static string ReadFileText(string path)
         {
-            using (var fs = OpenRead(path))
-            using (var reader = new StreamReader(fs, DetectEncoding(fs, defaultEncoding)))
+            using (var reader = new StreamReader(path, true))
             {
                 return reader.ReadToEnd();
             }
-        }
-
-        private static Encoding DetectEncoding(Stream stream, Encoding defaultEncoding = null)
-        {
-            var encoding = defaultEncoding ?? Encoding.Default;
-            try
-            {
-                var cdet = new CharsetDetector();
-                cdet.Feed(stream);
-                cdet.DataEnd();
-                if (cdet.Charset != null)
-                {
-                    encoding = Encoding.GetEncoding(cdet.Charset);
-                }
-            }
-            catch (Exception)
-            {
-                // Do nothing
-            }
-            finally
-            {
-                stream.Position = 0;
-            }
-            return encoding;
         }
     }
 }

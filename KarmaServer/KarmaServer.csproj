@@ -66,6 +66,8 @@
     <TypeScriptCompile Include="lib\Specs.ts" />
     <TypeScriptCompile Include="lib\StackTrace.ts" />
     <TypeScriptCompile Include="lib\Start.ts" />
+    <TypeScriptCompile Include="lib\TextFile.ts" />
+    <TypeScriptCompile Include="spec\TextFileSpec.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\node\node.d.ts" />
     <TypeScriptCompile Include="typings\q\Q.d.ts" />
@@ -108,6 +110,9 @@
     </Content>
     <Content Include="lib\Specs.js">
       <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+    <Content Include="lib\StackTrace.js">
+      <DependentUpon>StackTrace.ts</DependentUpon>
     </Content>
     <Content Include="lib\Start.js">
       <DependentUpon>Start.ts</DependentUpon>
@@ -179,10 +184,26 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="lib\TextFile.js">
+      <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\StackTrace.js.map">
+      <DependentUpon>StackTrace.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="spec\support\jasmine.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\TextFile.js.map">
+      <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>

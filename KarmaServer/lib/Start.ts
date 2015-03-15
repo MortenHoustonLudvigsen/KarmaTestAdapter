@@ -5,6 +5,7 @@ GlobalLog.info('starting karma server');
 import path = require('path');
 import Karma = require('./Karma');
 import freePort = require('./FreePort');
+import TextFile = require('./TextFile');
 var argv = require('yargs').argv;
 var extend = require('extend');
 
@@ -14,7 +15,7 @@ try {
     var config: any = {};
 
     if (argv.settings) {
-        var settings = require(path.resolve(argv.settings));
+        var settings = TextFile.readJson(argv.settings);
         if (settings.config) {
             extend(config, settings.config);
         }

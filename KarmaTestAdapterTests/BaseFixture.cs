@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,22 +32,28 @@ namespace KarmaTestAdapterTests
         protected DateTime _startTime = DateTime.Now;
         protected double Elapsed { get { return (DateTime.Now - _startTime).TotalMilliseconds; } }
 
-        protected string TestDir
+        protected static string TestDir
         {
-            get { return Path.GetFullPath(TestContext.CurrentContext.TestDirectory); }
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                var uri = new UriBuilder(codeBase);
+                var path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetFullPath(Path.GetDirectoryName(path));
+            }
         }
 
-        protected string ProjectDir
+        protected static string ProjectDir
         {
             get { return Path.GetFullPath(Path.Combine(TestDir, @"..\..")); }
         }
 
-        protected string SolutionDir
+        protected static string SolutionDir
         {
             get { return Path.GetDirectoryName(ProjectDir); }
         }
 
-        protected string TestProjectsDir
+        protected static string TestProjectsDir
         {
             get { return Path.Combine(SolutionDir, "TestProjects"); }
         }
