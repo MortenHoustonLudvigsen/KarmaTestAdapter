@@ -29,4 +29,4 @@ var KarmaTestAdapter;
     }
     KarmaTestAdapter.wrapFunctions = wrapFunctions;
 })(KarmaTestAdapter || (KarmaTestAdapter = {}));
-//# sourceMappingURL=Instumentation.js.map
+//# sourceMappingURL=instumentation.js.map

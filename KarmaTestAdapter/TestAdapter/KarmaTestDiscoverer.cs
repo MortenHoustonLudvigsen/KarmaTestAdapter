@@ -54,9 +54,9 @@ namespace KarmaTestAdapter.TestAdapter
         {
             logger = new KarmaLogger(logger, settings.Name, "Discover");
             var tests = new ConcurrentBag<Guid>();
-            logger.Info("Discovering tests");
             if (settings.Port > 0)
             {
+                logger.Info("Start");
                 var discoverCommand = new KarmaDiscoverCommand(settings.Port);
                 await discoverCommand.Run(spec =>
                 {
@@ -65,6 +65,7 @@ namespace KarmaTestAdapter.TestAdapter
                     discoverySink.SendTestCase(testCase);
                 });
                 await new KarmaRequestRunCommand(settings.Port).Run(tests);
+                logger.Info("Complete");
             }
             else
             {

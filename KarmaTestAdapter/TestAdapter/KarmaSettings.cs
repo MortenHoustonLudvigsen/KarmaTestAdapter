@@ -31,13 +31,10 @@ namespace KarmaTestAdapter.TestAdapter
                     _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
                     HasSettingsFile = true;
                 }
-                else if (PathUtils.PathHasFileName(configFile, Globals.KarmaConfigFilename) && fileExists(configFile))
-                {
-                    _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
-                }
                 else
                 {
-                    _validator.Validate(false, "Source is not a settings file or a Karma configuration file: {0}", PathUtils.GetRelativePath(baseDirectory, configFile));
+                    KarmaConfigFile = GetFullPath(configFile);
+                    _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
                 }
 
                 if (AreValid)

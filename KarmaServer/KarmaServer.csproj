@@ -56,10 +56,10 @@
     <TypeScriptCompile Include="lib\GlobalLog.ts" />
     <TypeScriptCompile Include="lib\Index.ts" />
     <TypeScriptCompile Include="lib\JsonServer.ts" />
-    <TypeScriptCompile Include="lib\karma-vs-jasmine\Adapter.ts" />
-    <TypeScriptCompile Include="lib\karma-vs-jasmine\Boot.ts" />
-    <TypeScriptCompile Include="lib\karma-vs-jasmine\Init.ts" />
-    <TypeScriptCompile Include="lib\karma-vs-jasmine\Instumentation.ts" />
+    <TypeScriptCompile Include="lib\karma-jasmine\lib\adapter.ts" />
+    <TypeScriptCompile Include="lib\karma-jasmine\lib\boot.ts" />
+    <TypeScriptCompile Include="lib\karma-jasmine\lib\index.ts" />
+    <TypeScriptCompile Include="lib\karma-jasmine\lib\instumentation.ts" />
     <TypeScriptCompile Include="lib\Karma.ts" />
     <TypeScriptCompile Include="lib\Reporter.ts" />
     <TypeScriptCompile Include="lib\Server.ts" />
@@ -87,17 +87,17 @@
     <Content Include="lib\JsonServer.js">
       <DependentUpon>JsonServer.ts</DependentUpon>
     </Content>
-    <Content Include="lib\karma-vs-jasmine\Adapter.js">
-      <DependentUpon>Adapter.ts</DependentUpon>
+    <Content Include="lib\karma-jasmine\lib\adapter.js">
+      <DependentUpon>adapter.ts</DependentUpon>
     </Content>
-    <Content Include="lib\karma-vs-jasmine\Boot.js">
-      <DependentUpon>Boot.ts</DependentUpon>
+    <Content Include="lib\karma-jasmine\lib\boot.js">
+      <DependentUpon>boot.ts</DependentUpon>
     </Content>
-    <Content Include="lib\karma-vs-jasmine\Init.js">
-      <DependentUpon>Init.ts</DependentUpon>
+    <Content Include="lib\karma-jasmine\lib\index.js">
+      <DependentUpon>index.ts</DependentUpon>
     </Content>
-    <Content Include="lib\karma-vs-jasmine\Instumentation.js">
-      <DependentUpon>Instumentation.ts</DependentUpon>
+    <Content Include="lib\karma-jasmine\lib\instumentation.js">
+      <DependentUpon>instumentation.ts</DependentUpon>
     </Content>
     <Content Include="lib\Karma.js">
       <DependentUpon>Karma.ts</DependentUpon>
@@ -136,26 +136,6 @@
   <ItemGroup>
     <Content Include="lib\JsonServer.js.map">
       <DependentUpon>JsonServer.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\karma-vs-jasmine\Adapter.js.map">
-      <DependentUpon>Adapter.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\karma-vs-jasmine\Boot.js.map">
-      <DependentUpon>Boot.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\karma-vs-jasmine\Init.js.map">
-      <DependentUpon>Init.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\karma-vs-jasmine\Instumentation.js.map">
-      <DependentUpon>Instumentation.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +183,26 @@
   <ItemGroup>
     <Content Include="lib\TextFile.js.map">
       <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-jasmine\lib\adapter.js.map">
+      <DependentUpon>adapter.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-jasmine\lib\boot.js.map">
+      <DependentUpon>boot.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-jasmine\lib\instumentation.js.map">
+      <DependentUpon>instumentation.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\karma-jasmine\lib\index.js.map">
+      <DependentUpon>index.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

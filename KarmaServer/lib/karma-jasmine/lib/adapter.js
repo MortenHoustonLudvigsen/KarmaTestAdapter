@@ -259,7 +259,6 @@ var KarmaTestAdapter;
         };
         return KarmaReporter;
     })();
-    KarmaTestAdapter.KarmaReporter = KarmaReporter;
     /**
      * Extract grep option from karma config
      * @param {[Array|string]} clientArguments The karma client arguments
@@ -298,7 +297,6 @@ var KarmaTestAdapter;
             return specFilter.matches(spec.getFullName());
         };
     }
-    KarmaTestAdapter.createSpecFilter = createSpecFilter;
     /**
      * Karma starter function factory.
      *
@@ -313,10 +311,18 @@ var KarmaTestAdapter;
         // This function will be assigned to `window.__karma__.start`:
         return function () {
             jasmineEnv = jasmineEnv || window.jasmine.getEnv();
-            //jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
             jasmineEnv.execute();
         };
     }
-    KarmaTestAdapter.createStartFn = createStartFn;
+    /**
+     * Obtain the Jasmine environment.
+     */
+    var jasmineEnv = window.jasmine.getEnv();
+    /**
+     * Add reporter
+     */
+    jasmineEnv.addReporter(new KarmaReporter(window.__karma__, jasmineEnv));
+    createSpecFilter(window.__karma__.config, jasmineEnv);
+    window.__karma__.start = createStartFn(window.__karma__, jasmineEnv);
 })(KarmaTestAdapter || (KarmaTestAdapter = {}));
-//# sourceMappingURL=Adapter.js.map
+//# sourceMappingURL=adapter.js.map

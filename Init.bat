@@ -38,6 +38,22 @@ echo.
 echo.
 
 echo ====================================================================================
+echo Install npm packages in %SolutionDir%\TestProjects\KarmaRequireJasmine\ui
+echo ------------------------------------------------------------------------------------
+cd %SolutionDir%\TestProjects\KarmaRequireJasmine\ui
+call npm install
+echo.
+echo.
+
+echo ====================================================================================
+echo Install bower packages in %SolutionDir%\TestProjects\KarmaRequireJasmine\ui
+echo ------------------------------------------------------------------------------------
+cd %SolutionDir%\TestProjects\KarmaRequireJasmine\ui
+call bower install
+echo.
+echo.
+
+echo ====================================================================================
 echo Create debug settings
 echo ------------------------------------------------------------------------------------
 cd %SolutionDir%\KarmaTestAdapter

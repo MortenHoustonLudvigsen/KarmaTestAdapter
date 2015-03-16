@@ -77,7 +77,7 @@ var Server = (function (_super) {
         this.events.notify('Karma run start');
     };
     Server.prototype.karmaEnd = function (specs) {
-        this.logger.info('Karma run complete');
+        this.logger.info('Karma run complete:\n', specs);
         this.events.notify('Karma run complete');
         this.specs.resolve(specs);
     };

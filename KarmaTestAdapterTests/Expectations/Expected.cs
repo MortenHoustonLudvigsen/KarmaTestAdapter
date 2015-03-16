@@ -53,11 +53,24 @@ namespace KarmaTestAdapterTests.Expectations
                 }
                 Globals.IsTest = true;
                 PopulateKarmaSpecs().Wait();
-                IsValid = true;
+            }
+            catch (AggregateException ex)
+            {
+                var innerException = ex.InnerExceptions.FirstOrDefault();
+                if (innerException != null)
+                {
+                    _validator.Validate(false, string.Format("{0}\n{1}", innerException.Message, innerException.StackTrace));
+                    Logger.Error(innerException);
+                }
+                else
+                {
+                    _validator.Validate(false, string.Format("{0}\n{1}", ex.Message, ex.StackTrace));
+                    Logger.Error(ex);
+                }
             }
             catch (Exception ex)
             {
-                IsValid = false;
+                _validator.Validate(false, string.Format("{0}\n{1}", ex.Message, ex.StackTrace));
                 Logger.Error(ex);
             }
         }
@@ -69,24 +82,36 @@ namespace KarmaTestAdapterTests.Expectations
         public string Directory { get; set; }
         public string Name { get; set; }
         public IEnumerable<KarmaSpec> KarmaSpecs { get; private set; }
-        public bool IsValid { get; private set; }
+        public bool IsValid { get { return _validator.IsValid; } }
+        public string InvalidReason { get { return _validator.InvalidReason; } }
         public List<string> KarmaOutput { get; private set; }
+
+        private Validator _validator = new Validator();
 
         public async Task PopulateKarmaSpecs()
         {
             var karmaSpecs = new List<KarmaSpec>();
             var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
-            var server = new KarmaServer(settings, Logger);
-            server.OutputReceived += line => Logger.Info("[OUT] {0}", line);
-            server.ErrorReceived += line => Logger.Info("[ERR] {0}", line);
-            var port = await server.StartServer(60000);
-            var stopCommand = new KarmaStopCommand(port);
-            var discoverCommand = new KarmaDiscoverCommand(port);
-            await discoverCommand.Run(spec => karmaSpecs.Add(spec));
-            await stopCommand.Run();
-            await server.Finished;
-            KarmaSpecs = karmaSpecs;
-            Logger.Info("{0} specs discovered", KarmaSpecs.Count());
+            if (settings.AreValid)
+            {
+                var server = new KarmaServer(settings, Logger);
+                server.OutputReceived += line => Logger.Info("[OUT] {0}", line);
+                server.ErrorReceived += line => Logger.Info("[ERR] {0}", line);
+                server.OutputReceived += line => KarmaOutput.Add(line);
+                server.ErrorReceived += line => KarmaOutput.Add(line);
+                var port = await server.StartServer(60000);
+                var stopCommand = new KarmaStopCommand(port);
+                var discoverCommand = new KarmaDiscoverCommand(port);
+                await discoverCommand.Run(spec => karmaSpecs.Add(spec));
+                await stopCommand.Run();
+                await server.Finished;
+                KarmaSpecs = karmaSpecs;
+                Logger.Info("{0} specs discovered", KarmaSpecs.Count());
+            }
+            else
+            {
+                _validator.Validate(false, settings.InvalidReason);
+            }
         }
 
         public ProjectTestCase GetProjectTestCase()

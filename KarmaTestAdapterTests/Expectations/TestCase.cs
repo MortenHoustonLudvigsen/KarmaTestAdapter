@@ -12,6 +12,7 @@ namespace KarmaTestAdapterTests.Expectations
         where TTestCase : TestCase<TTestCase>
     {
         public abstract bool IsValid { get; }
+        public abstract string InvalidReason { get; }
         public abstract string Output { get; }
         public abstract string ProjectName { get; }
 
@@ -31,6 +32,7 @@ namespace KarmaTestAdapterTests.Expectations
 
         public Expected Expected { get; private set; }
         public override bool IsValid { get { return Expected.IsValid; } }
+        public override string InvalidReason { get { return Expected.InvalidReason; } }
         public override string Output { get { return string.Join(Environment.NewLine, Expected.KarmaOutput); } }
         public override string ProjectName { get { return Expected.Name; } }
 
@@ -59,6 +61,11 @@ namespace KarmaTestAdapterTests.Expectations
         public override bool IsValid
         {
             get { return Spec != null && Spec.IsValid || Spec == null && KarmaSpec != null; }
+        }
+
+        public override string InvalidReason
+        {
+            get { return Spec != null ? Spec.InvalidReason : ""; }
         }
 
         public override string Output
@@ -97,6 +104,11 @@ namespace KarmaTestAdapterTests.Expectations
         public override bool IsValid
         {
             get { return Spec != null && Spec.IsValid || Spec == null && KarmaSpec != null; }
+        }
+
+        public override string InvalidReason
+        {
+            get { return Spec != null ? Spec.InvalidReason:""; }
         }
 
         public override string Output

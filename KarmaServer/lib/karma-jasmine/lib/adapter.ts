@@ -180,7 +180,7 @@ module KarmaTestAdapter {
     /**
      * Very simple reporter for Jasmine.
      */
-    export class KarmaReporter {
+    class KarmaReporter {
         constructor(private karma, private jasmineEnv) {
         }
 
@@ -368,7 +368,7 @@ module KarmaTestAdapter {
      * @param {Object} config The karma config
      * @param {Object} jasmineEnv jasmine environment object
      */
-    export function createSpecFilter(config, jasmineEnv) {
+    function createSpecFilter(config, jasmineEnv) {
         var specFilter = new KarmaSpecFilter({
             filterString: function () {
                 return getGrepOption(config.args);
@@ -390,13 +390,24 @@ module KarmaTestAdapter {
      * @param  {Object}   [jasmineEnv] Optional Jasmine environment for testing.
      * @return {Function}              Karma starter function.
      */
-    export function createStartFn(karma, jasmineEnv?) {
+    function createStartFn(karma, jasmineEnv?) {
         // This function will be assigned to `window.__karma__.start`:
         return function () {
             jasmineEnv = jasmineEnv || window.jasmine.getEnv();
-
-            //jasmineEnv.addReporter(new KarmaReporter(karma, jasmineEnv));
             jasmineEnv.execute();
         };
     }
+
+    /**
+     * Obtain the Jasmine environment.
+     */
+    var jasmineEnv = window.jasmine.getEnv();
+
+    /**
+     * Add reporter
+     */
+    jasmineEnv.addReporter(new KarmaReporter(window.__karma__, jasmineEnv));
+
+    createSpecFilter(window.__karma__.config, jasmineEnv);
+    window.__karma__.start = createStartFn(window.__karma__, jasmineEnv);
 }

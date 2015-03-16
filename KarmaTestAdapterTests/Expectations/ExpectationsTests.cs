@@ -53,7 +53,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetProjectShouldBeValidData")]
         public void ProjectShouldBeValid(ProjectTestCase testCase)
         {
-            Assert.That(testCase.IsValid, testCase.Output);
+            Assert.That(testCase.IsValid, testCase.InvalidReason);
             Logger.Info(testCase.Output);
         }
 
@@ -104,7 +104,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveKarmaSpecData")]
         public void ShouldHaveKarmaSpec(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec, Is.Not.Null);
+            Assert.That(testCase.KarmaSpec, Is.Not.Null, "Karma spec missing");
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveKarmaSpecData()
@@ -200,7 +200,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveOutputData")]
         public void ShouldHaveOutput(SpecResultTestCase testCase)
         {
-            Assert.That(testCase.KarmaResult.Output, Is.EqualTo(testCase.Spec.Output));
+            Assert.That(testCase.KarmaResult.Output, Is.StringMatching(testCase.Spec.Output));
         }
 
         private IEnumerable<SpecResultTestCase> GetShouldHaveOutputData()

@@ -40,7 +40,7 @@ class Server extends JsonServer.Server {
     }
 
     karmaEnd(specs: Specs.Spec[]): void {
-        this.logger.info('Karma run complete');
+        this.logger.info('Karma run complete:\n', specs);
         this.events.notify('Karma run complete');
         this.specs.resolve(specs);
     }

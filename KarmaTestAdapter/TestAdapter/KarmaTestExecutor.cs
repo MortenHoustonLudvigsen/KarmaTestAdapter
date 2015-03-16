@@ -47,11 +47,12 @@ namespace KarmaTestAdapter.TestAdapter
         private async Task RunTests(KarmaSourceSettings settings, IKarmaLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             logger = new KarmaLogger(logger, settings.Name, "Run");
-            logger.Info("Getting test results");
             if (settings.Port > 0)
             {
+                logger.Info("Start");
                 var discoverCommand = new KarmaDiscoverCommand(settings.Port);
                 await discoverCommand.Run(spec => RunTest(settings, logger, runContext, frameworkHandle, spec));
+                logger.Info("Complete");
             }
             else
             {

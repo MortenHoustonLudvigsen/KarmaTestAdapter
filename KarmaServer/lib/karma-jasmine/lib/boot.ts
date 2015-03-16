@@ -29,11 +29,6 @@ module KarmaTestAdapter {
     var jasmineInterface = jasmineRequire.interface(jasmine, jasmineEnv);
 
     /**
-     * Add reporter
-     */
-    jasmineEnv.addReporter(new KarmaReporter(window.__karma__, jasmineEnv));
-
-    /**
      * Setting up timing functions to be able to be overridden.
      * Certain browsers (Safari, IE 8, PhantomJS) require this hack.
      */
@@ -53,7 +48,4 @@ module KarmaTestAdapter {
             window[property] = jasmineInterface[property];
         }
     }
-
-    createSpecFilter(window.__karma__.config, jasmineEnv);
-    window.__karma__.start = createStartFn(window.__karma__, jasmineEnv);
 }
