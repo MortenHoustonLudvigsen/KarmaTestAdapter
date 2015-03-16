@@ -18,7 +18,7 @@ try {
     extend(config, {
         reporters: ['vs'],
         colors: false,
-        singleRun: false,
+        singleRun: argv.singleRun === 'true',
         autoWatch: true,
         loggers: GlobalLog.appenders
     });
