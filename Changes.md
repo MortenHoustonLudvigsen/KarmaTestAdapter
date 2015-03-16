@@ -4,6 +4,16 @@ title: Changes
 permalink: /changes/
 ---
 
+## Version 1.0.3
+
+### Bug fixes
+
+* Fixed: [The adapter does not work if both karma-jasmine and karma-jasmine-matchers are used ](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/20).
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.3/KarmaTestAdapter.vsix)
+
 ## Version 1.0.2
 
 ### Bug fixes
@@ -16,6 +26,10 @@ permalink: /changes/
   * UTF-8 with BOM / Signature
   * UTF-16 Big-Endian with BOM / Signature
   * UTF-16 Little-Endian with BOM / Signature
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.2/KarmaTestAdapter.vsix)
 
 ## Version 1.0.1
 
