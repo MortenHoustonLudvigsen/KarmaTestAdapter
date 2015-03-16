@@ -1,0 +1,16 @@
+{
+  "name": "KarmaRequireJasmine",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "jquery-ui": "1.11.1",
+    "jquery": "2.1.1",    
+    "components-bootstrap": "~3.1.1",
+    "requirejs": "~2.1.11",
+    "requirejs-text": "~2.0.10",
+    "require-css": "~0.1.5",
+    "knockout": "~3.2.0",
+    "modernizr": "~2.8.3",
+    "q": "~2.0.2"
+  }
+}

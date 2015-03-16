@@ -1,0 +1,12 @@
+﻿{
+    "$schema": "http://MortenHoustonLudvigsen.github.io/KarmaTestAdapter/KarmaTestAdapter.schema.json",
+    "KarmaConfigFile": "karma.conf.src.js",
+    "Disabled": false,
+    "LogToFile": true,
+    "LogDirectory": "TestResults/Karma",
+    "config": {
+        "browsers": [
+            "Chrome" 
+        ]
+    }
+}
