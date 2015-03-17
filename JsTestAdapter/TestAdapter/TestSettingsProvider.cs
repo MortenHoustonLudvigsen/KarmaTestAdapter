@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using JsTestAdapter.Helpers;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
@@ -9,15 +10,16 @@ using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace JsTestAdapter.TestAdapter.TestSettings
+namespace JsTestAdapter.TestAdapter
 {
-    public class TestSettingsProvider<TTestSettings> : IRunSettingsService, ISettingsProvider
-        where TTestSettings : TestSettings<TTestSettings>, new()
+    public abstract class TestSettingsProvider : IRunSettingsService, ISettingsProvider
     {
         public TestSettingsProvider()
         {
-            Settings = new TTestSettings();
+            Settings = CreateTestSettings();
         }
+
+        protected abstract TestSettings CreateTestSettings();
 
         public IXPathNavigable AddRunSettings(IXPathNavigable inputRunSettingDocument, IRunSettingsConfigurationInfo configurationInfo, ILogger log)
         {
@@ -39,7 +41,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
         }
 
         public string Name { get { return Settings.Name; } }
-        public TTestSettings Settings { get; private set; }
+        public TestSettings Settings { get; private set; }
 
         public void Load(XmlReader reader)
         {
@@ -47,7 +49,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
 
             if (reader.Read() && reader.Name.Equals(Name))
             {
-                Settings = TestSettings<TTestSettings>.Deserialize(reader);
+                Settings = (TestSettings)XmlSerialization.Deserialize(Settings.GetType(), reader);
             }
         }
     }

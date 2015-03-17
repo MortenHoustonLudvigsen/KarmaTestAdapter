@@ -102,14 +102,6 @@ namespace JsTestAdapter.Helpers
             }
         }
 
-        public static IEnumerable<string> GetSources(this IVsProject project, Func<string, bool> isSource)
-        {
-            return project
-                .GetProjectItems()
-                .Where(f => isSource(f))
-                .Where(f => File.Exists(f));
-        }
-
         public static bool HasFile(this IVsProject project, string file)
         {
             int found;

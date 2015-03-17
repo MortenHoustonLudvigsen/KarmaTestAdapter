@@ -89,17 +89,13 @@
     <Compile Include="Logging\KarmaServerTestLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAdapter\KarmaSettings.cs" />
+    <Compile Include="TestAdapter\KarmaTestAdapterInfo.cs" />
     <Compile Include="TestAdapter\KarmaTestContainer.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerBase.cs" />
     <Compile Include="TestAdapter\KarmaTestContainerDiscoverer.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerList.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerSnapshot.cs" />
     <Compile Include="TestAdapter\KarmaTestContainerSource.cs" />
-    <Compile Include="TestAdapter\KarmaTestDiscoverer.cs" />
-    <Compile Include="TestAdapter\KarmaTestExecutor.cs" />
-    <Compile Include="TestAdapter\TestSettings\KarmaTestSettings.cs" />
-    <Compile Include="TestAdapter\TestSettings\KarmaTestSettingsProvider.cs" />
-    <Compile Include="TestAdapter\TestSettings\RunSettingsExtensions.cs" />
+    <Compile Include="TestAdapter\KarmaTestRunner.cs" />
+    <Compile Include="TestAdapter\KarmaTestSettings.cs" />
+    <Compile Include="TestAdapter\KarmaTestSettingsProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DebugSettings.xml" />

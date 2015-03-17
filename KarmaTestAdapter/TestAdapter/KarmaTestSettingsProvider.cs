@@ -1,4 +1,4 @@
-﻿using JsTestAdapter.TestAdapter.TestSettings;
+﻿using JsTestAdapter.TestAdapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
@@ -9,13 +9,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.TestAdapter.TestSettings
+namespace KarmaTestAdapter.TestAdapter
 {
     [Export(typeof(ISettingsProvider))]
     [Export(typeof(IRunSettingsService))]
     [Export(typeof(KarmaTestSettingsProvider))]
     [SettingsName(KarmaTestSettings.SettingsName)]
-    public class KarmaTestSettingsProvider : TestSettingsProvider<KarmaTestSettings>
+    public class KarmaTestSettingsProvider : TestSettingsProvider
     {
+        protected override TestSettings CreateTestSettings()
+        {
+            return new KarmaTestSettings();
+        }
     }
 }

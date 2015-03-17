@@ -8,21 +8,21 @@ using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace JsTestAdapter.TestAdapter.TestSettings
+namespace JsTestAdapter.TestAdapter
 {
     public class SourceSettingsPersister
     {
-        public static SourceSettings Load(string settingsFileDirectory, string source)
+        public static TestSourceSettings Load(string settingsFileDirectory, string source)
         {
             return new SourceSettingsPersister(settingsFileDirectory).Load(source);
         }
 
-        public static void Save(string settingsFileDirectory, SourceSettings sourceSettings)
+        public static void Save(string settingsFileDirectory, TestSourceSettings sourceSettings)
         {
             new SourceSettingsPersister(settingsFileDirectory).Save(sourceSettings);
         }
 
-        public static void DeleteSettingsFile(string settingsFileDirectory, SourceSettings sourceSettings)
+        public static void DeleteSettingsFile(string settingsFileDirectory, TestSourceSettings sourceSettings)
         {
             new SourceSettingsPersister(settingsFileDirectory).DeleteSettingsFile(sourceSettings);
         }
@@ -32,7 +32,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             _settingsFileDirectory = settingsFileDirectory;
         }
 
-        private static XmlSerializer _serializer = new XmlSerializer(typeof(SourceSettings));
+        private static XmlSerializer _serializer = new XmlSerializer(typeof(TestSourceSettings));
         private static XmlSerializerNamespaces _serializerNamespaces = new XmlSerializerNamespaces(new[] { new XmlQualifiedName("", "") });
 
         private string _settingsFileDirectory;
@@ -41,7 +41,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             return Path.Combine(_settingsFileDirectory, Sha1Utils.GetHash(source.ToLowerInvariant()) + ".xml");
         }
 
-        private SourceSettings Load(string source)
+        private TestSourceSettings Load(string source)
         {
             var i = 0;
             while (true)
@@ -50,7 +50,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
                 {
                     using (var reader = XmlReader.Create(SettingsFilePath(source)))
                     {
-                        return _serializer.Deserialize(reader) as SourceSettings;
+                        return _serializer.Deserialize(reader) as TestSourceSettings;
                     }
                 }
                 catch (Exception)
@@ -65,7 +65,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             }
         }
 
-        private void Save(SourceSettings sourceSettings)
+        private void Save(TestSourceSettings sourceSettings)
         {
             var saved = false;
             var i = 0;
@@ -91,7 +91,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             }
         }
 
-        private void DeleteSettingsFile(SourceSettings sourceSettings)
+        private void DeleteSettingsFile(TestSourceSettings sourceSettings)
         {
             try
             {

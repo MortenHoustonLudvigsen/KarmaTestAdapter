@@ -10,7 +10,7 @@ namespace JsTestAdapter.Logging
 {
     public static class TestLoggerExtensions
     {
-        public static TestLogLevel GetKarmaLogLevel(this TestMessageLevel level)
+        public static TestLogLevel GetTestLogLevel(this TestMessageLevel level)
         {
             switch (level)
             {
@@ -25,7 +25,7 @@ namespace JsTestAdapter.Logging
             }
         }
 
-        public static TestLogLevel GetKarmaLogLevel(this MessageLevel level)
+        public static TestLogLevel GetTestLogLevel(this MessageLevel level)
         {
             switch (level)
             {
@@ -62,12 +62,12 @@ namespace JsTestAdapter.Logging
 
         public static string FormatMessage(this ITestLogger logger, TestMessageLevel level, string message)
         {
-            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Context, message);
+            return logger.FormatMessage(level.GetTestLogLevel(), logger.Context, message);
         }
 
         public static string FormatMessage(this ITestLogger logger, MessageLevel level, string message)
         {
-            return logger.FormatMessage(level.GetKarmaLogLevel(), logger.Context, message);
+            return logger.FormatMessage(level.GetTestLogLevel(), logger.Context, message);
         }
 
         public static void Info(this ITestLogger logger, string message)

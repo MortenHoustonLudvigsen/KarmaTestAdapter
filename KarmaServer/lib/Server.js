@@ -48,7 +48,7 @@ var Server = (function (_super) {
         });
         this.requestRun = this.addCommand('requestRun', function (command, message, connection) {
             _this.events.notify({
-                event: 'Karma run requested',
+                event: 'Test run requested',
                 tests: message.tests
             });
             return Q.resolve(undefined);
@@ -62,23 +62,17 @@ var Server = (function (_super) {
         this.logger.error(error);
     };
     Server.prototype.onClose = function (had_error, connection) {
-        //try {
-        //    throw new Error();
-        //} catch (e) {
-        //    this.logger.info('Connection ' + connection.name + ' closed: ' + (had_error ? "Had error" : "Without error") + '\n' + e.stack.replace(/^[^\n]*\n/, ''));
-        //}
-        //this.logger.info('Connection ' + connection.name + ' closed: ' + (had_error ? "Had error" : "Without error"));
     };
     Server.prototype.karmaStart = function () {
         if (this.specs.promise.isFulfilled()) {
             this.specs = Q.defer();
         }
-        this.logger.info('Karma run start');
-        this.events.notify('Karma run start');
+        this.logger.info('Test run start');
+        this.events.notify('Test run start');
     };
     Server.prototype.karmaEnd = function (specs) {
-        this.logger.info('Karma run complete:\n', specs);
-        this.events.notify('Karma run complete');
+        this.logger.info('Test run complete');
+        this.events.notify('Test run complete');
         this.specs.resolve(specs);
     };
     Server.$inject = ['config', 'emitter', 'logger'];

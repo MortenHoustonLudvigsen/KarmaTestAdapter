@@ -5,10 +5,10 @@ using System.Web;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace JsTestAdapter.TestAdapter.TestSettings
+namespace JsTestAdapter.TestAdapter
 {
     [XmlType("Source")]
-    public class SourceSettings
+    public class TestSourceSettings
     {
         [XmlAttribute]
         public string Name { get; set; }

@@ -8,32 +8,28 @@ using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace JsTestAdapter.TestAdapter.TestSettings
+namespace JsTestAdapter.TestAdapter
 {
-    public abstract class TestSettings<TTestSettings> : TestRunSettings
-        where TTestSettings : TestSettings<TTestSettings>, new()
+    public abstract class TestSettings : TestRunSettings
     {
         public TestSettings(string settingsName)
             : base(settingsName)
         {
-            Sources = new List<SourceSettings>();
+            Sources = new List<TestSourceSettings>();
         }
 
-        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(TTestSettings));
-        private static readonly XmlSerializerNamespaces _serializerNamespaces = new XmlSerializerNamespaces(new[] { new XmlQualifiedName("", "") });
+        public List<TestSourceSettings> Sources { get; set; }
 
-        public List<SourceSettings> Sources { get; set; }
-
-        public SourceSettings AddSource(string name, string source)
+        public TestSourceSettings AddSource(string name, string source)
         {
-            return AddSource(new SourceSettings
+            return AddSource(new TestSourceSettings
             {
                 Name = name,
                 Source = source
             });
         }
 
-        private SourceSettings AddSource(SourceSettings source)
+        private TestSourceSettings AddSource(TestSourceSettings source)
         {
             if (source != null)
             {
@@ -48,7 +44,7 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             Sources = Sources.Where(s => !s.Source.Equals(source, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
-        public SourceSettings GetSource(string source)
+        public TestSourceSettings GetSource(string source)
         {
             return Sources.FirstOrDefault(s => s.Source.Equals(source, StringComparison.OrdinalIgnoreCase));
         }
@@ -60,18 +56,9 @@ namespace JsTestAdapter.TestAdapter.TestSettings
             return document.DocumentElement;
         }
 
-        public static TTestSettings Deserialize(XmlReader reader)
-        {
-            return _serializer.Deserialize(reader) as TTestSettings;
-        }
-
         public string Serialize()
         {
-            using (var writer = new StringWriter())
-            {
-                _serializer.Serialize(writer, this, _serializerNamespaces);
-                return writer.ToString();
-            }
+            return XmlSerialization.Serialize(this);
         }
 
         public override string ToString()

@@ -10,14 +10,9 @@ namespace JsTestAdapter.Logging
 {
     public abstract class TestLoggerBase : ITestLogger, IDisposable
     {
-        private static ulong _nextId = 1;
-
         public TestLoggerBase()
         {
-            Id = _nextId++;
         }
-
-        public ulong Id { get; private set; }
 
         protected void AddContext(string context)
         {
@@ -85,7 +80,6 @@ namespace JsTestAdapter.Logging
         {
             context = context ?? Enumerable.Empty<string>();
             var parts = new object[]{
-                "karma",
                 context.FirstOrDefault(),
                 level.LevelText(),
                 context.Skip(1),
@@ -111,11 +105,6 @@ namespace JsTestAdapter.Logging
 
         public virtual void Dispose()
         {
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{1}({0})", Id, GetType().Name);
         }
     }
 }

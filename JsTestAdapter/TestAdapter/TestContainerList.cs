@@ -1,7 +1,5 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
-using KarmaTestAdapter.Helpers;
-using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
@@ -9,55 +7,26 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.TestAdapter
+namespace JsTestAdapter.TestAdapter
 {
-    public class KarmaTestContainerSourceInfo
+    public class TestContainerList : IEnumerable<TestContainer>, IDisposable
     {
-        public KarmaTestContainerSourceInfo(IVsProject project, string source)
-        {
-            Project = project;
-            source = PathUtils.GetPhysicalPath(source);
-            SourceDirectory = Directory.Exists(source) ? source : Path.GetDirectoryName(source);
-        }
-
-        public IVsProject Project { get; private set; }
-        public string SourceDirectory { get; private set; }
-        public string Source
-        {
-            get
-            {
-                var candidates = new[]{
-                    Path.Combine(SourceDirectory, Globals.SettingsFilename),
-                    Path.Combine(SourceDirectory, Globals.KarmaConfigFilename)
-                };
-                return candidates.FirstOrDefault(f => Project.HasFile(f));
-            }
-        }
-
-        public override string ToString()
-        {
-            return Source;
-        }
-    }
-
-    public class KarmaTestContainerList : IEnumerable<KarmaTestContainer>, IDisposable
-    {
-        public KarmaTestContainerList(KarmaTestContainerDiscoverer discoverer)
+        public TestContainerList(TestContainerDiscoverer discoverer)
         {
             Discoverer = discoverer;
         }
 
-        private List<KarmaTestContainer> _containers = new List<KarmaTestContainer>();
-        public KarmaTestContainerDiscoverer Discoverer { get; private set; }
+        private List<TestContainer> _containers = new List<TestContainer>();
+        public TestContainerDiscoverer Discoverer { get; private set; }
 
-        public void CreateContainer(KarmaTestContainerSourceInfo source)
+        public void CreateContainer(TestContainerSource source)
         {
             try
             {
                 RemoveFromDirectory(source.SourceDirectory);
                 if (!string.IsNullOrWhiteSpace(source.Source))
                 {
-                    _containers.Add(new KarmaTestContainer(this, source.Project, source.Source));
+                    _containers.Add(Discoverer.CreateTestContainer(source));
                 }
                 RemoveDuplicates();
                 Discoverer.RefreshTestContainers();
@@ -68,7 +37,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        public void CreateContainers(IEnumerable<KarmaTestContainerSourceInfo> sources)
+        public void CreateContainers(IEnumerable<TestContainerSource> sources)
         {
             foreach (var source in sources)
             {
@@ -78,7 +47,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void RemoveDuplicates()
         {
-            var containersToRemove = this.Where(c => !c.Settings.HasSettingsFile && this.Any(d => d.Settings.HasSettingsFile && PathUtils.PathsEqual(c.Settings.KarmaConfigFile, d.Settings.KarmaConfigFile))).ToList();
+            var containersToRemove = this.Where(c => this.Any(d => d.IsDuplicate(c))).ToList();
+
             foreach (var container in containersToRemove)
             {
                 Remove(container);
@@ -121,7 +91,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        public void Remove(KarmaTestContainer container)
+        public void Remove(TestContainer container)
         {
             _containers.Remove(container);
             container.Dispose();
@@ -135,7 +105,7 @@ namespace KarmaTestAdapter.TestAdapter
             Discoverer.RefreshTestContainers();
         }
 
-        public IEnumerator<KarmaTestContainer> GetEnumerator()
+        public IEnumerator<TestContainer> GetEnumerator()
         {
             return _containers.GetEnumerator();
         }
@@ -171,7 +141,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        ~KarmaTestContainerList()
+        ~TestContainerList()
         {
             Dispose(false);
         }

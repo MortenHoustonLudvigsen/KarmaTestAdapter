@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.Logging
 {
-    public class KarmaServerTestLogger : TestLogger
+    public class KarmaServerTestLogger : TestServerLogger
     {
         public KarmaServerTestLogger(ITestLogger logger)
-            : base(logger, "Karma")
+            : base(logger)
         {
         }
 
         private static Regex messageRe = new Regex(@"^(INFO|WARN|ERROR|DEBUG)\s*(.*)$");
-        public void Log(string message)
+        public override void Log(string message)
         {
             if (string.IsNullOrWhiteSpace(message))
             {

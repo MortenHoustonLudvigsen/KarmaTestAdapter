@@ -6,17 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.TestAdapter
+namespace JsTestAdapter.TestAdapter
 {
-    public class KarmaTestContainerBase<TDiscoverer> : ITestContainer, IDisposable
-        where TDiscoverer : ITestContainerDiscoverer
+    public class TestContainerBase : ITestContainer, IDisposable
     {
-        public KarmaTestContainerBase(TDiscoverer discoverer, string source)
+        public TestContainerBase(TestContainerDiscoverer discoverer, string source)
             : this(discoverer, source, DateTime.Now)
         {
         }
 
-        public KarmaTestContainerBase(TDiscoverer discoverer, string source, DateTime timeStamp)
+        public TestContainerBase(TestContainerDiscoverer discoverer, string source, DateTime timeStamp)
         {
             Discoverer = discoverer;
             Source = source;
@@ -24,7 +23,7 @@ namespace KarmaTestAdapter.TestAdapter
         }
 
         public DateTime TimeStamp { get; protected set; }
-        public TDiscoverer Discoverer { get; private set; }
+        public TestContainerDiscoverer Discoverer { get; private set; }
 
         #region ITestContainer
 
@@ -37,7 +36,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         public int CompareTo(ITestContainer other)
         {
-            var testContainer = other as KarmaTestContainerBase<TDiscoverer>;
+            var testContainer = other as TestContainerBase;
             if (testContainer == null)
             {
                 return -1;
@@ -59,7 +58,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         public ITestContainer Snapshot()
         {
-            return new KarmaTestContainerSnapshot<TDiscoverer>(this);
+            return new TestContainerSnapshot(this);
         }
 
         #endregion
@@ -88,7 +87,7 @@ namespace KarmaTestAdapter.TestAdapter
             _disposed = true;
         }
 
-        ~KarmaTestContainerBase()
+        ~TestContainerBase()
         {
             Dispose(false);
         }

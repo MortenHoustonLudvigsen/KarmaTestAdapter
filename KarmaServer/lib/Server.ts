@@ -23,25 +23,19 @@ class Server extends JsonServer.Server {
     }
 
     onClose(had_error: boolean, connection: JsonServer.Connection) {
-        //try {
-        //    throw new Error();
-        //} catch (e) {
-        //    this.logger.info('Connection ' + connection.name + ' closed: ' + (had_error ? "Had error" : "Without error") + '\n' + e.stack.replace(/^[^\n]*\n/, ''));
-        //}
-        //this.logger.info('Connection ' + connection.name + ' closed: ' + (had_error ? "Had error" : "Without error"));
     }
 
     karmaStart(): void {
         if (this.specs.promise.isFulfilled()) {
             this.specs = Q.defer<Specs.Spec[]>();
         }
-        this.logger.info('Karma run start');
-        this.events.notify('Karma run start');
+        this.logger.info('Test run start');
+        this.events.notify('Test run start');
     }
 
     karmaEnd(specs: Specs.Spec[]): void {
-        this.logger.info('Karma run complete:\n', specs);
-        this.events.notify('Karma run complete');
+        this.logger.info('Test run complete');
+        this.events.notify('Test run complete');
         this.specs.resolve(specs);
     }
 
@@ -84,7 +78,7 @@ class Server extends JsonServer.Server {
 
     requestRun = this.addCommand('requestRun',(command, message, connection) => {
         this.events.notify({
-            event: 'Karma run requested',
+            event: 'Test run requested',
             tests: message.tests
         });
         return Q.resolve<void>(undefined);

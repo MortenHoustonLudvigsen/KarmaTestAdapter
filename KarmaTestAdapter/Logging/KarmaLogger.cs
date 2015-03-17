@@ -26,6 +26,7 @@ namespace KarmaTestAdapter.Logging
 
         private KarmaLogger(ILogger logger, IMessageLogger messageLogger, bool newGlobalLog)
         {
+            AddContext("Karma");
             if (Globals.Debug)
             {
                 if (!Directory.Exists(Globals.GlobalLogDir))
