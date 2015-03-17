@@ -72,6 +72,10 @@
       <HintPath>Dlls\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -93,6 +97,15 @@
     <Content Include="Dlls\Microsoft.VisualStudio.TestWindow.Interfaces.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ExceptionExtensions.cs" />
+    <Compile Include="Helpers\Json.cs" />
+    <Compile Include="Helpers\PathUtils.cs" />
+    <Compile Include="Helpers\ProjectListener.cs" />
+    <Compile Include="Helpers\Sha1Utils.cs" />
+    <Compile Include="Helpers\SolutionListener.cs" />
+    <Compile Include="Helpers\TaskCompletionSourceExtensions.cs" />
+    <Compile Include="Helpers\Validator.cs" />
+    <Compile Include="Helpers\VSExtensions.cs" />
     <Compile Include="Logging\TestLogger.cs" />
     <Compile Include="Logging\ExtensibilityTestLogger.cs" />
     <Compile Include="Logging\FileTestLogger.cs" />
@@ -101,6 +114,9 @@
     <Compile Include="Logging\TestLoggerExtensions.cs" />
     <Compile Include="Logging\TestLogLevel.cs" />
     <Compile Include="Logging\TestMessageTestLogger.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>

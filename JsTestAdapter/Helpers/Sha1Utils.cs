@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Helpers
+namespace JsTestAdapter.Helpers
 {
     public static class Sha1Utils
     {

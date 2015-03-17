@@ -59,7 +59,7 @@ namespace KarmaTestAdapterTests.PathUtils
                 {
                     writer.Write(Text);
                 }
-                var actual = KarmaTestAdapter.Helpers.PathUtils.ReadFileText(filePath);
+                var actual = JsTestAdapter.Helpers.PathUtils.ReadFileText(filePath);
                 Assert.That(actual, Is.EqualTo(Text));
             }
 

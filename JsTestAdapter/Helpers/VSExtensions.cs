@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.Helpers
+namespace JsTestAdapter.Helpers
 {
     public static class VSExtensions
     {
@@ -102,11 +102,11 @@ namespace KarmaTestAdapter.Helpers
             }
         }
 
-        public static IEnumerable<string> GetSources(this IVsProject project)
+        public static IEnumerable<string> GetSources(this IVsProject project, Func<string, bool> isSource)
         {
             return project
                 .GetProjectItems()
-                .Where(f => PathUtils.IsSettingsFile(f) || PathUtils.IsKarmaConfigFile(f))
+                .Where(f => isSource(f))
                 .Where(f => File.Exists(f));
         }
 

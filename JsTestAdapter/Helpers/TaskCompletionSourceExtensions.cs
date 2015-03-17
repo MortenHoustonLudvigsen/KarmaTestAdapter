@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace KarmaTestAdapter.Helpers
+namespace JsTestAdapter.Helpers
 {
     public static class TaskCompletionSourceExtensions
     {

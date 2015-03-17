@@ -1,5 +1,4 @@
 ﻿using JsTestAdapter.Logging;
-using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Helpers
+namespace JsTestAdapter.Helpers
 {
     public class ProjectFileAddedEventArgs : EventArgs
     {

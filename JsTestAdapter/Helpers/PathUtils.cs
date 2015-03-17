@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Web;
 
-namespace KarmaTestAdapter.Helpers
+namespace JsTestAdapter.Helpers
 {
     public static class PathUtils
     {
@@ -48,16 +48,6 @@ namespace KarmaTestAdapter.Helpers
                 return false;
             }
             return string.Equals(Path.GetFileName(path), fileName, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public static bool IsSettingsFile(string path)
-        {
-            return PathHasFileName(path, Globals.SettingsFilename);
-        }
-
-        public static bool IsKarmaConfigFile(string path)
-        {
-            return PathHasFileName(path, Globals.KarmaConfigFilename);
         }
 
         public static bool IsInDirectory(string path, string directory)

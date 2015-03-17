@@ -1,4 +1,5 @@
-﻿using JsTestAdapter.Logging;
+﻿using JsTestAdapter.Helpers;
+using JsTestAdapter.Logging;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell;
@@ -159,7 +160,7 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnProjectFileAdded(IVsProject project, string file)
         {
             Logger.Debug("Project file added: {0}", file);
-            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
+            if (KarmaPathUtils.IsSettingsFile(file) || KarmaPathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
             {
                 Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, file));
             }
@@ -168,7 +169,7 @@ namespace KarmaTestAdapter.TestAdapter
         private void OnProjectFileRemoved(IVsProject project, string file)
         {
             Logger.Debug("Project file removed: {0}", file);
-            if (PathUtils.IsSettingsFile(file) || PathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
+            if (KarmaPathUtils.IsSettingsFile(file) || KarmaPathUtils.IsKarmaConfigFile(file) || Containers.Any(c => c.HasFile(file)))
             {
                 Containers.CreateContainer(new KarmaTestContainerSourceInfo(project, file));
             }
@@ -233,7 +234,7 @@ namespace KarmaTestAdapter.TestAdapter
         {
             Logger.Debug("Finding sources for {0}", project.GetProjectName());
 
-            var containers = project.GetSources().ToList();
+            var containers = project.GetSources(f => KarmaPathUtils.IsSettingsFile(f) || KarmaPathUtils.IsKarmaConfigFile(f)).ToList();
 
             return from c in containers
                    let s = Path.Combine(Path.GetDirectoryName(c), Globals.SettingsFilename)
