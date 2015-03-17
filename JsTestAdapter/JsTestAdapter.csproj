@@ -163,6 +163,18 @@
     <Compile Include="TestServer\TestServer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="NodeServer\FreePort.js">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+    <Content Include="NodeServer\JsonServer.js">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+    <Content Include="NodeServer\Specs.js">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+    <Content Include="NodeServer\TestServer.js">
+      <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +182,43 @@
       <Project>{65f8ef17-76cf-4f2f-9d3e-55cc1c95d065}</Project>
       <Name>NpmProxy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="NodeServer\FreePort.ts" />
+    <TypeScriptCompile Include="NodeServer\JsonServer.ts" />
+    <TypeScriptCompile Include="NodeServer\Specs.ts" />
+    <TypeScriptCompile Include="NodeServer\TestServer.ts" />
+    <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
+    <TypeScriptCompile Include="typings\node\node.d.ts" />
+    <TypeScriptCompile Include="typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="typings\source-map\source-map.d.ts" />
+    <TypeScriptCompile Include="typings\tsd.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NodeServer\FreePort.js.map">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NodeServer\JsonServer.js.map">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NodeServer\Specs.js.map">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NodeServer\TestServer.js.map">
+      <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
