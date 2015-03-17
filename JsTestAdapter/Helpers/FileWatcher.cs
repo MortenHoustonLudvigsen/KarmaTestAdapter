@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace KarmaTestAdapter.TestAdapter
+namespace JsTestAdapter.Helpers
 {
     public enum FileChangedReason
     {
@@ -27,9 +27,9 @@ namespace KarmaTestAdapter.TestAdapter
         }
     }
 
-    public class KarmaFileWatcher : IDisposable
+    public class FileWatcher : IDisposable
     {
-        public KarmaFileWatcher(string directory, string filter, bool includeSubdirectories = true)
+        public FileWatcher(string directory, string filter, bool includeSubdirectories = true)
         {
             Directory = directory;
             Filter = filter;
@@ -181,7 +181,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        ~KarmaFileWatcher()
+        ~FileWatcher()
         {
             Dispose(false);
         }

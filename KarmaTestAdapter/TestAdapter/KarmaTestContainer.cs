@@ -91,7 +91,7 @@ namespace KarmaTestAdapter.TestAdapter
         public Task KarmaEvents { get; private set; }
         public int Port { get; private set; }
         public string BaseDirectory { get; private set; }
-        public IEnumerable<KarmaFileWatcher> FileWatchers { get; private set; }
+        public IEnumerable<FileWatcher> FileWatchers { get; private set; }
         public IEnumerable<Guid> Tests { get; private set; }
 
         private readonly Validator _validator = new Validator();
@@ -103,13 +103,13 @@ namespace KarmaTestAdapter.TestAdapter
             return PathUtils.PathsEqual(file, Settings.SettingsFile) || PathUtils.PathsEqual(file, Settings.KarmaConfigFile);
         }
 
-        private IEnumerable<KarmaFileWatcher> GetFileWatchers()
+        private IEnumerable<FileWatcher> GetFileWatchers()
         {
             yield return CreateFileWatcher(Settings.SettingsFile);
             yield return CreateFileWatcher(Settings.KarmaConfigFile);
         }
 
-        private KarmaFileWatcher CreateFileWatcher(string file)
+        private FileWatcher CreateFileWatcher(string file)
         {
             if (!string.IsNullOrWhiteSpace(file))
             {
@@ -118,11 +118,11 @@ namespace KarmaTestAdapter.TestAdapter
             return null;
         }
 
-        private KarmaFileWatcher CreateFileWatcher(string directory, string filter, bool includeSubdirectories)
+        private FileWatcher CreateFileWatcher(string directory, string filter, bool includeSubdirectories)
         {
             if (Directory.Exists(directory))
             {
-                var watcher = new KarmaFileWatcher(directory, filter, includeSubdirectories);
+                var watcher = new FileWatcher(directory, filter, includeSubdirectories);
                 watcher.Changed += FileWatcherChanged;
                 Logger.Info(@"Watching {0}", GetRelativePath(watcher.Watching));
                 return watcher;
