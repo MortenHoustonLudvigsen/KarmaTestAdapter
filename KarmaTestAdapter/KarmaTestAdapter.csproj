@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="Globals.cs" />
     <Compile Include="Helpers\KarmaPathUtils.cs" />
-    <Compile Include="Karma\KarmaClient.cs" />
     <Compile Include="Karma\KarmaDiscoverCommand.cs" />
     <Compile Include="Karma\KarmaEvent.cs" />
     <Compile Include="Karma\KarmaEventCommand.cs" />
