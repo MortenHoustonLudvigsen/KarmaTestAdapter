@@ -9,17 +9,14 @@ using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 
-namespace KarmaTestAdapter.TestAdapter
+namespace JsTestAdapter.TestAdapter.TestSettings
 {
-    [Export(typeof(ISettingsProvider))]
-    [Export(typeof(IRunSettingsService))]
-    [Export(typeof(KarmaTestSettingsProvider))]
-    [SettingsName(KarmaTestSettings.SettingsName)]
-    public class KarmaTestSettingsProvider : IRunSettingsService, ISettingsProvider
+    public class TestSettingsProvider<TTestSettings> : IRunSettingsService, ISettingsProvider
+        where TTestSettings : TestSettings<TTestSettings>, new()
     {
-        public KarmaTestSettingsProvider()
+        public TestSettingsProvider()
         {
-            Settings = new KarmaTestSettings();
+            Settings = new TTestSettings();
         }
 
         public IXPathNavigable AddRunSettings(IXPathNavigable inputRunSettingDocument, IRunSettingsConfigurationInfo configurationInfo, ILogger log)
@@ -30,7 +27,7 @@ namespace KarmaTestAdapter.TestAdapter
             var navigator = inputRunSettingDocument.CreateNavigator();
             if (navigator.MoveToChild("RunSettings", ""))
             {
-                if (navigator.MoveToChild(KarmaTestSettings.SettingsName, ""))
+                if (navigator.MoveToChild(Name, ""))
                 {
                     navigator.DeleteSelf();
                 }
@@ -41,16 +38,16 @@ namespace KarmaTestAdapter.TestAdapter
             return navigator;
         }
 
-        public string Name { get { return KarmaTestSettings.SettingsName; } }
-        public KarmaTestSettings Settings { get; private set; }
+        public string Name { get { return Settings.Name; } }
+        public TTestSettings Settings { get; private set; }
 
         public void Load(XmlReader reader)
         {
             ValidateArg.NotNull(reader, "reader");
 
-            if (reader.Read() && reader.Name.Equals(KarmaTestSettings.SettingsName))
+            if (reader.Read() && reader.Name.Equals(Name))
             {
-                Settings = KarmaTestSettings.Deserialize(reader);
+                Settings = TestSettings<TTestSettings>.Deserialize(reader);
             }
         }
     }

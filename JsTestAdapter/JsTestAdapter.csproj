@@ -138,6 +138,10 @@
     <Compile Include="Logging\TestLoggerExtensions.cs" />
     <Compile Include="Logging\TestLogLevel.cs" />
     <Compile Include="Logging\TestMessageTestLogger.cs" />
+    <Compile Include="TestAdapter\TestSettings\TestSettings.cs" />
+    <Compile Include="TestAdapter\TestSettings\TestSettingsProvider.cs" />
+    <Compile Include="TestAdapter\TestSettings\SourceSettings.cs" />
+    <Compile Include="TestAdapter\TestSettings\SourceSettingsPersister.cs" />
     <Compile Include="TestServer\DiscoverCommand.cs" />
     <Compile Include="TestServer\EventCommand.cs" />
     <Compile Include="TestServer\StopCommand.cs" />

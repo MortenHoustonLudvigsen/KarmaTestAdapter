@@ -1,5 +1,6 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
+using JsTestAdapter.TestAdapter.TestSettings;
 using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
@@ -33,7 +34,7 @@ namespace KarmaTestAdapter.TestAdapter
             KarmaLogger = new KarmaServerTestLogger(Logger);
             Logger.Info("Creating KarmaTestContainer for {0}", GetRelativePath(Source));
             Containers = containers;
-            KarmaSourceSettings = Discoverer.TestSettings.AddSource(Name, Source);
+            SourceSettings = Discoverer.TestSettings.AddSource(Name, Source);
             try
             {
                 Settings = new KarmaSettings(Source, f => File.Exists(f), BaseDirectory, Logger);
@@ -64,7 +65,7 @@ namespace KarmaTestAdapter.TestAdapter
             FileWatchers = GetFileWatchers().Where(f => f != null).ToList();
             if (IsValid)
             {
-                KarmaSourceSettings.Save();
+                SourceSettingsPersister.Save(Globals.GlobalLogDir, SourceSettings);
                 StartKarmaServer();
             }
             RefreshContainer("KarmaTestContainer created");
@@ -87,7 +88,7 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaSettings Settings { get; private set; }
         public KarmaServer KarmaServer { get; private set; }
         public EventCommand KarmaEventCommand { get; private set; }
-        public KarmaSourceSettings KarmaSourceSettings { get; private set; }
+        public SourceSettings SourceSettings { get; private set; }
         public Task KarmaEvents { get; private set; }
         public int Port { get; private set; }
         public string BaseDirectory { get; private set; }
@@ -176,7 +177,7 @@ namespace KarmaTestAdapter.TestAdapter
             Logger.Debug("Karma started using port {0}", port);
             KarmaServer.Attempts = 0;
             Port = port;
-            KarmaSourceSettings.Port = port;
+            SourceSettings.Port = port;
             KarmaEventCommand = new EventCommand(port);
             KarmaEvents = KarmaEventCommand.Run(OnKarmaEvent);
             RefreshContainer(string.Format("Karma started for {0}", Name));
@@ -216,7 +217,7 @@ namespace KarmaTestAdapter.TestAdapter
             TimeStamp = DateTime.Now;
             if (IsValid)
             {
-                KarmaSourceSettings.Save();
+                SourceSettingsPersister.Save(Globals.GlobalLogDir, SourceSettings);
             }
             Discoverer.RefreshTestContainers(reason);
         }
@@ -289,7 +290,7 @@ namespace KarmaTestAdapter.TestAdapter
                     FileWatchers = null;
                 }
 
-                KarmaSourceSettings.DeleteSettingsFile();
+                SourceSettingsPersister.DeleteSettingsFile(Globals.GlobalLogDir, SourceSettings);
                 Containers.Remove(this);
             }
 

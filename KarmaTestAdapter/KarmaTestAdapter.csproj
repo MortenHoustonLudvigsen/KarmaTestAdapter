@@ -97,9 +97,9 @@
     <Compile Include="TestAdapter\KarmaTestContainerSource.cs" />
     <Compile Include="TestAdapter\KarmaTestDiscoverer.cs" />
     <Compile Include="TestAdapter\KarmaTestExecutor.cs" />
-    <Compile Include="TestAdapter\KarmaTestSettings.cs" />
-    <Compile Include="TestAdapter\KarmaTestSettingsProvider.cs" />
-    <Compile Include="TestAdapter\RunSettingsExtensions.cs" />
+    <Compile Include="TestAdapter\TestSettings\KarmaTestSettings.cs" />
+    <Compile Include="TestAdapter\TestSettings\KarmaTestSettingsProvider.cs" />
+    <Compile Include="TestAdapter\TestSettings\RunSettingsExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DebugSettings.xml" />

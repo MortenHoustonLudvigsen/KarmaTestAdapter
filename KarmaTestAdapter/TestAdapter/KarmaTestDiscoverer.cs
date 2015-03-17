@@ -1,8 +1,10 @@
 ﻿using JsTestAdapter.Logging;
+using JsTestAdapter.TestAdapter.TestSettings;
 using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
+using KarmaTestAdapter.TestAdapter.TestSettings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -26,7 +28,7 @@ namespace KarmaTestAdapter.TestAdapter
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             foreach (var source in sources)
             {
-                var sourceSettings = GetKarmaSourceSettings(source, testSettings);
+                var sourceSettings = GetSourceSettings(source, testSettings);
                 if (sourceSettings != null)
                 {
                     DiscoverTests(sourceSettings, karmaLogger, discoverySink).Wait();
@@ -38,21 +40,21 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        public static KarmaSourceSettings GetKarmaSourceSettings(string source, KarmaTestSettings testSettings)
+        public static SourceSettings GetSourceSettings(string source, KarmaTestSettings testSettings)
         {
-            KarmaSourceSettings sourceSettings = null;
+            SourceSettings sourceSettings = null;
             if (testSettings != null)
             {
                 sourceSettings = testSettings.GetSource(source);
             }
             if (sourceSettings == null)
             {
-                sourceSettings = KarmaSourceSettings.Load(source);
+                sourceSettings = SourceSettingsPersister.Load(Globals.GlobalLogDir, source);
             }
             return sourceSettings;
         }
 
-        private async Task DiscoverTests(KarmaSourceSettings settings, ITestLogger logger, ITestCaseDiscoverySink discoverySink)
+        private async Task DiscoverTests(SourceSettings settings, ITestLogger logger, ITestCaseDiscoverySink discoverySink)
         {
             logger = new TestLogger(logger, settings.Name, "Discover");
             var tests = new ConcurrentBag<Guid>();
@@ -75,7 +77,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        public static TestCase CreateTestCase(KarmaSourceSettings settings, Spec spec)
+        public static TestCase CreateTestCase(SourceSettings settings, Spec spec)
         {
             var fullyQualifiedName = string.Format("{0} / {1}", settings.Name, spec.UniqueName);
             var testCase = new TestCase(fullyQualifiedName, Globals.ExecutorUri, settings.Source);

@@ -1,7 +1,9 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
+using JsTestAdapter.TestAdapter.TestSettings;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Logging;
+using KarmaTestAdapter.TestAdapter.TestSettings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestWindow.Extensibility;

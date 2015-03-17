@@ -1,8 +1,10 @@
 ﻿using JsTestAdapter.Logging;
+using JsTestAdapter.TestAdapter.TestSettings;
 using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
+using KarmaTestAdapter.TestAdapter.TestSettings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
@@ -29,7 +31,7 @@ namespace KarmaTestAdapter.TestAdapter
 
             foreach (var source in sources)
             {
-                var sourceSettings = KarmaTestDiscoverer.GetKarmaSourceSettings(source, testSettings);
+                var sourceSettings = KarmaTestDiscoverer.GetSourceSettings(source, testSettings);
                 if (sourceSettings != null)
                 {
                     RunTests(sourceSettings, karmaLogger, runContext, frameworkHandle).Wait();
@@ -46,7 +48,7 @@ namespace KarmaTestAdapter.TestAdapter
             RunTests(tests.Select(t => t.Source).Distinct(), runContext, frameworkHandle);
         }
 
-        private async Task RunTests(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        private async Task RunTests(SourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
             logger = new TestLogger(logger, settings.Name, "Run");
             if (settings.Port > 0)
@@ -62,7 +64,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private void RunTest(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, Spec spec)
+        private void RunTest(SourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, Spec spec)
         {
             var testCase = KarmaTestDiscoverer.CreateTestCase(settings, spec);
             var outcome = TestOutcome.None;
