@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.Logging
 {
-    public class KarmaServerLogger : KarmaLogger
+    public class KarmaServerTestLogger : TestLogger
     {
-        public KarmaServerLogger(IKarmaLogger logger)
+        public KarmaServerTestLogger(ITestLogger logger)
             : base(logger, "Karma")
         {
         }

@@ -12,7 +12,7 @@ namespace KarmaTestAdapter.TestAdapter
 {
     public class KarmaSettings
     {
-        public KarmaSettings(string configFile, Func<string, bool> fileExists, string baseDirectory, IKarmaLogger logger)
+        public KarmaSettings(string configFile, Func<string, bool> fileExists, string baseDirectory, ITestLogger logger)
         {
             HasSettingsFile = false;
             Logger = logger;
@@ -115,7 +115,7 @@ namespace KarmaTestAdapter.TestAdapter
         /// The logger
         /// </summary>
         [JsonIgnore]
-        public IKarmaLogger Logger { get; private set; }
+        public ITestLogger Logger { get; private set; }
 
         /// <summary>
         /// The file to log to when LogToFile == true

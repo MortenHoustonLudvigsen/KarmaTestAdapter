@@ -64,15 +64,15 @@ namespace KarmaTestAdapter.Helpers
     {
         private readonly IVsTrackProjectDocuments2 _projectDocTracker;
         private uint _cookie = VSConstants.VSCOOKIE_NIL;
-        private IKarmaLogger Logger;
+        private ITestLogger Logger;
 
 
         [ImportingConstructor]
-        public ProjectListener([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, IKarmaLogger logger)
+        public ProjectListener([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider, ITestLogger logger)
         {
             ValidateArg.NotNull(serviceProvider, "serviceProvider");
             _projectDocTracker = serviceProvider.GetService(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
-            Logger = new KarmaLogger(logger, "ProjectListener");
+            Logger = new TestLogger(logger, "ProjectListener");
         }
 
         public event EventHandler<ProjectFileAddedEventArgs> FileAdded;

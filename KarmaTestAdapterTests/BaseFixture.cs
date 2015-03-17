@@ -15,7 +15,7 @@ namespace KarmaTestAdapterTests
     [TestFixture]
     public abstract class BaseFixture
     {
-        public readonly IKarmaLogger Logger;
+        public readonly ITestLogger Logger;
 
         public BaseFixture()
         {

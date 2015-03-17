@@ -75,7 +75,7 @@ namespace KarmaTestAdapterTests.Expectations
             }
         }
 
-        public IKarmaLogger Logger { get; private set; }
+        public ITestLogger Logger { get; private set; }
         public string KarmaConfig { get; set; }
         public IEnumerable<ExpectedSpec> Specs { get; set; }
         public string BaseDirectory { get; private set; }

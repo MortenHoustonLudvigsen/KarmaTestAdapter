@@ -21,8 +21,8 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            var karmaLogger = new KarmaLogger(frameworkHandle);
-            var runLogger = new KarmaLogger(karmaLogger, "Run");
+            var karmaLogger = new TestLogger(frameworkHandle);
+            var runLogger = new TestLogger(karmaLogger, "Run");
             var testSettings = runContext.RunSettings.GetKarmaTestSettings();
 
             foreach (var source in sources)
@@ -44,9 +44,9 @@ namespace KarmaTestAdapter.TestAdapter
             RunTests(tests.Select(t => t.Source).Distinct(), runContext, frameworkHandle);
         }
 
-        private async Task RunTests(KarmaSourceSettings settings, IKarmaLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
+        private async Task RunTests(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            logger = new KarmaLogger(logger, settings.Name, "Run");
+            logger = new TestLogger(logger, settings.Name, "Run");
             if (settings.Port > 0)
             {
                 logger.Info("Start");
@@ -60,7 +60,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private void RunTest(KarmaSourceSettings settings, IKarmaLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, KarmaSpec spec)
+        private void RunTest(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, KarmaSpec spec)
         {
             var testCase = KarmaTestDiscoverer.CreateTestCase(settings, spec);
             var outcome = TestOutcome.None;

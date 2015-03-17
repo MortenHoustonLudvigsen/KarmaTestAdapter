@@ -26,8 +26,8 @@ namespace KarmaTestAdapter.TestAdapter
                 Project.GetProjectName(),
                 Path.GetDirectoryName(GetRelativePath(Source)).Replace('\\', '/')
             }.Where(s => !string.IsNullOrWhiteSpace(s)));
-            Logger = new KarmaLogger(Discoverer.Logger, Name);
-            KarmaLogger = new KarmaServerLogger(Logger);
+            Logger = new TestLogger(Discoverer.Logger, Name);
+            KarmaLogger = new KarmaServerTestLogger(Logger);
             Logger.Info("Creating KarmaTestContainer for {0}", GetRelativePath(Source));
             Containers = containers;
             KarmaSourceSettings = Discoverer.TestSettings.AddSource(Name, Source);
@@ -79,8 +79,8 @@ namespace KarmaTestAdapter.TestAdapter
         public string ProjectDirectory { get; private set; }
         public string Name { get; private set; }
         public KarmaTestContainerList Containers { get; private set; }
-        public IKarmaLogger Logger { get; private set; }
-        public KarmaServerLogger KarmaLogger { get; private set; }
+        public ITestLogger Logger { get; private set; }
+        public KarmaServerTestLogger KarmaLogger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public KarmaServer KarmaServer { get; private set; }
         public KarmaEventCommand KarmaEventCommand { get; private set; }

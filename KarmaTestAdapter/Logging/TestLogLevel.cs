@@ -5,7 +5,7 @@ using System.Web;
 
 namespace KarmaTestAdapter.Logging
 {
-    public enum KarmaLogLevel
+    public enum TestLogLevel
     {
         Informational = 0,
         Warning = 1,

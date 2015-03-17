@@ -24,7 +24,7 @@ namespace KarmaTestAdapter.TestAdapter
             ILogger logger
             )
         {
-            Logger = new KarmaLogger(logger, true);
+            Logger = new TestLogger(logger, true);
             Logger.Info("KarmaTestContainerDiscoverer created");
             TestSettingsProvider = testSettingsService;
 
@@ -53,7 +53,7 @@ namespace KarmaTestAdapter.TestAdapter
         public IServiceProvider ServiceProvider { get; private set; }
         public ISolutionListener SolutionListener { get; private set; }
         public IProjectListener ProjectListener { get; private set; }
-        public IKarmaLogger Logger { get; set; }
+        public ITestLogger Logger { get; set; }
         public KarmaTestSettingsProvider TestSettingsProvider { get; private set; }
         public KarmaTestSettings TestSettings { get { return TestSettingsProvider.Settings; } }
         public string BaseDirectory { get { return ServiceProvider.GetSolutionDirectory(); } }

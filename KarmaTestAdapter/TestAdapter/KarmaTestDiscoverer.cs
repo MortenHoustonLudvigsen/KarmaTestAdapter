@@ -19,8 +19,8 @@ namespace KarmaTestAdapter.TestAdapter
     {
         public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            var karmaLogger = new KarmaLogger(logger);
-            var discoverLogger = new KarmaLogger(karmaLogger, "Discover");
+            var karmaLogger = new TestLogger(logger);
+            var discoverLogger = new TestLogger(karmaLogger, "Discover");
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             foreach (var source in sources)
             {
@@ -50,9 +50,9 @@ namespace KarmaTestAdapter.TestAdapter
             return sourceSettings;
         }
 
-        private async Task DiscoverTests(KarmaSourceSettings settings, IKarmaLogger logger, ITestCaseDiscoverySink discoverySink)
+        private async Task DiscoverTests(KarmaSourceSettings settings, ITestLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            logger = new KarmaLogger(logger, settings.Name, "Discover");
+            logger = new TestLogger(logger, settings.Name, "Discover");
             var tests = new ConcurrentBag<Guid>();
             if (settings.Port > 0)
             {

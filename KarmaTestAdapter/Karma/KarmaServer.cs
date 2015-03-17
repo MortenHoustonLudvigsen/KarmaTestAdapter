@@ -26,9 +26,9 @@ namespace KarmaTestAdapter.Karma
 
     public class KarmaServer
     {
-        public KarmaServer(KarmaSettings settings, IKarmaLogger logger)
+        public KarmaServer(KarmaSettings settings, ITestLogger logger)
         {
-            Logger = new KarmaLogger(logger, "Server");
+            Logger = new TestLogger(logger, "Server");
 
             if (!settings.AreValid)
             {
@@ -40,7 +40,7 @@ namespace KarmaTestAdapter.Karma
             Attempts = 0;
         }
 
-        public IKarmaLogger Logger { get; private set; }
+        public ITestLogger Logger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public string StartScript { get { return Path.Combine(Globals.LibDirectory, "Start.js"); } }
         public string WorkingDirectory { get { return Path.GetDirectoryName(Settings.KarmaConfigFile); } }
