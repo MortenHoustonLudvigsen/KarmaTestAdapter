@@ -1,53 +1,25 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
-using Microsoft.VisualStudio.TestWindow.Extensibility;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Logging
+namespace JsTestAdapter.Logging
 {
     public class TestLogger : TestLoggerBase
     {
-        private readonly List<ITestLogger> _loggers = new List<ITestLogger>();
-
-        public TestLogger(ILogger logger, bool newGlobalLog = false)
-            : this(logger, null, newGlobalLog)
+        protected TestLogger()
         {
         }
 
-        public TestLogger(IMessageLogger messageLogger, bool newGlobalLog = false)
-            : this(null, messageLogger, newGlobalLog)
+        public TestLogger(ITestLogger logger, params string[] context)
         {
-        }
-
-        public TestLogger(ITestLogger karmaLogger, params string[] context)
-        {
-            AddContext(karmaLogger.Context);
+            AddContext(logger.Context);
             AddContext(context);
-            this.AddLogger(karmaLogger);
+            this.AddLogger(logger);
         }
 
-        private TestLogger(ILogger logger, IMessageLogger messageLogger, bool newGlobalLog)
-        {
-            if (Globals.Debug)
-            {
-                if (!Directory.Exists(Globals.GlobalLogDir))
-                {
-                    Directory.CreateDirectory(Globals.GlobalLogDir);
-                }
-                if (newGlobalLog && File.Exists(Globals.GlobalLogFile))
-                {
-                    File.Delete(Globals.GlobalLogFile);
-                }
-                this.Info("Logging to {0}", Globals.GlobalLogFile);
-                this.AddLogger(Globals.GlobalLogFile);
-            }
-            this.AddLogger(logger);
-            this.AddLogger(messageLogger);
-        }
+        private readonly List<ITestLogger> _loggers = new List<ITestLogger>();
 
         public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
         {

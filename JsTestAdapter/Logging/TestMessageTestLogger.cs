@@ -2,40 +2,37 @@
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Logging
+namespace JsTestAdapter.Logging
 {
-    public class ExtensibilityTestLogger : TestLoggerBase
+    public class TestMessageTestLogger : TestLoggerBase
     {
-        public ExtensibilityTestLogger(ILogger logger)
+        public IMessageLogger Logger { get; private set; }
+
+        public TestMessageTestLogger(IMessageLogger logger)
         {
             Logger = logger;
         }
 
-        public ILogger Logger { get; private set; }
-
         public override void Clear()
         {
-            try
-            {
-                Logger.Clear();
-            }
-            catch { }
         }
 
-        protected MessageLevel? GetMessageLevel(TestLogLevel level)
+        protected TestMessageLevel? GetTestMessageLevel(TestLogLevel level)
         {
             switch (level)
             {
                 case TestLogLevel.Informational:
-                    return MessageLevel.Informational;
+                    return TestMessageLevel.Informational;
                 case TestLogLevel.Warning:
-                    return MessageLevel.Warning;
+                    return TestMessageLevel.Warning;
                 case TestLogLevel.Error:
-                    return MessageLevel.Error;
+                    return TestMessageLevel.Error;
                 default:
                     return null;
             }
@@ -45,10 +42,10 @@ namespace KarmaTestAdapter.Logging
         {
             try
             {
-                var messageLevel = GetMessageLevel(level);
-                if (messageLevel.HasValue)
+                var testMessageLevel = GetTestMessageLevel(level);
+                if (testMessageLevel.HasValue)
                 {
-                    Logger.Log(messageLevel.Value, FormatMessage(level, context, message));
+                    Logger.SendMessage(testMessageLevel.Value, FormatMessage(level, context, message));
                 }
             }
             catch { }

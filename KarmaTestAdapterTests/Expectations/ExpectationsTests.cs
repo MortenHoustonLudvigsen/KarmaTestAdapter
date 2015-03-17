@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter;
 using KarmaTestAdapter.Logging;
 using NUnit.Framework;
 using System;

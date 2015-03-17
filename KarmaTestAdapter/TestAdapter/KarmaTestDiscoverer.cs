@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Helpers;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -19,7 +20,7 @@ namespace KarmaTestAdapter.TestAdapter
     {
         public void DiscoverTests(IEnumerable<string> sources, IDiscoveryContext discoveryContext, IMessageLogger logger, ITestCaseDiscoverySink discoverySink)
         {
-            var karmaLogger = new TestLogger(logger);
+            var karmaLogger = new KarmaLogger(logger);
             var discoverLogger = new TestLogger(karmaLogger, "Discover");
             var testSettings = discoveryContext.RunSettings.GetKarmaTestSettings();
             foreach (var source in sources)

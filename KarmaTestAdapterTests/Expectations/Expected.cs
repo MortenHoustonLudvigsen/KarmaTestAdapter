@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;

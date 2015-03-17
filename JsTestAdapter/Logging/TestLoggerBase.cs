@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Logging
+namespace JsTestAdapter.Logging
 {
     public abstract class TestLoggerBase : ITestLogger, IDisposable
     {

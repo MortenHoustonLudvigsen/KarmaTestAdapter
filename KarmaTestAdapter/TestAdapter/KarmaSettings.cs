@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Helpers;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell.Interop;
 using Newtonsoft.Json;

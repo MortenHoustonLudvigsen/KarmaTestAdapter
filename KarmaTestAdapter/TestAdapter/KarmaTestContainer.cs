@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Helpers;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell.Interop;

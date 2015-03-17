@@ -96,15 +96,8 @@
     <Compile Include="Karma\KarmaServer.cs" />
     <Compile Include="Karma\KarmaSpec.cs" />
     <Compile Include="Karma\KarmaStopCommand.cs" />
-    <Compile Include="Logging\TestLoggerExtensions.cs" />
-    <Compile Include="Logging\ITestLogger.cs" />
-    <Compile Include="Logging\ExtensibilityTestLogger.cs" />
-    <Compile Include="Logging\FileTestLogger.cs" />
-    <Compile Include="Logging\TestLogger.cs" />
-    <Compile Include="Logging\TestLoggerBase.cs" />
-    <Compile Include="Logging\TestLogLevel.cs" />
+    <Compile Include="Logging\KarmaLogger.cs" />
     <Compile Include="Logging\KarmaServerTestLogger.cs" />
-    <Compile Include="Logging\TestMessageTestLogger.cs" />
     <Compile Include="Helpers\PathUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\TaskCompletionSourceExtensions.cs" />
@@ -152,6 +145,10 @@
     <ProjectReference Include="..\JsonServerClient\JsonServerClient.csproj">
       <Project>{f15c2463-e70b-435a-9de6-69d6dedad66f}</Project>
       <Name>JsonServerClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JsTestAdapter\JsTestAdapter.csproj">
+      <Project>{988cc656-0af1-4f93-9d47-508ffe2877fa}</Project>
+      <Name>JsTestAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\NpmProxy\NpmProxy.csproj">
       <Project>{65f8ef17-76cf-4f2f-9d3e-55cc1c95d065}</Project>

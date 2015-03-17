@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Helpers;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -21,7 +22,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         public void RunTests(IEnumerable<string> sources, IRunContext runContext, IFrameworkHandle frameworkHandle)
         {
-            var karmaLogger = new TestLogger(frameworkHandle);
+            var karmaLogger = new KarmaLogger(frameworkHandle);
             var runLogger = new TestLogger(karmaLogger, "Run");
             var testSettings = runContext.RunSettings.GetKarmaTestSettings();
 

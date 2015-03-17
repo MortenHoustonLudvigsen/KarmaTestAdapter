@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using TwoPS.Processes;
 using NpmProxy;
+using JsTestAdapter.Logging;
 
 namespace KarmaTestAdapter.Karma
 {

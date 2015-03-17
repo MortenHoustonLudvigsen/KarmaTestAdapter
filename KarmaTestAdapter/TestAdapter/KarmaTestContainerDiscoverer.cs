@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Helpers;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Logging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -24,7 +25,7 @@ namespace KarmaTestAdapter.TestAdapter
             ILogger logger
             )
         {
-            Logger = new TestLogger(logger, true);
+            Logger = new KarmaLogger(logger, true);
             Logger.Info("KarmaTestContainerDiscoverer created");
             TestSettingsProvider = testSettingsService;
 

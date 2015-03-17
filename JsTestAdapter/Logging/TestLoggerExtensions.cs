@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace KarmaTestAdapter.Logging
+namespace JsTestAdapter.Logging
 {
     public static class TestLoggerExtensions
     {
