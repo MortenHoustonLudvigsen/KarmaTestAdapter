@@ -1,4 +1,5 @@
 ﻿using JsTestAdapter.Logging;
+using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
@@ -58,14 +59,14 @@ namespace KarmaTestAdapter.TestAdapter
             if (settings.Port > 0)
             {
                 logger.Info("Start");
-                var discoverCommand = new KarmaDiscoverCommand(settings.Port);
+                var discoverCommand = new DiscoverCommand(settings.Port);
                 await discoverCommand.Run(spec =>
                 {
                     var testCase = CreateTestCase(settings, spec);
                     tests.Add(testCase.Id);
                     discoverySink.SendTestCase(testCase);
                 });
-                await new KarmaRequestRunCommand(settings.Port).Run(tests);
+                await new RequestRunCommand(settings.Port).Run(tests);
                 logger.Info("Complete");
             }
             else
@@ -74,7 +75,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        public static TestCase CreateTestCase(KarmaSourceSettings settings, KarmaSpec spec)
+        public static TestCase CreateTestCase(KarmaSourceSettings settings, Spec spec)
         {
             var fullyQualifiedName = string.Format("{0} / {1}", settings.Name, spec.UniqueName);
             var testCase = new TestCase(fullyQualifiedName, Globals.ExecutorUri, settings.Source);

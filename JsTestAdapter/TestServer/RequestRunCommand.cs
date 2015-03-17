@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace KarmaTestAdapter.Karma
+namespace JsTestAdapter.TestServer
 {
-    public class KarmaRequestRunCommand : JsonServerCommand
+    public class RequestRunCommand : JsonServerCommand
     {
-        public KarmaRequestRunCommand(int port, string host = null)
+        public RequestRunCommand(int port, string host = null)
             : base("requestRun", port, host)
         {
         }

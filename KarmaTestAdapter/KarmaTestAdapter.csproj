@@ -84,13 +84,7 @@
   <ItemGroup>
     <Compile Include="Globals.cs" />
     <Compile Include="Helpers\KarmaPathUtils.cs" />
-    <Compile Include="Karma\KarmaDiscoverCommand.cs" />
-    <Compile Include="Karma\KarmaEvent.cs" />
-    <Compile Include="Karma\KarmaEventCommand.cs" />
-    <Compile Include="Karma\KarmaRequestRunCommand.cs" />
     <Compile Include="Karma\KarmaServer.cs" />
-    <Compile Include="Karma\KarmaSpec.cs" />
-    <Compile Include="Karma\KarmaStopCommand.cs" />
     <Compile Include="Logging\KarmaLogger.cs" />
     <Compile Include="Logging\KarmaServerTestLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

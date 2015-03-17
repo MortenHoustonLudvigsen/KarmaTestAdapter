@@ -7,18 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Karma
+namespace JsTestAdapter.TestServer
 {
-    public class KarmaDiscoverCommand : JsonServerCommand
+    public class DiscoverCommand : JsonServerCommand
     {
-        public KarmaDiscoverCommand(int port, string host = null)
+        public DiscoverCommand(int port, string host = null)
             : base("discover", port, host)
         {
         }
 
-        public async Task Run(Action<KarmaSpec> onSpec)
+        public async Task Run(Action<Spec> onSpec)
         {
-            await RunInternal(message => onSpec(message.ToObject<KarmaSpec>()));
+            await RunInternal(message => onSpec(message.ToObject<Spec>()));
         }
     }
 }

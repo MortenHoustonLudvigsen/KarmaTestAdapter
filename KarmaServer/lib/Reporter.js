@@ -123,7 +123,7 @@ var Reporter = (function () {
         };
         var spec = this.getSpec(browser, event);
         var result = {
-            browser: browser.name,
+            name: browser.name,
             success: event.success,
             skipped: event.skipped,
             output: this.output.join('\n'),
@@ -185,7 +185,7 @@ var Reporter = (function () {
         var _this = this;
         var spec = this.getSpec(browser, event);
         var result = {
-            browser: browser.name,
+            name: browser.name,
             success: event.success,
             skipped: event.skipped,
             output: this.output.join('\n'),

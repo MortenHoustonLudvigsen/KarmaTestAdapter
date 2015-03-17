@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace KarmaTestAdapter.Karma
+namespace JsTestAdapter.TestServer
 {
-    public class KarmaEvent
+    public class ServerEvent
     {
         public string Event { get; set; }
         public IEnumerable<Guid> Tests { get; set; }

@@ -8,7 +8,7 @@
 }
 
 export interface SpecResult {
-    browser: string;
+    name: string;
     success: boolean;
     skipped: boolean;
     output: string;

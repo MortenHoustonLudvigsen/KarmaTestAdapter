@@ -137,9 +137,23 @@
     <Compile Include="Logging\TestLoggerExtensions.cs" />
     <Compile Include="Logging\TestLogLevel.cs" />
     <Compile Include="Logging\TestMessageTestLogger.cs" />
+    <Compile Include="TestServer\DiscoverCommand.cs" />
+    <Compile Include="TestServer\EventCommand.cs" />
+    <Compile Include="TestServer\StopCommand.cs" />
+    <Compile Include="TestServer\RequestRunCommand.cs" />
+    <Compile Include="TestServer\ServerEvent.cs" />
+    <Compile Include="TestServer\ServerState.cs" />
+    <Compile Include="TestServer\Spec.cs" />
+    <Compile Include="TestServer\TestServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NpmProxy\NpmProxy.csproj">
+      <Project>{65f8ef17-76cf-4f2f-9d3e-55cc1c95d065}</Project>
+      <Name>NpmProxy</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>

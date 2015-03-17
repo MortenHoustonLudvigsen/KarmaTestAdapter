@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter.Karma;
+﻿using JsTestAdapter.TestServer;
+using KarmaTestAdapter.Karma;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ namespace KarmaTestAdapterTests.Expectations
 
     public class SpecTestCase : TestCase<SpecTestCase>
     {
-        public SpecTestCase(Expected expected, string uniqueName, ExpectedSpec spec, KarmaSpec karmaSpec)
+        public SpecTestCase(Expected expected, string uniqueName, ExpectedSpec spec, Spec karmaSpec)
         {
             Expected = expected;
             UniqueName = uniqueName;
@@ -56,7 +57,7 @@ namespace KarmaTestAdapterTests.Expectations
         public Expected Expected { get; private set; }
         public string UniqueName { get; private set; }
         public ExpectedSpec Spec { get; private set; }
-        public KarmaSpec KarmaSpec { get; private set; }
+        public Spec KarmaSpec { get; private set; }
 
         public override bool IsValid
         {
@@ -83,7 +84,7 @@ namespace KarmaTestAdapterTests.Expectations
 
     public class SpecResultTestCase : TestCase<SpecResultTestCase>
     {
-        public SpecResultTestCase(Expected expected, string uniqueName, ExpectedSpec spec, KarmaSpec karmaSpec, KarmaSpecResult karmaResult)
+        public SpecResultTestCase(Expected expected, string uniqueName, ExpectedSpec spec, Spec karmaSpec, SpecResult karmaResult)
         {
             Expected = expected;
             UniqueName = uniqueName;
@@ -91,15 +92,15 @@ namespace KarmaTestAdapterTests.Expectations
             KarmaSpec = karmaSpec;
             KarmaResult = karmaResult;
             AddCategory(Expected.Name);
-            AddCategory(string.Format("Browser: {0}", KarmaResult.Browser));
-            AddCategory(string.Format("{0} ({1})", Expected.Name, KarmaResult.Browser));
+            AddCategory(string.Format("Browser: {0}", KarmaResult.Name));
+            AddCategory(string.Format("{0} ({1})", Expected.Name, KarmaResult.Name));
         }
 
         public Expected Expected { get; private set; }
         public string UniqueName { get; private set; }
         public ExpectedSpec Spec { get; private set; }
-        public KarmaSpec KarmaSpec { get; private set; }
-        public KarmaSpecResult KarmaResult { get; private set; }
+        public Spec KarmaSpec { get; private set; }
+        public SpecResult KarmaResult { get; private set; }
 
         public override bool IsValid
         {
@@ -116,7 +117,7 @@ namespace KarmaTestAdapterTests.Expectations
             get { return Spec != null ? Spec.InvalidReason : ""; }
         }
 
-        public override string ProjectName { get { return string.Format("{0} ({1})", Expected.Name, KarmaResult.Browser.Replace('.', '-')); } }
+        public override string ProjectName { get { return string.Format("{0} ({1})", Expected.Name, KarmaResult.Name.Replace('.', '-')); } }
 
         public override SpecResultTestCase SetDescription(string format, params object[] args)
         {

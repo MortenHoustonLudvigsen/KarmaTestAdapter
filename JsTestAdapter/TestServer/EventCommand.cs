@@ -7,18 +7,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Karma
+namespace JsTestAdapter.TestServer
 {
-    public class KarmaEventCommand : JsonServerCommand
+    public class EventCommand : JsonServerCommand
     {
-        public KarmaEventCommand(int port, string host = null)
+        public EventCommand(int port, string host = null)
             : base("event", port, host)
         {
         }
 
-        public async Task Run(Action<KarmaEvent> onEvent)
+        public async Task Run(Action<ServerEvent> onEvent)
         {
-            await RunInternal(message => onEvent(message.ToObject<KarmaEvent>()));
+            await RunInternal(message => onEvent(message.ToObject<ServerEvent>()));
         }
     }
 }

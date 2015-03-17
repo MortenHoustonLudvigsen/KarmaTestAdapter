@@ -1,4 +1,5 @@
 ﻿using JsTestAdapter.Logging;
+using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
@@ -51,7 +52,7 @@ namespace KarmaTestAdapter.TestAdapter
             if (settings.Port > 0)
             {
                 logger.Info("Start");
-                var discoverCommand = new KarmaDiscoverCommand(settings.Port);
+                var discoverCommand = new DiscoverCommand(settings.Port);
                 await discoverCommand.Run(spec => RunTest(settings, logger, runContext, frameworkHandle, spec));
                 logger.Info("Complete");
             }
@@ -61,7 +62,7 @@ namespace KarmaTestAdapter.TestAdapter
             }
         }
 
-        private void RunTest(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, KarmaSpec spec)
+        private void RunTest(KarmaSourceSettings settings, ITestLogger logger, IRunContext runContext, IFrameworkHandle frameworkHandle, Spec spec)
         {
             var testCase = KarmaTestDiscoverer.CreateTestCase(settings, spec);
             var outcome = TestOutcome.None;
@@ -87,7 +88,7 @@ namespace KarmaTestAdapter.TestAdapter
                 var testResult = new TestResult(testCase)
                 {
                     ComputerName = Environment.MachineName,
-                    DisplayName = result.Browser,
+                    DisplayName = result.Name,
                     Outcome = GetTestOutcome(result),
                     Duration = TimeSpan.FromTicks(Math.Max(Convert.ToInt64((result.Time ?? 0) * TimeSpan.TicksPerMillisecond), 1))
                 };
@@ -124,7 +125,7 @@ namespace KarmaTestAdapter.TestAdapter
             frameworkHandle.RecordEnd(testCase, outcome);
         }
 
-        private static TestOutcome GetTestOutcome(KarmaSpecResult result)
+        private static TestOutcome GetTestOutcome(SpecResult result)
         {
             if (result.Skipped)
             {

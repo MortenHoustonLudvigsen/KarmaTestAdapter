@@ -1,5 +1,6 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
+using JsTestAdapter.TestServer;
 using KarmaTestAdapter;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
@@ -83,7 +84,7 @@ namespace KarmaTestAdapterTests.Expectations
         public string BaseDirectory { get; private set; }
         public string Directory { get; set; }
         public string Name { get; set; }
-        public IEnumerable<KarmaSpec> KarmaSpecs { get; private set; }
+        public IEnumerable<Spec> KarmaSpecs { get; private set; }
         public bool IsValid { get { return _validator.IsValid; } }
         public string InvalidReason { get { return _validator.InvalidReason; } }
         public List<string> KarmaOutput { get; private set; }
@@ -92,7 +93,7 @@ namespace KarmaTestAdapterTests.Expectations
 
         public async Task PopulateKarmaSpecs()
         {
-            var karmaSpecs = new List<KarmaSpec>();
+            var karmaSpecs = new List<Spec>();
             var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
             if (settings.AreValid)
             {
@@ -102,8 +103,8 @@ namespace KarmaTestAdapterTests.Expectations
                 server.OutputReceived += line => KarmaOutput.Add(line);
                 server.ErrorReceived += line => KarmaOutput.Add(line);
                 var port = await server.StartServer(60000);
-                var stopCommand = new KarmaStopCommand(port);
-                var discoverCommand = new KarmaDiscoverCommand(port);
+                var stopCommand = new StopCommand(port);
+                var discoverCommand = new DiscoverCommand(port);
                 await discoverCommand.Run(spec => karmaSpecs.Add(spec));
                 await stopCommand.Run();
                 await server.Finished;

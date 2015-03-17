@@ -1,5 +1,6 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
+using JsTestAdapter.TestServer;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
@@ -85,7 +86,7 @@ namespace KarmaTestAdapter.TestAdapter
         public KarmaServerTestLogger KarmaLogger { get; private set; }
         public KarmaSettings Settings { get; private set; }
         public KarmaServer KarmaServer { get; private set; }
-        public KarmaEventCommand KarmaEventCommand { get; private set; }
+        public EventCommand KarmaEventCommand { get; private set; }
         public KarmaSourceSettings KarmaSourceSettings { get; private set; }
         public Task KarmaEvents { get; private set; }
         public int Port { get; private set; }
@@ -176,7 +177,7 @@ namespace KarmaTestAdapter.TestAdapter
             KarmaServer.Attempts = 0;
             Port = port;
             KarmaSourceSettings.Port = port;
-            KarmaEventCommand = new KarmaEventCommand(port);
+            KarmaEventCommand = new EventCommand(port);
             KarmaEvents = KarmaEventCommand.Run(OnKarmaEvent);
             RefreshContainer(string.Format("Karma started for {0}", Name));
         }
@@ -220,7 +221,7 @@ namespace KarmaTestAdapter.TestAdapter
             Discoverer.RefreshTestContainers(reason);
         }
 
-        private void OnKarmaEvent(KarmaEvent evt)
+        private void OnKarmaEvent(ServerEvent evt)
         {
             switch (evt.Event)
             {

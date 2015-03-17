@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace KarmaTestAdapter.Karma
+namespace JsTestAdapter.TestServer
 {
-    public class KarmaStopCommand : JsonServerCommand
+    public class StopCommand : JsonServerCommand
     {
-        public KarmaStopCommand(int port, string host = null)
+        public StopCommand(int port, string host = null)
             : base("stop", port, host)
         {
         }

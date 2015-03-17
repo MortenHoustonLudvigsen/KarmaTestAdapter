@@ -181,7 +181,7 @@ class Reporter {
         var spec = this.getSpec(browser, event);
 
         var result: Specs.SpecResult = {
-            browser: browser.name,
+            name: browser.name,
             success: event.success,
             skipped: event.skipped,
             output: this.output.join('\n'),
@@ -250,7 +250,7 @@ class Reporter {
     onSpecDone(browser: Browser, event: Event) {
         var spec = this.getSpec(browser, event);
         var result: Specs.SpecResult = {
-            browser: browser.name,
+            name: browser.name,
             success: event.success,
             skipped: event.skipped,
             output: this.output.join('\n'),
