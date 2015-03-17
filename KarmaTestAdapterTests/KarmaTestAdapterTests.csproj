@@ -78,10 +78,6 @@
     <Compile Include="TestKarmaLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JsonServerClient\JsonServerClient.csproj">
-      <Project>{f15c2463-e70b-435a-9de6-69d6dedad66f}</Project>
-      <Name>JsonServerClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\JsTestAdapter\JsTestAdapter.csproj">
       <Project>{988cc656-0af1-4f93-9d47-508ffe2877fa}</Project>
       <Name>JsTestAdapter</Name>

@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
 
-namespace JsonServerClient
+namespace JsTestAdapter.JsonServerClient
 {
     public class JsonServerClient : IDisposable
     {

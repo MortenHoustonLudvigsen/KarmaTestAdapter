@@ -76,10 +76,28 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ProcessRunner">
+      <HintPath>..\packages\ProcessRunner.1.0.7\lib\net40\ProcessRunner.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveSockets">
+      <HintPath>..\packages\ReactiveSockets.0.2.6\lib\net40\ReactiveSockets.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -106,6 +124,11 @@
     <Compile Include="Helpers\TaskCompletionSourceExtensions.cs" />
     <Compile Include="Helpers\Validator.cs" />
     <Compile Include="Helpers\VSExtensions.cs" />
+    <Compile Include="JsonServerClient\ArrayExtensions.cs" />
+    <Compile Include="JsonServerClient\Buffer.cs" />
+    <Compile Include="JsonServerClient\JsonServerClient.cs" />
+    <Compile Include="JsonServerClient\JsonServerCommand.cs" />
+    <Compile Include="JsonServerClient\JTokenExtensions.cs" />
     <Compile Include="Logging\TestLogger.cs" />
     <Compile Include="Logging\ExtensibilityTestLogger.cs" />
     <Compile Include="Logging\FileTestLogger.cs" />

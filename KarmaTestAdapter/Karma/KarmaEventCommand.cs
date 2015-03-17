@@ -1,4 +1,4 @@
-﻿using JsonServerClient;
+﻿using JsTestAdapter.JsonServerClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsonServerClient
+namespace JsTestAdapter.JsonServerClient
 {
     public static class JTokenExtensions
     {

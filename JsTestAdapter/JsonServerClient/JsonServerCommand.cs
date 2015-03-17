@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsonServerClient
+namespace JsTestAdapter.JsonServerClient
 {
     public class JsonServerCommand
     {

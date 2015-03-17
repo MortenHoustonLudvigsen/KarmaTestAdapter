@@ -1,4 +1,4 @@
-﻿using JsonServerClient;
+﻿using JsTestAdapter.JsonServerClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
