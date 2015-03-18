@@ -36,14 +36,6 @@ namespace KarmaTestAdapterTests.Expectations
             return testCases;
         }
 
-        public IEnumerable<SpecResultTestCase> GetSpecResultTestCases()
-        {
-            var testCases = Expected
-                .SelectMany(e => e.GetSpecResultTestCases())
-                .ToList();
-            return testCases;
-        }
-
         private IEnumerable<Expected> GetExpected(string directory, string name = null)
         {
             if (Path.GetFileName(directory) == "node_modules")

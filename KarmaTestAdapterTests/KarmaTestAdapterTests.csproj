@@ -68,6 +68,7 @@
     <Compile Include="Expectations\ExpectationsTests.cs" />
     <Compile Include="Expectations\Expected.cs" />
     <Compile Include="Expectations\ExpectedSpec.cs" />
+    <Compile Include="Expectations\SpecExtensions.cs" />
     <Compile Include="Expectations\TestCase.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Karma\KarmaServer.cs" />

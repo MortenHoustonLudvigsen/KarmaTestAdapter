@@ -85,7 +85,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
         [Test]
         public async void KarmaGetsDifferentPort()
         {
-            var karmaPortTCS = new TaskCompletionSource<int>().SetTimeout(3000);
+            var karmaPortTCS = new TaskCompletionSource<int>().SetTimeout(60000);
             Server.OutputReceived += line =>
             {
                 var match = Regex.Match(line, @"\[karma\]:\s+Karma\s+.*\s+server started at http://[^:]+:(\d+)");
