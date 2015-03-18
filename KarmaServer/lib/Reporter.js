@@ -1,5 +1,7 @@
+var path = require('path');
+var url = require('url');
+var SourceUtils = require('../node_modules/JsTestAdapter/SourceUtils');
 var Karma = require('./Karma');
-var StackTrace = require('./StackTrace');
 var VsBrowser = (function () {
     function VsBrowser(browser) {
         this.browser = browser;
@@ -54,6 +56,10 @@ var Reporter = (function () {
     function Reporter(config, server, logger) {
         this.config = config;
         this.server = server;
+        this.urlRoot = this.config.urlRoot || '/';
+        this.urlBase = url.parse(path.join(this.urlRoot, 'base')).pathname;
+        this.urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
+        this.basePath = this.config.basePath;
         this.specMap = {};
         this.specs = [];
         this.output = [];
@@ -63,7 +69,7 @@ var Reporter = (function () {
     Reporter.prototype.getSpec = function (browser, spec) {
         var existingSpec;
         if (existingSpec = this.specMap[spec.id]) {
-            existingSpec.source = existingSpec.source || this.stackTrace.getSource(spec.sourceStack);
+            existingSpec.source = existingSpec.source || this.sourceUtils.getSource(spec.sourceStack);
         }
         else {
             existingSpec = this.specMap[spec.id] = {
@@ -71,7 +77,7 @@ var Reporter = (function () {
                 description: spec.description,
                 uniqueName: spec.uniqueName || browser.vsBrowser.getUniqueName(spec),
                 suite: spec.suite,
-                source: this.stackTrace.getSource(spec.sourceStack),
+                source: this.sourceUtils.getSource(spec.sourceStack),
                 results: []
             };
             this.specs.push(existingSpec);
@@ -79,14 +85,26 @@ var Reporter = (function () {
         return existingSpec;
     };
     Reporter.prototype.onRunStart = function (data) {
-        this.server.karmaStart();
+        var _this = this;
+        this.server.testRunStarted();
         this.specMap = {};
         this.specs = [];
         this.output = [];
-        this.stackTrace = new StackTrace(this.config, this.logger);
+        this.sourceUtils = new SourceUtils(this.basePath, this.logger, function (fileName) {
+            if (typeof fileName === 'string') {
+                var filePath = url.parse(fileName).pathname;
+                if (filePath.indexOf(_this.urlBase) === 0) {
+                    return path.join(_this.basePath, filePath.substring(_this.urlBase.length));
+                }
+                else if (filePath.indexOf(_this.urlAbsoluteBase) === 0) {
+                    return filePath.substring(_this.urlAbsoluteBase.length);
+                }
+            }
+            return fileName;
+        });
     };
     Reporter.prototype.onRunComplete = function (browsers, results) {
-        this.server.karmaEnd(this.specs);
+        this.server.testRunCompleted(this.specs);
     };
     Reporter.prototype.onBrowserStart = function (browser) {
         this.output = [];
@@ -97,7 +115,7 @@ var Reporter = (function () {
         browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
         var failures;
         var source;
-        var stackFrames = this.stackTrace.parseStack({ stack: error }, false);
+        var stackFrames = this.sourceUtils.parseStack({ stack: error }, false);
         if (stackFrames) {
             source = stackFrames[0];
             failures = [{
@@ -133,7 +151,7 @@ var Reporter = (function () {
             log: event.log,
             failures: event.failures ? event.failures.map(function (failure) { return {
                 message: failure.message,
-                stack: _this.stackTrace.normalizeStack(failure.stack),
+                stack: _this.sourceUtils.normalizeStack(failure.stack),
                 passed: failure.passed
             }; }) : undefined
         };
@@ -153,7 +171,7 @@ var Reporter = (function () {
         browser.vsBrowser.adjustResults();
     };
     Reporter.prototype.onSpecComplete = function (browser, result) {
-        result.source = this.stackTrace.resolveSource(result.source);
+        result.source = this.sourceUtils.resolveSource(result.source);
         switch (result.event) {
             case 'suite-start':
                 this.onSuiteStart(browser, result);
@@ -195,7 +213,7 @@ var Reporter = (function () {
             log: event.log,
             failures: event.failures ? event.failures.map(function (exp) { return {
                 message: exp.message,
-                stack: _this.stackTrace.normalizeStack(exp.stack),
+                stack: _this.sourceUtils.normalizeStack(exp.stack),
                 passed: exp.passed
             }; }) : undefined
         };

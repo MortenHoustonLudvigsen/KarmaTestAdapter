@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var TextFile = require('../lib/TextFile');
+var TextFile = require('node_modules/JsTestAdapter/TextFile');
 describe('TextFile', function () {
     var expected = '{ "Some Danish letters for good measure": "æøåÆØÅ" }';
     var expectedJson = JSON.parse(expected);

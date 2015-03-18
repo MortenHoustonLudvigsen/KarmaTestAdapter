@@ -1,20 +1,27 @@
-var fs = require('fs');
-var path = require('path');
-var url = require('url');
-var SourceMap = require("source-map");
+﻿import fs = require('fs');
+import path = require('path');
+import url = require('url');
+import Specs = require('./Specs');
+import Logger = require('./Logger');
+import SourceMap = require("source-map");
 var SourceMapResolve = require("source-map-resolve");
 var errorStackParser = require('error-stack-parser');
-var StackTrace = (function () {
-    function StackTrace(config, logger) {
-        this.config = config;
-        this.logger = logger;
-        this.urlRoot = this.config.urlRoot || '/';
-        this.urlBase = url.parse(path.join(this.urlRoot, 'base')).pathname;
-        this.urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
-        this.basePath = this.config.basePath;
-        this.sourceMapConsumers = {};
+
+type ErrorWithStack = {
+    skip?: number;
+    skipFunctions?: string;
+    stack?: string;
+    stacktrace?: string;
+    'opera#sourceloc'?: any;
+};
+
+class SourceUtils {
+    constructor(private basePath: string, private logger: Logger, private resolveFilePath: (fileName: string) => string) {
     }
-    StackTrace.prototype.getSourceMapConsumer = function (filePath) {
+
+    private sourceMapConsumers: { [filePath: string]: SourceMap.SourceMapConsumer } = {};
+
+    private getSourceMapConsumer(filePath: string): SourceMap.SourceMapConsumer {
         if (filePath in this.sourceMapConsumers) {
             return this.sourceMapConsumers[filePath];
         }
@@ -23,30 +30,18 @@ var StackTrace = (function () {
             var sourceMap = SourceMapResolve.resolveSync(content, filePath, fs.readFileSync);
             var consumer = sourceMap ? new SourceMap.SourceMapConsumer(sourceMap.map) : null;
             if (consumer) {
-                consumer['resolvePath'] = function (filePath) { return path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath); };
+                consumer['resolvePath'] = (filePath: string) => path.resolve(path.dirname(sourceMap.sourcesRelativeTo), filePath);
             }
             this.sourceMapConsumers[filePath] = consumer;
             return consumer;
-        }
-        catch (e) {
+        } catch (e) {
             this.sourceMapConsumers[filePath] = undefined;
         }
-    };
-    StackTrace.prototype.getFilePath = function (fileName) {
-        if (typeof fileName === 'string') {
-            var filePath = url.parse(fileName).pathname;
-            if (filePath.indexOf(this.urlBase) === 0) {
-                return path.join(this.basePath, filePath.substring(this.urlBase.length));
-            }
-            else if (filePath.indexOf(this.urlAbsoluteBase) === 0) {
-                return filePath.substring(this.urlAbsoluteBase.length);
-            }
-        }
-        return fileName;
-    };
-    StackTrace.prototype.resolveSource = function (source) {
+    }
+
+    resolveSource(source: Specs.Source): Specs.Source {
         if (source && source.fileName) {
-            source.fileName = this.getFilePath(source.fileName);
+            source.fileName = this.resolveFilePath(source.fileName);
             var consumer = this.getSourceMapConsumer(source.fileName);
             if (consumer) {
                 var position = {
@@ -70,8 +65,9 @@ var StackTrace = (function () {
             }
         }
         return source;
-    };
-    StackTrace.prototype.getRealSource = function (source, relative) {
+    }
+
+    getRealSource(source: Specs.Source, relative: boolean): Specs.Source {
         if (source) {
             if (source.source) {
                 return this.getRealSource(source.source, relative);
@@ -81,13 +77,12 @@ var StackTrace = (function () {
             }
         }
         return source;
-    };
-    StackTrace.prototype.getSource = function (error) {
-        if (!error)
-            return;
+    }
+
+    getSource(error: ErrorWithStack): Specs.Source {
+        if (!error) return;
         var stack = this.parseStack(error, false);
-        if (!stack)
-            return;
+        if (!stack) return;
         if (typeof error.skip === 'number' && error.skip > 0) {
             stack = stack.slice(error.skip);
         }
@@ -98,37 +93,45 @@ var StackTrace = (function () {
             }
         }
         return stack[0];
-    };
-    StackTrace.prototype.parseStack = function (error, relative) {
-        var _this = this;
+    }
+
+    parseStack(error: ErrorWithStack, relative: boolean): Specs.Source[] {
         var self = this;
+
         try {
-            return errorStackParser.parse(error).map(function (frame) { return getSource(frame); }).map(function (frame) { return _this.resolveSource(frame); }).map(function (frame) { return _this.getRealSource(frame, relative); });
-        }
-        catch (e) {
+            return errorStackParser.parse(error)
+                .map(frame => getSource(frame))
+                .map(frame => this.resolveSource(frame))
+                .map(frame => this.getRealSource(frame, relative));
+        } catch (e) {
             this.logger.debug(e);
             return;
         }
-        function getSource(frame) {
+
+        function getSource(frame: any): Specs.Source {
             return {
                 functionName: frame.functionName,
-                fileName: self.getFilePath(frame.fileName),
+                fileName: self.resolveFilePath(frame.fileName),
                 lineNumber: frame.lineNumber,
                 columnNumber: frame.columnNumber
             };
         }
-    };
-    StackTrace.prototype.normalizeStack = function (stack) {
+    }
+
+    normalizeStack(stack: string): string[] {
         var relative = false;
         var basePath = this.basePath;
+
         var stackFrames = this.parseStack({ stack: stack }, relative);
         if (stackFrames) {
-            return stackFrames.filter(function (frame) { return !/\/require\.js$/.test(frame.fileName); }).map(function (frame) { return formatFrame(frame); });
-        }
-        else {
+            return stackFrames
+                .filter(frame => !/\/require\.js$/.test(frame.fileName))
+                .map(frame => formatFrame(frame));
+        } else {
             return stack.split(/\r\n|\n/g);
         }
-        function formatFrame(frame) {
+
+        function formatFrame(frame: Specs.Source): string {
             var result = 'at ';
             result += frame.functionName || '<anonymous>';
             result += ' in ';
@@ -138,8 +141,7 @@ var StackTrace = (function () {
             }
             return result;
         }
-    };
-    return StackTrace;
-})();
-module.exports = StackTrace;
-//# sourceMappingURL=StackTrace.js.map
+    }
+}
+
+export = SourceUtils;

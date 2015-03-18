@@ -52,10 +52,8 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="lib\FreePort.ts" />
     <TypeScriptCompile Include="lib\GlobalLog.ts" />
     <TypeScriptCompile Include="lib\Index.ts" />
-    <TypeScriptCompile Include="lib\JsonServer.ts" />
     <TypeScriptCompile Include="lib\karma-jasmine\lib\adapter.ts" />
     <TypeScriptCompile Include="lib\karma-jasmine\lib\boot.ts" />
     <TypeScriptCompile Include="lib\karma-jasmine\lib\index.ts" />
@@ -63,10 +61,7 @@
     <TypeScriptCompile Include="lib\Karma.ts" />
     <TypeScriptCompile Include="lib\Reporter.ts" />
     <TypeScriptCompile Include="lib\Server.ts" />
-    <TypeScriptCompile Include="lib\Specs.ts" />
-    <TypeScriptCompile Include="lib\StackTrace.ts" />
     <TypeScriptCompile Include="lib\Start.ts" />
-    <TypeScriptCompile Include="lib\TextFile.ts" />
     <TypeScriptCompile Include="spec\TextFileSpec.ts" />
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\node\node.d.ts" />
@@ -75,17 +70,11 @@
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\FreePort.js">
-      <DependentUpon>FreePort.ts</DependentUpon>
-    </Content>
     <Content Include="lib\GlobalLog.js">
       <DependentUpon>GlobalLog.ts</DependentUpon>
     </Content>
     <Content Include="lib\Index.js">
       <DependentUpon>Index.ts</DependentUpon>
-    </Content>
-    <Content Include="lib\JsonServer.js">
-      <DependentUpon>JsonServer.ts</DependentUpon>
     </Content>
     <Content Include="lib\karma-jasmine\lib\adapter.js">
       <DependentUpon>adapter.ts</DependentUpon>
@@ -108,19 +97,8 @@
     <Content Include="lib\Server.js">
       <DependentUpon>Server.ts</DependentUpon>
     </Content>
-    <Content Include="lib\Specs.js">
-      <DependentUpon>Specs.ts</DependentUpon>
-    </Content>
-    <Content Include="lib\StackTrace.js">
-      <DependentUpon>StackTrace.ts</DependentUpon>
-    </Content>
     <Content Include="lib\Start.js">
       <DependentUpon>Start.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\FreePort.js.map">
-      <DependentUpon>FreePort.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -131,11 +109,6 @@
   <ItemGroup>
     <Content Include="lib\Index.js.map">
       <DependentUpon>Index.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\JsonServer.js.map">
-      <DependentUpon>JsonServer.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -154,36 +127,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\Specs.js.map">
-      <DependentUpon>Specs.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="lib\Start.js.map">
       <DependentUpon>Start.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\TextFile.js">
-      <DependentUpon>TextFile.ts</DependentUpon>
-    </Content>
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="lib\StackTrace.js.map">
-      <DependentUpon>StackTrace.ts</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="spec\support\jasmine.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="lib\TextFile.js.map">
-      <DependentUpon>TextFile.ts</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\karma-jasmine\lib\adapter.js.map">

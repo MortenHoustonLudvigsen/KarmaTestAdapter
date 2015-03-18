@@ -6,6 +6,7 @@
     "jasmine": "^2.2.1"
   },
   "dependencies": {
+    "JsTestAdapter": "^1.0.0",
     "error-stack-parser": "^1.1.2",
     "extend": "^2.0.0",
     "iconv-lite": "^0.4.7",

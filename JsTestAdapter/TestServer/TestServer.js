@@ -8,9 +8,12 @@ var JsonServer = require('./JsonServer');
 var Q = require('q');
 var TestServer = (function (_super) {
     __extends(TestServer, _super);
-    function TestServer() {
+    function TestServer(port, host) {
         var _this = this;
-        _super.apply(this, arguments);
+        if (port === void 0) { port = 0; }
+        _super.call(this, port, host);
+        this.port = port;
+        this.host = host;
         this.events = Q.defer();
         this.specs = Q.defer();
         this.testRunStartedCommand = this.addCommand('test run started', function (command, message, connection) {

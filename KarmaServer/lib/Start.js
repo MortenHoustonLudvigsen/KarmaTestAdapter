@@ -2,8 +2,8 @@ var GlobalLog = require('./GlobalLog');
 GlobalLog.info('starting karma server');
 var path = require('path');
 var Karma = require('./Karma');
-var freePort = require('./FreePort');
-var TextFile = require('./TextFile');
+var freePort = require('../node_modules/JsTestAdapter/FreePort');
+var TextFile = require('../node_modules/JsTestAdapter/TextFile');
 var argv = require('yargs').argv;
 var extend = require('extend');
 try {

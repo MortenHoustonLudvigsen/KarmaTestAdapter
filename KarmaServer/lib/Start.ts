@@ -4,8 +4,8 @@ GlobalLog.info('starting karma server');
 
 import path = require('path');
 import Karma = require('./Karma');
-import freePort = require('./FreePort');
-import TextFile = require('./TextFile');
+import freePort = require('../node_modules/JsTestAdapter/FreePort');
+import TextFile = require('../node_modules/JsTestAdapter/TextFile');
 var argv = require('yargs').argv;
 var extend = require('extend');
 

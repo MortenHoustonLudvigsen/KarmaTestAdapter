@@ -1,8 +1,10 @@
 ﻿import util = require('util');
-import Specs = require('./Specs');
+import path = require('path');
+import url = require('url');
+import Specs = require('../node_modules/JsTestAdapter/Specs');
+import SourceUtils = require('../node_modules/JsTestAdapter/SourceUtils');
 import Server = require('./Server');
 import Karma = require('./Karma');
-import StackTrace = require('./StackTrace');
 
 class VsBrowser {
     constructor(public browser: Browser) {
@@ -104,24 +106,29 @@ class Reporter {
         this.logger.info("Created");
     }
 
+    private urlRoot = this.config.urlRoot || '/';
+    private urlBase = url.parse(path.join(this.urlRoot, 'base')).pathname;
+    private urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
+    private basePath = this.config.basePath;
+
     private logger: Karma.Logger;
     private specMap: { [id: string]: Specs.Spec } = {};
     private specs: Specs.Spec[] = [];
-    private stackTrace: StackTrace;
+    private sourceUtils: SourceUtils;
 
     private output: string[] = [];
 
     getSpec(browser: Browser, spec: Event): Specs.Spec {
         var existingSpec: Specs.Spec;
         if (existingSpec = this.specMap[spec.id]) {
-            existingSpec.source = existingSpec.source || this.stackTrace.getSource(spec.sourceStack);
+            existingSpec.source = existingSpec.source || this.sourceUtils.getSource(spec.sourceStack);
         } else {
             existingSpec = this.specMap[spec.id] = {
                 id: spec.id,
                 description: spec.description,
                 uniqueName: spec.uniqueName || browser.vsBrowser.getUniqueName(spec),
                 suite: spec.suite,
-                source: this.stackTrace.getSource(spec.sourceStack),
+                source: this.sourceUtils.getSource(spec.sourceStack),
                 results: []
             };
             this.specs.push(existingSpec);
@@ -130,15 +137,25 @@ class Reporter {
     }
 
     onRunStart(data): void {
-        this.server.karmaStart();
+        this.server.testRunStarted();
         this.specMap = {};
         this.specs = [];
         this.output = [];
-        this.stackTrace = new StackTrace(this.config, this.logger);
+        this.sourceUtils = new SourceUtils(this.basePath, this.logger, fileName => {
+            if (typeof fileName === 'string') {
+                var filePath = url.parse(fileName).pathname;
+                if (filePath.indexOf(this.urlBase) === 0) {
+                    return path.join(this.basePath, filePath.substring(this.urlBase.length));
+                } else if (filePath.indexOf(this.urlAbsoluteBase) === 0) {
+                    return filePath.substring(this.urlAbsoluteBase.length);
+                }
+            }
+            return fileName;
+        });
     }
 
     onRunComplete(browsers, results): void {
-        this.server.karmaEnd(this.specs);
+        this.server.testRunCompleted(this.specs);
     }
 
     onBrowserStart(browser: Browser): void {
@@ -151,7 +168,7 @@ class Reporter {
 
         var failures: Failure[];
         var source: Specs.Source;
-        var stackFrames = this.stackTrace.parseStack({ stack: error }, false);
+        var stackFrames = this.sourceUtils.parseStack({ stack: error }, false);
         if (stackFrames) {
             source = stackFrames[0];
             failures = [{
@@ -191,7 +208,7 @@ class Reporter {
             log: event.log,
             failures: event.failures ? event.failures.map(failure => <Specs.Expectation>{
                 message: failure.message,
-                stack: this.stackTrace.normalizeStack(failure.stack),
+                stack: this.sourceUtils.normalizeStack(failure.stack),
                 passed: failure.passed
             }) : undefined
         };
@@ -215,7 +232,7 @@ class Reporter {
     }
 
     onSpecComplete(browser: Browser, result: Event): void {
-        result.source = this.stackTrace.resolveSource(result.source);
+        result.source = this.sourceUtils.resolveSource(result.source);
         switch (result.event) {
             case 'suite-start':
                 this.onSuiteStart(browser, result);
@@ -260,7 +277,7 @@ class Reporter {
             log: event.log,
             failures: event.failures ? event.failures.map(exp => <Specs.Expectation>{
                 message: exp.message,
-                stack: this.stackTrace.normalizeStack(exp.stack),
+                stack: this.sourceUtils.normalizeStack(exp.stack),
                 passed: exp.passed
             }) : undefined
         };

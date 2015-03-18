@@ -3,6 +3,10 @@ import Specs = require('./Specs');
 import Q = require('q');
 
 class TestServer extends JsonServer.Server {
+    constructor(public port: number = 0, public host?: string) {
+        super(port, host);
+    }
+
     events: Q.Deferred<void> = Q.defer<void>();
     specs: Q.Deferred<Specs.Spec[]> = Q.defer<Specs.Spec[]>();
 

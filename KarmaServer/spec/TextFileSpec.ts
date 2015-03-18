@@ -1,6 +1,6 @@
 ﻿import fs = require('fs');
 import path = require('path');
-import TextFile = require('../lib/TextFile');
+import TextFile = require('node_modules/JsTestAdapter/TextFile');
 
 describe('TextFile',() => {
     var expected = '{ "Some Danish letters for good measure": "æøåÆØÅ" }';

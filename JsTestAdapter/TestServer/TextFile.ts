@@ -19,7 +19,7 @@ var boms = <Object>{
     utf32be: [0x00, 0x00, 0xFE, 0xFF]
 };
 
-export function detectBom(buffer: NodeBuffer, defaultValue?: string): string {
+export function detectBom(buffer: Buffer, defaultValue?: string): string {
     for (var encoding in boms) {
         if (boms.hasOwnProperty(encoding)) {
             var bom = boms[encoding];
@@ -31,7 +31,7 @@ export function detectBom(buffer: NodeBuffer, defaultValue?: string): string {
     return defaultValue;
 }
 
-export function stripBom(buffer: NodeBuffer) {
+export function stripBom(buffer: Buffer) {
     var encoding = detectBom(buffer);
     if (encoding) {
         return buffer.slice(boms[encoding].length);
@@ -39,7 +39,7 @@ export function stripBom(buffer: NodeBuffer) {
     return buffer;
 }
 
-function hasBom(buffer: NodeBuffer, bom: number[]): boolean {
+function hasBom(buffer: Buffer, bom: number[]): boolean {
     for (var i = 0; i < bom.length; i++) {
         if (buffer[i] !== bom[i]) {
             return false;
