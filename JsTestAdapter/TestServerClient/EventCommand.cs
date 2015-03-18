@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JsTestAdapter.TestServer
+namespace JsTestAdapter.TestServerClient
 {
     public class EventCommand : JsonServerCommand
     {

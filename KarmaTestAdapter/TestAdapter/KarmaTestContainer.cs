@@ -1,7 +1,7 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
 using JsTestAdapter.TestAdapter;
-using JsTestAdapter.TestServer;
+using JsTestAdapter.TestServerClient;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;

@@ -1,4 +1,4 @@
-﻿using JsTestAdapter.TestServer;
+﻿using JsTestAdapter.TestServerClient;
 using KarmaTestAdapter.Karma;
 using NUnit.Framework;
 using System;

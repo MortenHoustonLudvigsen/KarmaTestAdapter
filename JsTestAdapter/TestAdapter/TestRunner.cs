@@ -1,5 +1,5 @@
 ﻿using JsTestAdapter.Logging;
-using JsTestAdapter.TestServer;
+using JsTestAdapter.TestServerClient;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;

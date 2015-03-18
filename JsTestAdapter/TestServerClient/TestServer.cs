@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using TwoPS.Processes;
 
-namespace JsTestAdapter.TestServer
+namespace JsTestAdapter.TestServerClient
 {
     public abstract class TestServer
     {

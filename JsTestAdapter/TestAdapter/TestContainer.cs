@@ -1,6 +1,6 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
-using JsTestAdapter.TestServer;
+using JsTestAdapter.TestServerClient;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
@@ -59,7 +59,7 @@ namespace JsTestAdapter.TestAdapter
 
         protected abstract void Init();
         protected abstract TestServerLogger CreateServerLogger();
-        protected abstract JsTestAdapter.TestServer.TestServer CreateTestServer();
+        protected abstract JsTestAdapter.TestServerClient.TestServer CreateTestServer();
 
         public IVsProject Project { get; private set; }
         public string ProjectDirectory { get; private set; }
@@ -67,7 +67,7 @@ namespace JsTestAdapter.TestAdapter
         public TestContainerList Containers { get; private set; }
         public ITestLogger Logger { get; private set; }
         public TestServerLogger ServerLogger { get; private set; }
-        public JsTestAdapter.TestServer.TestServer TestServer { get; private set; }
+        public JsTestAdapter.TestServerClient.TestServer TestServer { get; private set; }
         public EventCommand EventCommand { get; private set; }
         public TestSourceSettings SourceSettings { get; private set; }
         public Task EventsTask { get; private set; }

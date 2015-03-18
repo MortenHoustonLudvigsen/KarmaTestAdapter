@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace JsTestAdapter.TestServer
+namespace JsTestAdapter.TestServerClient
 {
     public class RequestRunCommand : JsonServerCommand
     {

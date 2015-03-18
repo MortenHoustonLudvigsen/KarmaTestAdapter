@@ -1,6 +1,6 @@
 ﻿using JsTestAdapter.Helpers;
 using JsTestAdapter.Logging;
-using JsTestAdapter.TestServer;
+using JsTestAdapter.TestServerClient;
 using KarmaTestAdapter.TestAdapter;
 using System;
 using System.IO;

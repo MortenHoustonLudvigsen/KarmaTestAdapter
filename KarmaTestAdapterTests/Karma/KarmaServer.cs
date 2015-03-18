@@ -63,7 +63,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
         public async void CanGetEvents()
         {
             var port = await Server.StartServer(60000);
-            var eventsCommand = new JsTestAdapter.TestServer.EventCommand(port);
+            var eventsCommand = new JsTestAdapter.TestServerClient.EventCommand(port);
             var events = eventsCommand.Run(evt => Logger.Info("Event: {0}", evt));
             Server.Finished.Wait(500);
             Server.Kill("Stop", false);
@@ -76,7 +76,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
         public async void CanStopServer()
         {
             var port = await Server.StartServer(60000);
-            var stopCommand = new JsTestAdapter.TestServer.StopCommand(port);
+            var stopCommand = new JsTestAdapter.TestServerClient.StopCommand(port);
             await stopCommand.Run();
             var exitCode = await Server.Finished;
             Logger.Info("[Test] Exit code: {0}", exitCode);
@@ -97,7 +97,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
             var port = await Server.StartServer(60000);
             var karmaPort = await karmaPortTCS.Task;
 
-            var stopCommand = new JsTestAdapter.TestServer.StopCommand(port);
+            var stopCommand = new JsTestAdapter.TestServerClient.StopCommand(port);
             await stopCommand.Run();
             var exitCode = await Server.Finished;
             Logger.Info("[Test] Exit code: {0}", exitCode);
@@ -110,7 +110,7 @@ namespace KarmaTestAdapterTests.Karma.KarmaServerTests
         public async void CanDiscover()
         {
             var port = await Server.StartServer(60000);
-            var discoverCommand = new JsTestAdapter.TestServer.DiscoverCommand(port);
+            var discoverCommand = new JsTestAdapter.TestServerClient.DiscoverCommand(port);
             //discoverCommand.MessageReceived += message => Logger.Info("[Discover] [Message] {0}", message);
             discoverCommand.Connected += () => Logger.Info("[Discover] connected");
             discoverCommand.Disconnected += () => Logger.Info("[Discover] disconnected");

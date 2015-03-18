@@ -153,14 +153,14 @@
     <Compile Include="TestAdapter\TestSettingsProvider.cs" />
     <Compile Include="TestAdapter\TestSourceSettings.cs" />
     <Compile Include="TestAdapter\TestSourceSettingsPersister.cs" />
-    <Compile Include="TestServer\DiscoverCommand.cs" />
-    <Compile Include="TestServer\EventCommand.cs" />
-    <Compile Include="TestServer\StopCommand.cs" />
-    <Compile Include="TestServer\RequestRunCommand.cs" />
-    <Compile Include="TestServer\ServerEvent.cs" />
-    <Compile Include="TestServer\ServerState.cs" />
-    <Compile Include="TestServer\Spec.cs" />
-    <Compile Include="TestServer\TestServer.cs" />
+    <Compile Include="TestServerClient\DiscoverCommand.cs" />
+    <Compile Include="TestServerClient\EventCommand.cs" />
+    <Compile Include="TestServerClient\StopCommand.cs" />
+    <Compile Include="TestServerClient\RequestRunCommand.cs" />
+    <Compile Include="TestServerClient\ServerEvent.cs" />
+    <Compile Include="TestServerClient\ServerState.cs" />
+    <Compile Include="TestServerClient\Spec.cs" />
+    <Compile Include="TestServerClient\TestServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NodeServer\FreePort.js">

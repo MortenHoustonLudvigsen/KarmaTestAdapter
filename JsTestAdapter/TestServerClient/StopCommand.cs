@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace JsTestAdapter.TestServer
+namespace JsTestAdapter.TestServerClient
 {
     public class StopCommand : JsonServerCommand
     {
