@@ -132,6 +132,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="spec\TextFileSpec.js">
+      <DependentUpon>TextFileSpec.ts</DependentUpon>
+    </Content>
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +161,11 @@
   <ItemGroup>
     <Content Include="lib\karma-jasmine\lib\index.js.map">
       <DependentUpon>index.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="spec\TextFileSpec.js.map">
+      <DependentUpon>TextFileSpec.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

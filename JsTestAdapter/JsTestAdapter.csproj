@@ -163,7 +163,6 @@
     <Compile Include="TestServerClient\TestServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="gruntfile.js" />
     <Content Include="TestServer\FreePort.js">
       <DependentUpon>FreePort.ts</DependentUpon>
     </Content>
@@ -232,9 +231,6 @@
     <Content Include="TestServer\TestServer.js.map">
       <DependentUpon>TestServer.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestServer\TextFile.js.map">
