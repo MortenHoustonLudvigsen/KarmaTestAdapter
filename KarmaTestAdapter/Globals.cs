@@ -73,7 +73,7 @@ namespace KarmaTestAdapter
         /// </summary>
         public static string RootDirectory
         {
-            get { return Path.GetFullPath(IsTest ? Path.Combine(AssemblyDirectory, @"..\..\..\KarmaServer") : AssemblyDirectory); }
+            get { return Path.GetFullPath(IsTest ? Path.Combine(AssemblyDirectory, @"..\..\..\KarmaTestAdapter") : AssemblyDirectory); }
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace KarmaTestAdapter
         /// </summary>
         public static string LibDirectory
         {
-            get { return Path.GetFullPath(Path.Combine(RootDirectory, "lib")); }
+            get { return Path.GetFullPath(Path.Combine(RootDirectory, "KarmaTestServer")); }
         }
     }
 }

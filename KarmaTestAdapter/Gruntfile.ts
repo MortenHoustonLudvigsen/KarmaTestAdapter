@@ -1,7 +1,10 @@
 /// <vs AfterBuild='default' />
-var jsTestAdapter = require('./Grunt/Index');
+
+import jsTestAdapter = require('./Grunt/Index');
+
 function config(grunt) {
     var buildConfig = grunt.file.readJSON('./BuildConfig.json');
+
     grunt.initConfig({
         buildConfig: buildConfig,
         exec: {
@@ -13,28 +16,32 @@ function config(grunt) {
             }
         }
     });
+
     jsTestAdapter.config(grunt, {
         name: 'KarmaTestAdapter',
         lib: 'KarmaTestServer'
     });
+
     if (buildConfig.VisualStudioVersion === "12.0") {
         grunt.registerTask('default', [
             'JsTestAdapter'
         ]);
-    }
-    else {
+    } else {
         grunt.registerTask('default', [
             'JsTestAdapter',
             'exec:resetTestVS'
         ]);
     }
+
     grunt.registerTask('ResetTestVS', [
         'exec:resetTestVS'
     ]);
+
     grunt.registerTask('StartTestVS', [
         'exec:startTestVS'
     ]);
+
     grunt.loadNpmTasks('grunt-exec');
 }
-module.exports = config;
-//# sourceMappingURL=Gruntfile.js.map
+
+export = config;

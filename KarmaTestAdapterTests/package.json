@@ -1,6 +1,6 @@
 {
-  "name": "KarmaTestAdapter",
-  "version": "1.0.3",
+  "name": "KarmaTestAdapterTests",
+  "version": "0.0.1",
   "private": true,
   "dependencies": {
     "error-stack-parser": "^1.2.0",
