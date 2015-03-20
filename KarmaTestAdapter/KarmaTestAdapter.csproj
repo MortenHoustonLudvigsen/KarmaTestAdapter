@@ -52,17 +52,18 @@
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Gruntfile.js">
-      <DependentUpon>Gruntfile.ts</DependentUpon>
-    </Content>
-    <Content Include="Grunt\GetContentTypes.js">
-      <DependentUpon>GetContentTypes.ts</DependentUpon>
+    <Content Include="Gruntfile.js" />
+    <Content Include="Grunt\CreateContentTypes.js">
+      <DependentUpon>CreateContentTypes.ts</DependentUpon>
     </Content>
     <Content Include="Grunt\GetNodeModules.js">
       <DependentUpon>GetNodeModules.ts</DependentUpon>
     </Content>
     <Content Include="Grunt\Index.js">
       <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+    <Content Include="Grunt\TestVS.js">
+      <DependentUpon>TestVS.ts</DependentUpon>
     </Content>
     <Content Include="KarmaTestServer\GlobalLog.js">
       <DependentUpon>GlobalLog.ts</DependentUpon>
@@ -94,35 +95,13 @@
     <Content Include="KarmaTestServer\Start.js">
       <DependentUpon>Start.ts</DependentUpon>
     </Content>
-    <Content Include="TestServer\FreePort.js">
-      <DependentUpon>FreePort.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\JsonServer.js">
-      <DependentUpon>JsonServer.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\Logger.js">
-      <DependentUpon>Logger.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\SourceUtils.js">
-      <DependentUpon>SourceUtils.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\Specs.js">
-      <DependentUpon>Specs.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\TestServer.js">
-      <DependentUpon>TestServer.ts</DependentUpon>
-    </Content>
-    <Content Include="TestServer\TextFile.js">
-      <DependentUpon>TextFile.ts</DependentUpon>
-    </Content>
-    <Content Include="Vsix\Content_Types.xml" />
-    <Content Include="Vsix\source.extension.vsixmanifest" />
+    <Content Include="source.extension.vsixmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Gruntfile.ts" />
-    <TypeScriptCompile Include="Grunt\GetContentTypes.ts" />
+    <TypeScriptCompile Include="Grunt\CreateContentTypes.ts" />
     <TypeScriptCompile Include="Grunt\GetNodeModules.ts" />
     <TypeScriptCompile Include="Grunt\Index.ts" />
+    <TypeScriptCompile Include="Grunt\TestVS.ts" />
     <TypeScriptCompile Include="KarmaTestServer\GlobalLog.ts" />
     <TypeScriptCompile Include="KarmaTestServer\Index.ts" />
     <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\adapter.ts" />
@@ -148,15 +127,31 @@
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestServer\FreePort.js">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\JsonServer.js">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\Logger.js">
+      <DependentUpon>Logger.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\SourceUtils.js">
+      <DependentUpon>SourceUtils.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\Specs.js">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestServer.js">
+      <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TextFile.js">
+      <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Gruntfile.js.map">
-      <DependentUpon>Gruntfile.ts</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="KarmaTestAdapter.schema.json" />
@@ -179,27 +174,27 @@
   <ItemGroup>
     <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\JsTestAdapter.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\JsTestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -208,7 +203,7 @@
     </Reference>
     <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.0\lib\net45\NpmProxy.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.2\lib\net45\NpmProxy.dll</HintPath>
     </Reference>
     <Reference Include="ProcessRunner">
       <HintPath>..\packages\ProcessRunner.1.0.8\lib\net40\ProcessRunner.dll</HintPath>
@@ -270,12 +265,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestVSVars.bat" />
-    <Content Include="ResetTestVS.bat" />
-    <Content Include="StartTestVS.bat" />
+    <Content Include="BuildConfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BuildConfig.json" />
+    <Content Include="JsTestAdapter.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestServer\TextFile.js.map">
@@ -313,6 +306,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Grunt\TestVS.js.map">
+      <DependentUpon>TestVS.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Grunt\Index.js.map">
       <DependentUpon>Index.ts</DependentUpon>
     </Content>
@@ -323,8 +321,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Grunt\GetContentTypes.js.map">
-      <DependentUpon>GetContentTypes.ts</DependentUpon>
+    <Content Include="Grunt\CreateContentTypes.js.map">
+      <DependentUpon>CreateContentTypes.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

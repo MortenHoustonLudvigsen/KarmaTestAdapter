@@ -1,40 +1,35 @@
-/// <vs AfterBuild='default' />
+/// <vs AfterBuild='CreatePackage' />
 var jsTestAdapter = require('./Grunt/Index');
-function config(grunt) {
-    var buildConfig = grunt.file.readJSON('./BuildConfig.json');
+
+module.exports = function (grunt) {
     grunt.initConfig({
-        buildConfig: buildConfig,
-        exec: {
-            resetTestVS: {
-                cmd: 'ResetTestVS.bat <%= buildConfig.VisualStudioVersion %>'
-            },
-            startTestVS: {
-                cmd: 'StartTestVS.bat <%= buildConfig.VisualStudioVersion %>'
-            }
-        }
     });
+
     jsTestAdapter.config(grunt, {
         name: 'KarmaTestAdapter',
-        lib: 'KarmaTestServer'
+        lib: 'KarmaTestServer',
+        bin: 'bin',
+        rootSuffix: 'KarmaTestAdapter',
+        testProject: '../TestProjects/TestProjects.sln'
     });
-    if (buildConfig.VisualStudioVersion === "12.0") {
-        grunt.registerTask('default', [
-            'JsTestAdapter'
-        ]);
-    }
-    else {
-        grunt.registerTask('default', [
-            'JsTestAdapter',
-            'exec:resetTestVS'
-        ]);
-    }
-    grunt.registerTask('ResetTestVS', [
-        'exec:resetTestVS'
+
+    grunt.registerTask('CreatePackage', [
+        'clean:JsTestAdapter',
+        'copy:JsTestAdapter',
+        'JsTestAdapter-flatten-packages',
+        'xmlpoke:JsTestAdapter-vsix',
+        'JsTestAdapter-CreateContentTypes',
+        'compress:JsTestAdapter'
     ]);
-    grunt.registerTask('StartTestVS', [
-        'exec:startTestVS'
+
+    grunt.registerTask('ResetVS', [
+        'JsTestAdapter-ResetVisualStudio'
     ]);
-    grunt.loadNpmTasks('grunt-exec');
+
+    grunt.registerTask('RunVS', [
+        'JsTestAdapter-ResetVisualStudio',
+        'JsTestAdapter-RunVisualStudio'
+    ]);
+
+    grunt.registerTask('default', ['CreatePackage']);
 }
-module.exports = config;
-//# sourceMappingURL=Gruntfile.js.map

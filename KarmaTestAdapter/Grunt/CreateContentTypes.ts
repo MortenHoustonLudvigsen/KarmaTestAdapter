@@ -1,11 +1,21 @@
 ﻿import path = require('path');
+var builder = require('xmlbuilder');
 
-function getContentTypes(grunt: any, directory: string): string {
+function createContentTypes(grunt: any, directory: string, fileName: string): void {
+    var types = require('xmlbuilder').create('Types', { version: '1.0', encoding: 'utf-8' });
+
+    types.att('xmlns', 'http://schemas.openxmlformats.org/package/2006/content-types');
+
     var extensions = {
         'vsixmanifest': 'text/xml',
         'xml': 'text/xml',
         'js': 'application/javascript',
+        'jsm': 'application/javascript',
+        'ts': 'application/typescript',
         'json': 'application/json',
+        'json5': 'application/json',
+        'hbs': 'text/plain',
+        'map': 'text/plain',
         'md': 'text/plain',
         'markdown': 'text/plain',
         'txt': 'text/plain'
@@ -28,21 +38,29 @@ function getContentTypes(grunt: any, directory: string): string {
         }
     });
 
-    var contentTypes = [];
-
     for (var extension in extensions) {
         if (extensions.hasOwnProperty(extension)) {
-            contentTypes.push('<Default Extension="' + extension + '" ContentType="' + extensions[extension] + '"/>');
+            types.ele('Default', {
+                'Extension': extension,
+                'ContentType': extensions[extension]
+            });
         }
     }
 
     for (var override in overrides) {
         if (overrides.hasOwnProperty(override)) {
-            contentTypes.push('<Override PartName="' + override + '" ContentType="' + overrides[override] + '"/>');
+            types.ele('Override', {
+                'PartName': override,
+                'ContentType': overrides[override]
+            });
         }
     }
 
-    return contentTypes.join('\n');
+    grunt.file.write(fileName, types.end({
+        pretty: true,
+        indent: '    ',
+        newline: '\n'
+    }));
 }
 
-export = getContentTypes;
+export = createContentTypes;

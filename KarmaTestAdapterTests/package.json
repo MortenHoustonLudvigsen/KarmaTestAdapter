@@ -21,6 +21,9 @@
     "grunt-contrib-copy": "^0.8.0",
     "grunt-exec": "^0.4.6",
     "grunt-nuget": "^0.1.4",
-    "grunt-xmlpoke": "^0.8.0"
+    "grunt-xmlpoke": "^0.8.0",
+    "regedit": "^2.1.0",
+    "string-template": "^0.2.0",
+    "xmlbuilder": "^2.6.2"
   }
 }

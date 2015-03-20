@@ -1,7 +1,8 @@
 ﻿import path = require('path');
-import getNodeModules = require('./GetNodeModules');
-import getContentTypes = require('./GetContentTypes');
 import extend = require('extend');
+import getNodeModules = require('./GetNodeModules');
+import createContentTypes = require('./CreateContentTypes');
+import TestVS = require('./TestVS');
 var flatten = require('flatten-packages');
 
 type Options = {
@@ -11,6 +12,9 @@ type Options = {
     build?: string;
     dist?: string;
     output?: string;
+    rootSuffix: string;
+    testProject?: string;
+    visualStudioVersion: string;
 };
 
 var defaultOptions: Options = {
@@ -19,7 +23,9 @@ var defaultOptions: Options = {
     build: 'build',
     dist: 'dist',
     output: 'bin',
-    lib: 'lib'
+    lib: 'lib',
+    rootSuffix: 'JsTestAdapter',
+    visualStudioVersion: process.env.VisualStudioVersion
 };
 
 export function config(grunt: any, options: Options): void {
@@ -33,7 +39,11 @@ export function config(grunt: any, options: Options): void {
     grunt.config.merge({
         // read in the project settings from the package.json file into the pkg property
         pkg: grunt.file.readJSON(options.packagePath),
+        JsTestAdapterPackage: grunt.file.readJSON('JsTestAdapter.json'),
         JsTestAdapterOptions: options,
+        JsTestAdapterValues: {
+            vsixFile: '<%= JsTestAdapterOptions.dist %>/<%= JsTestAdapterOptions.name %>.vsix'
+        },
 
         clean: {
             JsTestAdapter: [options.build, options.dist]
@@ -67,19 +77,7 @@ export function config(grunt: any, options: Options): void {
                     ]
                 },
                 files: {
-                    '<%= JsTestAdapterOptions.build %>/extension.vsixmanifest': 'Vsix/source.extension.vsixmanifest'
-                }
-            },
-            'JsTestAdapter-contentTypes': {
-                options: {
-                    xpath: '/Types',
-                    valueType: 'append',
-                    value: function (node) {
-                        return getContentTypes(grunt, options.build);
-                    }
-                },
-                files: {
-                    '<%= JsTestAdapterOptions.build %>/[Content_Types].xml': 'Vsix/Content_Types.xml'
+                    '<%= JsTestAdapterOptions.build %>/extension.vsixmanifest': 'source.extension.vsixmanifest'
                 }
             }
         },
@@ -89,7 +87,7 @@ export function config(grunt: any, options: Options): void {
                 options: {
                     level: 9,
                     mode: 'zip',
-                    archive: '<%= JsTestAdapterOptions.dist %>/<%= JsTestAdapterOptions.name %>.vsix'
+                    archive: '<%= JsTestAdapterValues.vsixFile %>'
                 },
                 files: [
                     { expand: true, cwd: options.build, src: ['**/*'], dest: '/' }
@@ -98,9 +96,13 @@ export function config(grunt: any, options: Options): void {
         }
     });
 
+    grunt.registerTask('JsTestAdapter-CreateContentTypes', function () {
+        createContentTypes(grunt, options.build, path.join(options.build, '[Content_Types].xml'));
+    });
+
     grunt.registerTask('JsTestAdapter-flatten-packages', function () {
         var done = this.async();
-        flatten(options.build, {}, function (err, res) {
+        flatten(options.build, {},(err, res) => {
             if (err) {
                 grunt.log.error(err);
                 done(false);
@@ -112,13 +114,23 @@ export function config(grunt: any, options: Options): void {
         });
     });
 
-    grunt.registerTask('JsTestAdapter', [
-        'clean:JsTestAdapter',
-        'copy:JsTestAdapter',
-        'JsTestAdapter-flatten-packages',
-        'xmlpoke:JsTestAdapter-vsix',
-        'xmlpoke:JsTestAdapter-contentTypes',
-        'compress:JsTestAdapter'
-    ]);
+    grunt.registerTask('JsTestAdapter-ResetVisualStudio', function () {
+        var done = this.async();
+        TestVS.reset(grunt, {
+            version: options.visualStudioVersion,
+            rootSuffix: options.rootSuffix,
+            toolsDir: grunt.config('JsTestAdapterPackage').ToolsPath,
+            vsixFile: grunt.config('JsTestAdapterValues').vsixFile
+        }).then(() => done(), err => done(err));
+    });
+
+    grunt.registerTask('JsTestAdapter-RunVisualStudio', function () {
+        var done = this.async();
+        TestVS.run(grunt, {
+            version: options.visualStudioVersion,
+            testProject: options.testProject,
+            rootSuffix: options.rootSuffix
+        }).then(() => done(), err => done(err));
+    });
 }
 

@@ -1,7 +1,8 @@
 var path = require('path');
-var getNodeModules = require('./GetNodeModules');
-var getContentTypes = require('./GetContentTypes');
 var extend = require('extend');
+var getNodeModules = require('./GetNodeModules');
+var createContentTypes = require('./CreateContentTypes');
+var TestVS = require('./TestVS');
 var flatten = require('flatten-packages');
 var defaultOptions = {
     packagePath: 'package.json',
@@ -9,7 +10,9 @@ var defaultOptions = {
     build: 'build',
     dist: 'dist',
     output: 'bin',
-    lib: 'lib'
+    lib: 'lib',
+    rootSuffix: 'JsTestAdapter',
+    visualStudioVersion: process.env.VisualStudioVersion
 };
 function config(grunt, options) {
     options = extend({}, defaultOptions, options);
@@ -20,7 +23,11 @@ function config(grunt, options) {
     grunt.config.merge({
         // read in the project settings from the package.json file into the pkg property
         pkg: grunt.file.readJSON(options.packagePath),
+        JsTestAdapterPackage: grunt.file.readJSON('JsTestAdapter.json'),
         JsTestAdapterOptions: options,
+        JsTestAdapterValues: {
+            vsixFile: '<%= JsTestAdapterOptions.dist %>/<%= JsTestAdapterOptions.name %>.vsix'
+        },
         clean: {
             JsTestAdapter: [options.build, options.dist]
         },
@@ -46,19 +53,7 @@ function config(grunt, options) {
                     ]
                 },
                 files: {
-                    '<%= JsTestAdapterOptions.build %>/extension.vsixmanifest': 'Vsix/source.extension.vsixmanifest'
-                }
-            },
-            'JsTestAdapter-contentTypes': {
-                options: {
-                    xpath: '/Types',
-                    valueType: 'append',
-                    value: function (node) {
-                        return getContentTypes(grunt, options.build);
-                    }
-                },
-                files: {
-                    '<%= JsTestAdapterOptions.build %>/[Content_Types].xml': 'Vsix/Content_Types.xml'
+                    '<%= JsTestAdapterOptions.build %>/extension.vsixmanifest': 'source.extension.vsixmanifest'
                 }
             }
         },
@@ -67,13 +62,16 @@ function config(grunt, options) {
                 options: {
                     level: 9,
                     mode: 'zip',
-                    archive: '<%= JsTestAdapterOptions.dist %>/<%= JsTestAdapterOptions.name %>.vsix'
+                    archive: '<%= JsTestAdapterValues.vsixFile %>'
                 },
                 files: [
                     { expand: true, cwd: options.build, src: ['**/*'], dest: '/' }
                 ]
             }
         }
+    });
+    grunt.registerTask('JsTestAdapter-CreateContentTypes', function () {
+        createContentTypes(grunt, options.build, path.join(options.build, '[Content_Types].xml'));
     });
     grunt.registerTask('JsTestAdapter-flatten-packages', function () {
         var done = this.async();
@@ -88,14 +86,23 @@ function config(grunt, options) {
             }
         });
     });
-    grunt.registerTask('JsTestAdapter', [
-        'clean:JsTestAdapter',
-        'copy:JsTestAdapter',
-        'JsTestAdapter-flatten-packages',
-        'xmlpoke:JsTestAdapter-vsix',
-        'xmlpoke:JsTestAdapter-contentTypes',
-        'compress:JsTestAdapter'
-    ]);
+    grunt.registerTask('JsTestAdapter-ResetVisualStudio', function () {
+        var done = this.async();
+        TestVS.reset(grunt, {
+            version: options.visualStudioVersion,
+            rootSuffix: options.rootSuffix,
+            toolsDir: grunt.config('JsTestAdapterPackage').ToolsPath,
+            vsixFile: grunt.config('JsTestAdapterValues').vsixFile
+        }).then(function () { return done(); }, function (err) { return done(err); });
+    });
+    grunt.registerTask('JsTestAdapter-RunVisualStudio', function () {
+        var done = this.async();
+        TestVS.run(grunt, {
+            version: options.visualStudioVersion,
+            testProject: options.testProject,
+            rootSuffix: options.rootSuffix
+        }).then(function () { return done(); }, function (err) { return done(err); });
+    });
 }
 exports.config = config;
 //# sourceMappingURL=Index.js.map
