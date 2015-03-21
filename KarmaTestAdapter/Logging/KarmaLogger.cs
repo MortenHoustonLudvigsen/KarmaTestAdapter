@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+﻿using JsTestAdapter.Logging;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using Microsoft.VisualStudio.TestWindow.Extensibility;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapter.Logging
 {
-    public class KarmaLogger : KarmaLoggerBase
+    public class KarmaLogger : TestLogger
     {
-        private readonly List<IKarmaLogger> _loggers = new List<IKarmaLogger>();
+        private readonly List<ITestLogger> _loggers = new List<ITestLogger>();
 
         public KarmaLogger(ILogger logger, bool newGlobalLog = false)
             : this(logger, null, newGlobalLog)
@@ -23,15 +24,9 @@ namespace KarmaTestAdapter.Logging
         {
         }
 
-        public KarmaLogger(IKarmaLogger karmaLogger, params string[] context)
-        {
-            AddContext(karmaLogger.Context);
-            AddContext(context);
-            this.AddLogger(karmaLogger);
-        }
-
         private KarmaLogger(ILogger logger, IMessageLogger messageLogger, bool newGlobalLog)
         {
+            AddContext("Karma");
             if (Globals.Debug)
             {
                 if (!Directory.Exists(Globals.GlobalLogDir))
@@ -47,60 +42,6 @@ namespace KarmaTestAdapter.Logging
             }
             this.AddLogger(logger);
             this.AddLogger(messageLogger);
-        }
-
-        public override bool HasLogger<TLogger>(Func<TLogger, bool> predicate)
-        {
-            if (_loggers.OfType<TLogger>().Any(predicate))
-            {
-                return true;
-            }
-            foreach (var logger in _loggers)
-            {
-                if (logger.HasLogger(predicate))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public override void AddLogger<TLogger>(Func<TLogger, bool> predicate, Func<TLogger> createLogger)
-        {
-            if (!HasLogger(predicate))
-            {
-                _loggers.Add(createLogger());
-            }
-        }
-
-        public override void RemoveLogger<TLogger>(Func<TLogger, bool> predicate)
-        {
-            var loggersToRemove = _loggers.OfType<TLogger>().Where(predicate).Cast<IKarmaLogger>().ToList();
-            _loggers.RemoveAll(l => loggersToRemove.Contains(l));
-        }
-
-        public override void Clear()
-        {
-            foreach (var logger in _loggers)
-            {
-                try
-                {
-                    logger.Clear();
-                }
-                catch { }
-            }
-        }
-
-        public override void Log(KarmaLogLevel level, IEnumerable<string> context, string message)
-        {
-            foreach (var logger in _loggers)
-            {
-                try
-                {
-                    logger.Log(level, context, message);
-                }
-                catch { }
-            }
         }
     }
 }

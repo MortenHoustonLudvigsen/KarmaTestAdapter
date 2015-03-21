@@ -22,14 +22,6 @@ echo.
 echo.
 
 echo ====================================================================================
-echo Install npm packages in %SolutionDir%\KarmaServer
-echo ------------------------------------------------------------------------------------
-cd %SolutionDir%\KarmaServer
-call npm install
-echo.
-echo.
-
-echo ====================================================================================
 echo Install npm packages in %SolutionDir%\TestProjects
 echo ------------------------------------------------------------------------------------
 cd %SolutionDir%\TestProjects

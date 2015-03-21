@@ -1,18 +1,29 @@
-﻿using System;
+﻿using JsTestAdapter.Helpers;
+using JsTestAdapter.TestAdapter;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
 namespace KarmaTestAdapter.TestAdapter
 {
-    public class KarmaTestContainerSource
+    public class KarmaTestContainerSource : TestContainerSource
     {
-        public KarmaTestContainerSource(string karmaConfigFile)
+        public KarmaTestContainerSource(IVsProject project, string source)
+            : base(project, GetSource(project, source))
         {
-            KarmaConfigFile = karmaConfigFile;
         }
 
-        public string KarmaConfigFile { get; set; }
-        public int Port { get; set; }
+        private static string GetSource(IVsProject project, string source)
+        {
+            var directory = Directory.Exists(source) ? source : Path.GetDirectoryName(source);
+            var candidates = new[]{
+                Path.Combine(directory, Globals.SettingsFilename),
+                Path.Combine(directory, Globals.KarmaConfigFilename)
+            };
+            return candidates.FirstOrDefault(f => project.HasFile(f));
+        }
     }
 }

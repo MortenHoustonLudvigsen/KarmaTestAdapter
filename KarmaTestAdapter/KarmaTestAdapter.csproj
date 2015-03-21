@@ -1,67 +1,227 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7810C732-F9A2-40EC-910D-DE3B9F50F8E1}</ProjectGuid>
+    <ProjectGuid>{D7F71BDD-0001-40CA-8FD5-0875C9223B26}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KarmaTestAdapter</RootNamespace>
-    <AssemblyName>KarmaTestAdapter</AssemblyName>
+    <OutputPath>bin</OutputPath>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>KarmaTestAdapter</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>52690</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:52690/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Content Include="Gruntfile.js" />
+    <Content Include="Grunt\CreateContentTypes.js">
+      <DependentUpon>CreateContentTypes.ts</DependentUpon>
+    </Content>
+    <Content Include="Grunt\GetNodeModules.js">
+      <DependentUpon>GetNodeModules.ts</DependentUpon>
+    </Content>
+    <Content Include="Grunt\Index.js">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+    <Content Include="Grunt\TestVS.js">
+      <DependentUpon>TestVS.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\GlobalLog.js">
+      <DependentUpon>GlobalLog.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Index.js">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\adapter.js">
+      <DependentUpon>adapter.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\boot.js">
+      <DependentUpon>boot.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\index.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\instumentation.js">
+      <DependentUpon>instumentation.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Karma.js">
+      <DependentUpon>Karma.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Reporter.js">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Server.js">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Start.js">
+      <DependentUpon>Start.ts</DependentUpon>
+    </Content>
+    <Content Include="source.extension.vsixmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Grunt\CreateContentTypes.ts" />
+    <TypeScriptCompile Include="Grunt\GetNodeModules.ts" />
+    <TypeScriptCompile Include="Grunt\Index.ts" />
+    <TypeScriptCompile Include="Grunt\TestVS.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\GlobalLog.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\Index.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\adapter.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\boot.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\index.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\instumentation.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\Specs.d.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\Karma.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\Reporter.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\Server.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\Start.ts" />
+    <TypeScriptCompile Include="TestServer\FreePort.ts" />
+    <TypeScriptCompile Include="TestServer\JsonServer.ts" />
+    <TypeScriptCompile Include="TestServer\Logger.ts" />
+    <TypeScriptCompile Include="TestServer\SourceUtils.ts" />
+    <TypeScriptCompile Include="TestServer\Specs.ts" />
+    <TypeScriptCompile Include="TestServer\TestContext.ts" />
+    <TypeScriptCompile Include="TestServer\TestReporter.ts" />
+    <TypeScriptCompile Include="TestServer\TestServer.ts" />
+    <TypeScriptCompile Include="TestServer\TextFile.ts" />
+    <TypeScriptCompile Include="typings\extend\extend.d.ts" />
+    <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
+    <TypeScriptCompile Include="typings\node\node.d.ts" />
+    <TypeScriptCompile Include="typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="typings\source-map\source-map.d.ts" />
+    <TypeScriptCompile Include="typings\tsd.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\FreePort.js">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\JsonServer.js">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\Logger.js">
+      <DependentUpon>Logger.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\SourceUtils.js">
+      <DependentUpon>SourceUtils.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\Specs.js">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestContext.js">
+      <DependentUpon>TestContext.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestReporter.js">
+      <DependentUpon>TestReporter.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestServer.js">
+      <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TextFile.js">
+      <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
+    <Content Include="tsd.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="KarmaTestAdapter.schema.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Globals.cs" />
+    <Compile Include="Helpers\KarmaPathUtils.cs" />
+    <Compile Include="Karma\KarmaServer.cs" />
+    <Compile Include="Logging\KarmaLogger.cs" />
+    <Compile Include="Logging\KarmaServerTestLogger.cs" />
+    <Compile Include="TestAdapter\KarmaSettings.cs" />
+    <Compile Include="TestAdapter\KarmaTestAdapterInfo.cs" />
+    <Compile Include="TestAdapter\KarmaTestContainer.cs" />
+    <Compile Include="TestAdapter\KarmaTestContainerDiscoverer.cs" />
+    <Compile Include="TestAdapter\KarmaTestContainerSource.cs" />
+    <Compile Include="TestAdapter\KarmaTestRunner.cs" />
+    <Compile Include="TestAdapter\KarmaTestSettings.cs" />
+    <Compile Include="TestAdapter\KarmaTestSettingsProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dlls\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\JsTestAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dlls\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <Private>False</Private>
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dlls\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>False</Private>
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>Dlls\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>Dlls\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\NpmProxy.dll</HintPath>
+    </Reference>
     <Reference Include="ProcessRunner">
-      <HintPath>..\packages\ProcessRunner.1.0.7\lib\net40\ProcessRunner.dll</HintPath>
+      <HintPath>..\packages\ProcessRunner.1.0.8\lib\net40\ProcessRunner.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveSockets">
       <HintPath>..\packages\ReactiveSockets.0.2.6\lib\net40\ReactiveSockets.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Reactive.Core">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -75,95 +235,117 @@
     <Reference Include="System.Reactive.PlatformServices">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\ExceptionExtensions.cs" />
-    <Compile Include="Globals.cs" />
-    <Compile Include="Helpers\Json.cs" />
-    <Compile Include="Helpers\ProjectListener.cs" />
-    <Compile Include="Helpers\Sha1Utils.cs" />
-    <Compile Include="Helpers\Validator.cs" />
-    <Compile Include="Karma\KarmaClient.cs" />
-    <Compile Include="Karma\KarmaDiscoverCommand.cs" />
-    <Compile Include="Karma\KarmaEvent.cs" />
-    <Compile Include="Karma\KarmaEventCommand.cs" />
-    <Compile Include="Karma\KarmaRequestRunCommand.cs" />
-    <Compile Include="Karma\KarmaServer.cs" />
-    <Compile Include="Karma\KarmaSpec.cs" />
-    <Compile Include="Karma\KarmaStopCommand.cs" />
-    <Compile Include="Logging\Extensions.cs" />
-    <Compile Include="Logging\IKarmaLogger.cs" />
-    <Compile Include="Logging\KarmaExtensibilityLogger.cs" />
-    <Compile Include="Logging\KarmaFileLogger.cs" />
-    <Compile Include="Logging\KarmaLogger.cs" />
-    <Compile Include="Logging\KarmaLoggerBase.cs" />
-    <Compile Include="Logging\KarmaLogLevel.cs" />
-    <Compile Include="Logging\KarmaServerLogger.cs" />
-    <Compile Include="Logging\KarmaTestMessageLogger.cs" />
-    <Compile Include="Helpers\PathUtils.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\TaskCompletionSourceExtensions.cs" />
-    <Compile Include="TestAdapter\KarmaFileWatcher.cs" />
-    <Compile Include="TestAdapter\KarmaSettings.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainer.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerBase.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerDiscoverer.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerList.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerSnapshot.cs" />
-    <Compile Include="TestAdapter\KarmaTestContainerSource.cs" />
-    <Compile Include="TestAdapter\KarmaTestDiscoverer.cs" />
-    <Compile Include="TestAdapter\KarmaTestExecutor.cs" />
-    <Compile Include="TestAdapter\KarmaTestSettings.cs" />
-    <Compile Include="TestAdapter\KarmaTestSettingsProvider.cs" />
-    <Compile Include="TestAdapter\RunSettingsExtensions.cs" />
-    <Compile Include="Helpers\VSExtensions.cs" />
-    <Compile Include="Helpers\SolutionListener.cs" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DebugSettings.xml" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.12.0.dll" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.12.0.xml" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.Immutable.10.0.dll" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.Immutable.10.0.xml" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.Interop.dll" />
-    <Content Include="Dlls\Microsoft.VisualStudio.Shell.Interop.xml" />
-    <Content Include="Dlls\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" />
-    <Content Include="Dlls\Microsoft.VisualStudio.TestWindow.Interfaces.dll" />
-    <Content Include="gruntfile.js" />
-    <Content Include="source.extension.vsixmanifest" />
-    <Content Include="Vsix\Content_Types.xml" />
+    <Content Include="KarmaTestServer\GlobalLog.js.map">
+      <DependentUpon>GlobalLog.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Index.js.map">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\adapter.js.map">
+      <DependentUpon>adapter.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\boot.js.map">
+      <DependentUpon>boot.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\index.js.map">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\karma-jasmine\lib\instumentation.js.map">
+      <DependentUpon>instumentation.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Karma.js.map">
+      <DependentUpon>Karma.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Reporter.js.map">
+      <DependentUpon>Reporter.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Server.js.map">
+      <DependentUpon>Server.ts</DependentUpon>
+    </Content>
+    <Content Include="KarmaTestServer\Start.js.map">
+      <DependentUpon>Start.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ExperimentalHubVars.bat" />
-    <None Include="KarmaTestAdapter.schema.json" />
-    <None Include="package.json" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="ResetExperimentalHub.bat" />
-    <None Include="StartExperimentalHub.bat" />
+    <Content Include="BuildConfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JsonServerClient\JsonServerClient.csproj">
-      <Project>{f15c2463-e70b-435a-9de6-69d6dedad66f}</Project>
-      <Name>JsonServerClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NpmProxy\NpmProxy.csproj">
-      <Project>{65f8ef17-76cf-4f2f-9d3e-55cc1c95d065}</Project>
-      <Name>NpmProxy</Name>
-    </ProjectReference>
+    <Content Include="JsTestAdapter.json" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets. -->
-  <Target Name="BeforeBuild">
-    <WriteLinesToFile File="BuildConfig.json" Lines="{&#xD;&#xA;    &quot;VisualStudioVersion&quot;: &quot;$(VisualStudioVersion)&quot;,&#xD;&#xA;    &quot;DevEnvDir&quot;: &quot;$([System.String]::Copy('$(DevEnvDir)').Replace('\', '\\'))&quot;&#xD;&#xA;}" Overwrite="true" Encoding="UTF-8" />
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
+  <ItemGroup>
+    <Content Include="TestServer\TextFile.js.map">
+      <DependentUpon>TextFile.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\TestServer.js.map">
+      <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\TestReporter.js.map">
+      <DependentUpon>TestReporter.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\TestContext.js.map">
+      <DependentUpon>TestContext.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\Specs.js.map">
+      <DependentUpon>Specs.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\SourceUtils.js.map">
+      <DependentUpon>SourceUtils.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\Logger.js.map">
+      <DependentUpon>Logger.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\JsonServer.js.map">
+      <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\FreePort.js.map">
+      <DependentUpon>FreePort.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Grunt\TestVS.js.map">
+      <DependentUpon>TestVS.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Grunt\Index.js.map">
+      <DependentUpon>Index.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Grunt\GetNodeModules.js.map">
+      <DependentUpon>GetNodeModules.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Grunt\CreateContentTypes.js.map">
+      <DependentUpon>CreateContentTypes.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

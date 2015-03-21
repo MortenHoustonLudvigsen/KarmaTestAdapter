@@ -1,0 +1,29 @@
+{
+  "name": "KarmaTestAdapterTests",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "error-stack-parser": "^1.2.0",
+    "extend": "^2.0.0",
+    "iconv-lite": "^0.4.7",
+    "q": "^1.2.0",
+    "source-map": "^0.4.2",
+    "source-map-resolve": "^0.3.1",
+    "stackframe": "^0.2.2",
+    "yargs": "^3.5.4"
+  },
+  "devDependencies": {
+    "extend": "^2.0.0",
+    "flatten-packages": "^0.1.4",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compress": "^0.13.0",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-exec": "^0.4.6",
+    "grunt-nuget": "^0.1.4",
+    "grunt-xmlpoke": "^0.8.0",
+    "regedit": "^2.1.0",
+    "string-template": "^0.2.0",
+    "xmlbuilder": "^2.6.2"
+  }
+}

@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter;
 using KarmaTestAdapter.Logging;
 using NUnit.Framework;
 using System;
@@ -10,28 +11,6 @@ using System.Threading.Tasks;
 
 namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class ExpectationsFixtureAttribute : TestActionAttribute
-    {
-        public override void BeforeTest(TestDetails details)
-        {
-        }
-
-        public override void AfterTest(TestDetails details)
-        {
-            if (details.IsSuite)
-            {
-                ExpectationsTests.Reset();
-            }
-        }
-
-        public override ActionTargets Targets
-        {
-            get { return ActionTargets.Suite; }
-        }
-    }
-
-    [ExpectationsFixture]
     public class ExpectationsTests : BaseFixture
     {
         private static string ExpectationsDir = Path.GetFullPath(Path.Combine(Globals.AssemblyDirectory, @"..\..\..\TestProjects"));
@@ -50,11 +29,17 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
 
         public Expectations Expectations { get { return _expectations.Value; } }
 
-        [Test, TestCaseSource("GetProjectShouldBeValidData")]
-        public void ProjectShouldBeValid(ProjectTestCase testCase)
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
         {
+            Reset();
+        }
+
+        [Test, TestCaseSource("GetProjectShouldBeValidData")]
+        public async void ProjectShouldBeValid(ProjectTestCase testCase)
+        {
+            Console.WriteLine(await testCase.GetOutput());
             Assert.That(testCase.IsValid, testCase.InvalidReason);
-            Logger.Info(testCase.Output);
         }
 
         private IEnumerable<ProjectTestCase> GetProjectShouldBeValidData()
@@ -63,10 +48,24 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
                 .Select(t => t.SetDescription("should be valid"));
         }
 
+        [Test, TestCaseSource("GetProjectShouldNotHaveUnexpectedKarmaSpecsData")]
+        public async void ProjectShouldNotHaveUnexpectedKarmaSpecs(ProjectTestCase testCase)
+        {
+            var unexpectedKarmaSpecs = await testCase.Expected.GetUnexpectedKarmaSpecs();
+            Console.WriteLine(unexpectedKarmaSpecs.Format());
+            Assert.That(!unexpectedKarmaSpecs.Any(), "{0} unexpected karma specs", unexpectedKarmaSpecs.Count());
+        }
+
+        private IEnumerable<ProjectTestCase> GetProjectShouldNotHaveUnexpectedKarmaSpecsData()
+        {
+            return Expectations.GetProjectTestCases()
+                .Select(t => t.SetDescription("should not have unexpected karma specs"));
+        }
+
         [Test, TestCaseSource("GetSpecShouldBeValidData")]
         public void SpecShouldBeValid(SpecTestCase testCase)
         {
-            Assert.That(testCase.IsValid, testCase.Output);
+            Assert.That(testCase.IsValid, testCase.InvalidReason);
         }
 
         private IEnumerable<SpecTestCase> GetSpecShouldBeValidData()
@@ -75,137 +74,144 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
                 .Select(t => t.SetDescription("should be valid"));
         }
 
-        [Test, TestCaseSource("GetShouldHaveSpecData")]
-        public void ShouldHaveSpec(SpecTestCase testCase)
-        {
-            Assert.That(testCase.Spec, Is.Not.Null);
-        }
-
-        private IEnumerable<SpecTestCase> GetValidTestCases(bool expectSpec = true, bool expectKarmaSpec = true)
-        {
-            var testCases = Expectations.GetSpecTestCases().Where(t => t.IsValid);
-            if (expectSpec)
-            {
-                testCases = testCases.Where(t => t.Spec != null);
-            }
-            if (expectKarmaSpec)
-            {
-                testCases = testCases.Where(t => t.KarmaSpec != null);
-            }
-            return testCases;
-        }
-
-        private IEnumerable<SpecTestCase> GetShouldHaveSpecData()
-        {
-            return GetValidTestCases(expectSpec: false)
-                .Select(t => t.SetDescription("should have spec"));
-        }
-
         [Test, TestCaseSource("GetShouldHaveKarmaSpecData")]
-        public void ShouldHaveKarmaSpec(SpecTestCase testCase)
+        public async void ShouldHaveKarmaSpec(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec, Is.Not.Null, "Karma spec missing");
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveKarmaSpecData()
         {
-            return GetValidTestCases(expectKarmaSpec: false)
+            return Expectations.GetSpecTestCases()
                 .Select(t => t.SetDescription("should have karma spec"));
         }
 
         [Test, TestCaseSource("GetShouldHaveResultsData")]
-        public void ShouldHaveResults(SpecTestCase testCase)
+        public async void ShouldHaveResults(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec.Results.Any(), Is.True);
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Results.Any(), Is.True);
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveResultsData()
         {
-            return GetValidTestCases()
+            return Expectations.GetSpecTestCases()
                 .Select(t => t.SetDescription("should have results"));
         }
 
         [Test, TestCaseSource("GetShouldHaveFileNameData")]
-        public void ShouldHaveFileName(SpecTestCase testCase)
+        public async void ShouldHaveFileName(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null, "Source missing");
-            Assert.That(testCase.KarmaSpec.Source.FileName, Is.SamePath(testCase.Spec.FileName));
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Source, Is.Not.Null, "Source missing");
+            Assert.That(karmaSpec.Source.FileName, Is.SamePath(testCase.Spec.FileName));
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveFileNameData()
         {
-            return GetValidTestCases()
+            return Expectations.GetSpecTestCases()
                 .Where(t => !string.IsNullOrWhiteSpace(t.Spec.FileName))
                 .Select(t => t.SetDescription("should have file name '{0}'", t.Spec.FileName));
         }
 
         [Test, TestCaseSource("GetShouldHaveLineNumberData")]
-        public void ShouldHaveLineNumber(SpecTestCase testCase)
+        public async void ShouldHaveLineNumber(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaSpec.Source, Is.Not.Null, "Source missing");
-            Assert.That(testCase.KarmaSpec.Source.LineNumber, new BetweenConstraint(testCase.Spec.LineNumberFrom, testCase.Spec.LineNumberTo), "Line number");
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Source, Is.Not.Null, "Source missing");
+            Assert.That(karmaSpec.Source.LineNumber, new BetweenConstraint(testCase.Spec.LineNumberFrom, testCase.Spec.LineNumberTo), "Line number");
         }
 
         private IEnumerable<SpecTestCase> GetShouldHaveLineNumberData()
         {
-            return GetValidTestCases()
+            return Expectations.GetSpecTestCases()
                 .Where(t => t.Spec.LineNumberFrom.HasValue && t.Spec.LineNumberTo.HasValue)
                 .Select(t => t.SetDescription("should have line number between {0} and {1}", t.Spec.LineNumberFrom, t.Spec.LineNumberTo));
         }
 
-        [Test, TestCaseSource("GetShouldFailData")]
-        public void ShouldFail(SpecResultTestCase testCase)
+        [Test, TestCaseSource("GetShouldSucceedData")]
+        public async void ShouldSucceed(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaResult.Success, Is.False);
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Results, Is.Not.Null, "Karma spec results missing");
+            Assert.That(karmaSpec.Results.All(r => r.Success), "Some results did not succeed");
         }
 
-        private IEnumerable<SpecResultTestCase> GetShouldFailData()
+        private IEnumerable<SpecTestCase> GetShouldSucceedData()
         {
-            return Expectations.GetSpecResultTestCases()
+            return Expectations.GetSpecTestCases()
+                .Where(t => t.Spec.Success)
+                .Select(t => t.SetDescription("should succeed"));
+        }
+
+        [Test, TestCaseSource("GetShouldFailData")]
+        public async void ShouldFail(SpecTestCase testCase)
+        {
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Results, Is.Not.Null, "Karma spec results missing");
+            Assert.That(karmaSpec.Results.All(r => !r.Success), "Some results did not fail");
+        }
+
+        private IEnumerable<SpecTestCase> GetShouldFailData()
+        {
+            return Expectations.GetSpecTestCases()
                 .Where(t => !t.Spec.Success)
                 .Select(t => t.SetDescription("should fail"));
         }
 
         [Test, TestCaseSource("GetShouldHaveStackTraceData")]
-        public void ShouldHaveStackTrace(SpecResultTestCase testCase)
+        public async void ShouldHaveStackTrace(SpecTestCase testCase)
         {
-            string actualStack = null;
-            if (testCase.KarmaResult.Failures != null && testCase.KarmaResult.Failures.Any())
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Results, Is.Not.Null, "Karma spec results missing");
+            foreach (var result in karmaSpec.Results)
             {
-                actualStack = string.Join(Environment.NewLine, testCase.KarmaResult.Failures.First().stack.Take(testCase.Spec.Stack.Count()));
+                string actualStack = null;
+                if (result.Failures != null && result.Failures.Any())
+                {
+                    actualStack = string.Join(Environment.NewLine, result.Failures.First().stack.Take(testCase.Spec.Stack.Count()));
+                }
+                Assert.That(actualStack, Is.EqualTo(testCase.Spec.StackTrace), "Stack trace incorrect for {0}", result.Name);
             }
-            Assert.That(actualStack, Is.EqualTo(testCase.Spec.StackTrace));
         }
 
-        private IEnumerable<SpecResultTestCase> GetShouldHaveStackTraceData()
+        private IEnumerable<SpecTestCase> GetShouldHaveStackTraceData()
         {
-            return Expectations.GetSpecResultTestCases()
+            return Expectations.GetSpecTestCases()
                 .Where(t => !t.Spec.Success)
                 .Select(t => t.SetDescription("should have stack trace"));
         }
 
-        [Test, TestCaseSource("GetShouldSucceedData")]
-        public void ShouldSucceed(SpecResultTestCase testCase)
-        {
-            Assert.That(testCase.KarmaResult.Success, Is.True);
-        }
-
-        private IEnumerable<SpecResultTestCase> GetShouldSucceedData()
-        {
-            return Expectations.GetSpecResultTestCases()
-                .Where(t => t.Spec.Success)
-                .Select(t => t.SetDescription("should succeed"));
-        }
-
         [Test, TestCaseSource("GetShouldHaveOutputData")]
-        public void ShouldHaveOutput(SpecResultTestCase testCase)
+        public async void ShouldHaveOutput(SpecTestCase testCase)
         {
-            Assert.That(testCase.KarmaResult.Output, Is.StringMatching(testCase.Spec.Output));
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.Results, Is.Not.Null, "Karma spec results missing");
+            foreach (var result in karmaSpec.Results)
+            {
+                Assert.That(result.Output, Is.StringMatching(testCase.Spec.Output), "Output incorrect for {0}", result.Name);
+            }
         }
 
-        private IEnumerable<SpecResultTestCase> GetShouldHaveOutputData()
+        private IEnumerable<SpecTestCase> GetShouldHaveOutputData()
         {
-            return Expectations.GetSpecResultTestCases()
+            return Expectations.GetSpecTestCases()
                 .Where(t => !string.IsNullOrWhiteSpace(t.Spec.Output))
                 .Select(t => t.SetDescription("should have output"));
         }

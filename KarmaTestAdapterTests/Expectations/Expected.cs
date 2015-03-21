@@ -1,4 +1,7 @@
-﻿using KarmaTestAdapter;
+﻿using JsTestAdapter.Helpers;
+using JsTestAdapter.Logging;
+using JsTestAdapter.TestServerClient;
+using KarmaTestAdapter;
 using KarmaTestAdapter.Helpers;
 using KarmaTestAdapter.Karma;
 using KarmaTestAdapter.Logging;
@@ -21,7 +24,6 @@ namespace KarmaTestAdapterTests.Expectations
         public Expected(string name, string file, string baseDirectory)
         {
             BaseDirectory = baseDirectory;
-            KarmaOutput = new List<string>();
             Logger = new TestKarmaLogger(message => Console.WriteLine(message));
             Name = name ?? "";
             try
@@ -52,7 +54,6 @@ namespace KarmaTestAdapterTests.Expectations
                     Specs = Enumerable.Empty<ExpectedSpec>();
                 }
                 Globals.IsTest = true;
-                PopulateKarmaSpecs().Wait();
             }
             catch (AggregateException ex)
             {
@@ -75,42 +76,69 @@ namespace KarmaTestAdapterTests.Expectations
             }
         }
 
-        public IKarmaLogger Logger { get; private set; }
+        public ITestLogger Logger { get; private set; }
         public string KarmaConfig { get; set; }
         public IEnumerable<ExpectedSpec> Specs { get; set; }
         public string BaseDirectory { get; private set; }
         public string Directory { get; set; }
         public string Name { get; set; }
-        public IEnumerable<KarmaSpec> KarmaSpecs { get; private set; }
         public bool IsValid { get { return _validator.IsValid; } }
         public string InvalidReason { get { return _validator.InvalidReason; } }
-        public List<string> KarmaOutput { get; private set; }
+
+        private IEnumerable<Spec> _karmaSpecs;
+        private List<string> _karmaOutput = new List<string>();
+
+        public async Task<IEnumerable<string>> GetKarmaOutput()
+        {
+            await PopulateKarmaSpecs();
+            return _karmaOutput;
+        }
+
+        public async Task<IEnumerable<Spec>> GetKarmaSpecs()
+        {
+            await PopulateKarmaSpecs();
+            return _karmaSpecs;
+        }
+
+        public async Task<Spec> GetKarmaSpec(string uniqueName)
+        {
+            var karmaSpecs = await GetKarmaSpecs();
+            return karmaSpecs.FirstOrDefault(s => s.UniqueName == uniqueName);
+        }
+
+        public async Task<IEnumerable<Spec>> GetUnexpectedKarmaSpecs()
+        {
+            var karmaSpecs = await GetKarmaSpecs();
+            return karmaSpecs.Where(k => !Specs.Any(s => s.UniqueName == k.UniqueName)).ToList();
+        }
 
         private Validator _validator = new Validator();
 
         public async Task PopulateKarmaSpecs()
         {
-            var karmaSpecs = new List<KarmaSpec>();
-            var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
-            if (settings.AreValid)
+            if (_karmaSpecs == null)
             {
-                var server = new KarmaServer(settings, Logger);
-                server.OutputReceived += line => Logger.Info("[OUT] {0}", line);
-                server.ErrorReceived += line => Logger.Info("[ERR] {0}", line);
-                server.OutputReceived += line => KarmaOutput.Add(line);
-                server.ErrorReceived += line => KarmaOutput.Add(line);
-                var port = await server.StartServer(60000);
-                var stopCommand = new KarmaStopCommand(port);
-                var discoverCommand = new KarmaDiscoverCommand(port);
-                await discoverCommand.Run(spec => karmaSpecs.Add(spec));
-                await stopCommand.Run();
-                await server.Finished;
-                KarmaSpecs = karmaSpecs;
-                Logger.Info("{0} specs discovered", KarmaSpecs.Count());
-            }
-            else
-            {
-                _validator.Validate(false, settings.InvalidReason);
+                Globals.IsTest = true;
+                var karmaSpecs = new List<Spec>();
+                var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
+                if (settings.AreValid)
+                {
+                    var server = new KarmaServer(settings, Logger);
+                    server.OutputReceived += line => _karmaOutput.Add(line);
+                    server.ErrorReceived += line => _karmaOutput.Add(line);
+                    var port = await server.StartServer(60000);
+                    var stopCommand = new StopCommand(port);
+                    var discoverCommand = new DiscoverCommand(port);
+                    await discoverCommand.Run(spec => karmaSpecs.Add(spec));
+                    await stopCommand.Run();
+                    await server.Finished;
+                    _karmaSpecs = karmaSpecs;
+                    Logger.Info("{0} specs discovered", _karmaSpecs.Count());
+                }
+                else
+                {
+                    _validator.Validate(false, settings.InvalidReason);
+                }
             }
         }
 
@@ -121,32 +149,7 @@ namespace KarmaTestAdapterTests.Expectations
 
         public IEnumerable<SpecTestCase> GetSpecTestCases()
         {
-            if (!IsValid)
-            {
-                return Enumerable.Empty<SpecTestCase>();
-            }
-
-            var uniqueNames = Enumerable.Union(
-                Specs.Select(spec => spec.UniqueName),
-                KarmaSpecs.Select(spec => spec.UniqueName)
-            );
-
-            var q = from uniqueName in uniqueNames
-                    join spec in Specs on uniqueName equals spec.UniqueName into jSpec
-                    from spec in jSpec.DefaultIfEmpty()
-                    join karmaSpec in KarmaSpecs on uniqueName equals karmaSpec.UniqueName into jKarmaSpec
-                    from karmaSpec in jKarmaSpec.DefaultIfEmpty()
-                    select new SpecTestCase(this, uniqueName, spec, karmaSpec);
-
-            return q.ToList();
-        }
-
-        public IEnumerable<SpecResultTestCase> GetSpecResultTestCases()
-        {
-            return GetSpecTestCases()
-                .Where(t => t.IsValid && t.Spec != null && t.KarmaSpec != null)
-                .SelectMany(t => t.KarmaSpec.Results.Select(r => new SpecResultTestCase(t.Expected, t.UniqueName, t.Spec, t.KarmaSpec, r)))
-                .ToList();
+            return Specs.Select(spec => new SpecTestCase(this, spec)).ToList();
         }
     }
 }

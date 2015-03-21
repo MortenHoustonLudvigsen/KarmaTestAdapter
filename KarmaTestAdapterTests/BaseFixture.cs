@@ -1,4 +1,5 @@
-﻿using KarmaTestAdapter;
+﻿using JsTestAdapter.Logging;
+using KarmaTestAdapter;
 using KarmaTestAdapter.Logging;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -15,7 +16,7 @@ namespace KarmaTestAdapterTests
     [TestFixture]
     public abstract class BaseFixture
     {
-        public readonly IKarmaLogger Logger;
+        public readonly ITestLogger Logger;
 
         public BaseFixture()
         {
