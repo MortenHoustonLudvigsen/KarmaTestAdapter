@@ -108,6 +108,7 @@
     <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\boot.ts" />
     <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\index.ts" />
     <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\instumentation.ts" />
+    <TypeScriptCompile Include="KarmaTestServer\karma-jasmine\lib\Specs.d.ts" />
     <TypeScriptCompile Include="KarmaTestServer\Karma.ts" />
     <TypeScriptCompile Include="KarmaTestServer\Reporter.ts" />
     <TypeScriptCompile Include="KarmaTestServer\Server.ts" />
@@ -118,6 +119,7 @@
     <TypeScriptCompile Include="TestServer\SourceUtils.ts" />
     <TypeScriptCompile Include="TestServer\Specs.ts" />
     <TypeScriptCompile Include="TestServer\TestContext.ts" />
+    <TypeScriptCompile Include="TestServer\TestReporter.ts" />
     <TypeScriptCompile Include="TestServer\TestServer.ts" />
     <TypeScriptCompile Include="TestServer\TextFile.ts" />
     <TypeScriptCompile Include="typings\extend\extend.d.ts" />
@@ -145,6 +147,9 @@
     </Content>
     <Content Include="TestServer\TestContext.js">
       <DependentUpon>TestContext.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestReporter.js">
+      <DependentUpon>TestReporter.ts</DependentUpon>
     </Content>
     <Content Include="TestServer\TestServer.js">
       <DependentUpon>TestServer.ts</DependentUpon>
@@ -282,6 +287,11 @@
   <ItemGroup>
     <Content Include="TestServer\TestServer.js.map">
       <DependentUpon>TestServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\TestReporter.js.map">
+      <DependentUpon>TestReporter.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

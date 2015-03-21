@@ -2,37 +2,16 @@
 import path = require('path');
 import url = require('url');
 import Specs = require('../TestServer/Specs');
-import SourceUtils = require('../TestServer/SourceUtils');
-import VsBrowser = require('../TestServer/TestContext');
+import TestReporter = require('../TestServer/TestReporter');
 import Server = require('./Server');
 import Karma = require('./Karma');
 
 interface Browser {
     name: string;
-    vsBrowser: VsBrowser
 }
 
-interface Event {
+interface Result extends Specs.SpecData {
     event: string;
-    description: string;
-    id: string;
-    log: string[];
-    skipped: boolean;
-    success: boolean;
-    suite: string[];
-    time: number;
-    startTime: number;
-    endTime: number;
-    uniqueName: string;
-    source: Specs.Source;
-    failures: Failure[];
-    sourceStack?: any;
-}
-
-interface Failure {
-    message: string;
-    stack: string;
-    passed: boolean;
 }
 
 class Reporter {
@@ -49,37 +28,11 @@ class Reporter {
     private urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
     private basePath = this.config.basePath;
 
+    private testReporter: TestReporter;
     private logger: Karma.Logger;
-    private specMap: { [id: string]: Specs.Spec } = {};
-    private specs: Specs.Spec[] = [];
-    private sourceUtils: SourceUtils;
-
-    private output: string[] = [];
-
-    getSpec(browser: Browser, spec: Event): Specs.Spec {
-        var existingSpec: Specs.Spec;
-        if (existingSpec = this.specMap[spec.id]) {
-            existingSpec.source = existingSpec.source || this.sourceUtils.getSource(spec.sourceStack);
-        } else {
-            existingSpec = this.specMap[spec.id] = {
-                id: spec.id,
-                description: spec.description,
-                uniqueName: spec.uniqueName || browser.vsBrowser.getUniqueName(spec),
-                suite: spec.suite,
-                source: this.sourceUtils.getSource(spec.sourceStack),
-                results: []
-            };
-            this.specs.push(existingSpec);
-        }
-        return existingSpec;
-    }
 
     onRunStart(data): void {
-        this.server.testRunStarted();
-        this.specMap = {};
-        this.specs = [];
-        this.output = [];
-        this.sourceUtils = new SourceUtils(this.basePath, this.logger, fileName => {
+        this.testReporter = new TestReporter(this.server, this.basePath, this.logger, fileName => {
             if (typeof fileName === 'string') {
                 var filePath = url.parse(fileName).pathname;
                 if (filePath.indexOf(this.urlBase) === 0) {
@@ -90,139 +43,47 @@ class Reporter {
             }
             return fileName;
         });
+        this.testReporter.onTestRunStart();
     }
 
     onRunComplete(browsers, results): void {
-        this.server.testRunCompleted(this.specs);
+        this.testReporter.onTestRunComplete();
     }
 
     onBrowserStart(browser: Browser): void {
-        this.output = [];
-        browser.vsBrowser = new VsBrowser(browser);
+        this.testReporter.onContextStart(browser);
     }
 
-    onBrowserError(browser: Browser, error: string): void {
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
-
-        var failures: Failure[];
-        var source: Specs.Source;
-        var stackFrames = this.sourceUtils.parseStack({ stack: error }, false);
-        if (stackFrames) {
-            source = stackFrames[0];
-            failures = [{
-                message: error.split(/(\r\n|\n|\r)/g)[0],
-                passed: false,
-                stack: error
-            }];
-        }
-
-        var id = browser.vsBrowser.getUniqueName([], "Uncaught error");
-
-        var event = <Event>{
-            description: "Uncaught error",
-            id: id,
-            log: [error],
-            skipped: false,
-            success: false,
-            suite: [],
-            time: 0,
-            startTime: undefined,
-            endTime: undefined,
-            uniqueName: id,
-            source: source,
-            failures: failures
-        };
-
-        var spec = this.getSpec(browser, event);
-
-        var result: Specs.SpecResult = {
-            name: browser.name,
-            success: event.success,
-            skipped: event.skipped,
-            output: this.output.join('\n'),
-            time: event.time,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            log: event.log,
-            failures: event.failures ? event.failures.map(failure => <Specs.Expectation>{
-                message: failure.message,
-                stack: this.sourceUtils.normalizeStack(failure.stack),
-                passed: failure.passed
-            }) : undefined
-        };
-        browser.vsBrowser.addResult(spec, result);
-        spec.results.push(result);
-
-        this.output = [];
+    onBrowserError(browser: Browser, error: any): void {
+        this.testReporter.onError(browser, error);
     }
 
     onBrowserLog(browser: Browser, message: string, type): void {
         if (typeof message === 'string') {
-            message = message.replace(/^'(.*)'$/, '$1');
+            this.testReporter.onOutput(browser, message.replace(/^'(.*)'$/, '$1'));
         }
-        this.output.push(message);
     }
 
     onBrowserComplete(browser: Browser): void {
-        this.output = [];
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
-        browser.vsBrowser.adjustResults();
+        this.testReporter.onContextDone(browser);
     }
 
-    onSpecComplete(browser: Browser, result: Event): void {
-        result.source = this.sourceUtils.resolveSource(result.source);
+    onSpecComplete(browser: Browser, result: Result): void {
         switch (result.event) {
             case 'suite-start':
-                this.onSuiteStart(browser, result);
+                this.testReporter.onSuiteStart(browser);
                 break;
             case 'suite-done':
-                this.onSuiteDone(browser, result);
+                this.testReporter.onSuiteDone(browser);
                 break;
             case 'spec-start':
-                this.onSpecStart(browser, result);
+                this.testReporter.onSpecStart(browser, result);
                 break;
             case 'spec-done':
-                this.onSpecDone(browser, result);
-                break;
             default:
-                this.onSpecDone(browser, result);
+                this.testReporter.onSpecDone(browser, result);
                 break;
         }
-    }
-
-    onSuiteStart(browser: Browser, event: Event) {
-        this.output = [];
-    }
-
-    onSuiteDone(browser: Browser, event: Event) {
-        this.output = [];
-    }
-
-    onSpecStart(browser: Browser, event: Event) {
-        this.output = [];
-    }
-
-    onSpecDone(browser: Browser, event: Event) {
-        var spec = this.getSpec(browser, event);
-        var result: Specs.SpecResult = {
-            name: browser.name,
-            success: event.success,
-            skipped: event.skipped,
-            output: this.output.join('\n'),
-            time: event.time,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            log: event.log,
-            failures: event.failures ? event.failures.map(exp => <Specs.Expectation>{
-                message: exp.message,
-                stack: this.sourceUtils.normalizeStack(exp.stack),
-                passed: exp.passed
-            }) : undefined
-        };
-        browser.vsBrowser.addResult(spec, result);
-        spec.results.push(result);
-
-        this.output = [];
     }
 }
 

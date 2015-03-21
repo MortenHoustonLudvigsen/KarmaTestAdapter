@@ -1,16 +1,12 @@
 ﻿import Specs = require('./Specs');
 
-type Context = {
-    name: string;
-};
-
 type Event = {
-    description: string;
-    suite: string[];
+    description?: string;
+    suite?: string[];
 };
 
 class TestContext {
-    constructor(public context: Context) {
+    constructor() {
     }
 
     results: Specs.SpecResult[] = [];

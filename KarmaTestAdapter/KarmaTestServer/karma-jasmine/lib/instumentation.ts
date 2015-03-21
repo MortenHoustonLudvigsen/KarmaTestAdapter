@@ -1,13 +1,13 @@
 ﻿module KarmaTestAdapter {
     interface WrappedFunction extends Function {
-        __source_wrapped?: boolean;
+        __karma_test_adapter_source_wrapped?: boolean;
     }
 
     export function wrapFunctions(env: any): void {
         ['describe', 'xdescribe', 'fdescribe', 'it', 'xit', 'fit'].forEach(functionName => {
             var oldFunction: WrappedFunction = env[functionName];
 
-            if (typeof oldFunction !== 'function' || oldFunction.__source_wrapped) {
+            if (typeof oldFunction !== 'function' || oldFunction.__karma_test_adapter_source_wrapped) {
                 return;
             }
 
@@ -18,7 +18,7 @@
                     // Error must be thrown to get stack in IE
                     throw new Error();
                 } catch (error) {
-                    item.result.sourceStack = {
+                    item.result.source = <Specs.StackInfo>{
                         skip: 2,
                         skipFunctions: "^(jasmineInterface|Env)\.",
                         stack: error.stack,
@@ -28,7 +28,7 @@
                 }
                 return item;
             };
-            wrapped[functionName].__source_wrapped = true;
+            wrapped[functionName].__karma_test_adapter_source_wrapped = true;
             env[functionName] = wrapped[functionName];
         });
     }

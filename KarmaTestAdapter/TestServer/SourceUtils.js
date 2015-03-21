@@ -105,12 +105,9 @@ var SourceUtils = (function () {
     SourceUtils.prototype.normalizeStack = function (stack) {
         var relative = false;
         var basePath = this.basePath;
-        var stackFrames = this.parseStack({ stack: stack }, relative);
+        var stackFrames = this.parseStack(stack, relative);
         if (stackFrames) {
             return stackFrames.filter(function (frame) { return !/\/require\.js$/.test(frame.fileName); }).map(function (frame) { return formatFrame(frame); });
-        }
-        else {
-            return stack.split(/\r\n|\n/g);
         }
         function formatFrame(frame) {
             var result = 'at ';

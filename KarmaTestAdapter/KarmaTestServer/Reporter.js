@@ -1,7 +1,6 @@
 var path = require('path');
 var url = require('url');
-var SourceUtils = require('../TestServer/SourceUtils');
-var VsBrowser = require('../TestServer/TestContext');
+var TestReporter = require('../TestServer/TestReporter');
 var Karma = require('./Karma');
 var Reporter = (function () {
     function Reporter(config, server, logger) {
@@ -11,37 +10,12 @@ var Reporter = (function () {
         this.urlBase = url.parse(path.join(this.urlRoot, 'base')).pathname;
         this.urlAbsoluteBase = url.parse(path.join(this.urlRoot, 'absolute')).pathname;
         this.basePath = this.config.basePath;
-        this.specMap = {};
-        this.specs = [];
-        this.output = [];
         this.logger = logger.create('VS Reporter', Karma.karma.Constants.LOG_DEBUG);
         this.logger.info("Created");
     }
-    Reporter.prototype.getSpec = function (browser, spec) {
-        var existingSpec;
-        if (existingSpec = this.specMap[spec.id]) {
-            existingSpec.source = existingSpec.source || this.sourceUtils.getSource(spec.sourceStack);
-        }
-        else {
-            existingSpec = this.specMap[spec.id] = {
-                id: spec.id,
-                description: spec.description,
-                uniqueName: spec.uniqueName || browser.vsBrowser.getUniqueName(spec),
-                suite: spec.suite,
-                source: this.sourceUtils.getSource(spec.sourceStack),
-                results: []
-            };
-            this.specs.push(existingSpec);
-        }
-        return existingSpec;
-    };
     Reporter.prototype.onRunStart = function (data) {
         var _this = this;
-        this.server.testRunStarted();
-        this.specMap = {};
-        this.specs = [];
-        this.output = [];
-        this.sourceUtils = new SourceUtils(this.basePath, this.logger, function (fileName) {
+        this.testReporter = new TestReporter(this.server, this.basePath, this.logger, function (fileName) {
             if (typeof fileName === 'string') {
                 var filePath = url.parse(fileName).pathname;
                 if (filePath.indexOf(_this.urlBase) === 0) {
@@ -53,124 +27,41 @@ var Reporter = (function () {
             }
             return fileName;
         });
+        this.testReporter.onTestRunStart();
     };
     Reporter.prototype.onRunComplete = function (browsers, results) {
-        this.server.testRunCompleted(this.specs);
+        this.testReporter.onTestRunComplete();
     };
     Reporter.prototype.onBrowserStart = function (browser) {
-        this.output = [];
-        browser.vsBrowser = new VsBrowser(browser);
+        this.testReporter.onContextStart(browser);
     };
     Reporter.prototype.onBrowserError = function (browser, error) {
-        var _this = this;
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
-        var failures;
-        var source;
-        var stackFrames = this.sourceUtils.parseStack({ stack: error }, false);
-        if (stackFrames) {
-            source = stackFrames[0];
-            failures = [{
-                message: error.split(/(\r\n|\n|\r)/g)[0],
-                passed: false,
-                stack: error
-            }];
-        }
-        var id = browser.vsBrowser.getUniqueName([], "Uncaught error");
-        var event = {
-            description: "Uncaught error",
-            id: id,
-            log: [error],
-            skipped: false,
-            success: false,
-            suite: [],
-            time: 0,
-            startTime: undefined,
-            endTime: undefined,
-            uniqueName: id,
-            source: source,
-            failures: failures
-        };
-        var spec = this.getSpec(browser, event);
-        var result = {
-            name: browser.name,
-            success: event.success,
-            skipped: event.skipped,
-            output: this.output.join('\n'),
-            time: event.time,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            log: event.log,
-            failures: event.failures ? event.failures.map(function (failure) { return {
-                message: failure.message,
-                stack: _this.sourceUtils.normalizeStack(failure.stack),
-                passed: failure.passed
-            }; }) : undefined
-        };
-        browser.vsBrowser.addResult(spec, result);
-        spec.results.push(result);
-        this.output = [];
+        this.testReporter.onError(browser, error);
     };
     Reporter.prototype.onBrowserLog = function (browser, message, type) {
         if (typeof message === 'string') {
-            message = message.replace(/^'(.*)'$/, '$1');
+            this.testReporter.onOutput(browser, message.replace(/^'(.*)'$/, '$1'));
         }
-        this.output.push(message);
     };
     Reporter.prototype.onBrowserComplete = function (browser) {
-        this.output = [];
-        browser.vsBrowser = browser.vsBrowser || new VsBrowser(browser);
-        browser.vsBrowser.adjustResults();
+        this.testReporter.onContextDone(browser);
     };
     Reporter.prototype.onSpecComplete = function (browser, result) {
-        result.source = this.sourceUtils.resolveSource(result.source);
         switch (result.event) {
             case 'suite-start':
-                this.onSuiteStart(browser, result);
+                this.testReporter.onSuiteStart(browser);
                 break;
             case 'suite-done':
-                this.onSuiteDone(browser, result);
+                this.testReporter.onSuiteDone(browser);
                 break;
             case 'spec-start':
-                this.onSpecStart(browser, result);
+                this.testReporter.onSpecStart(browser, result);
                 break;
             case 'spec-done':
-                this.onSpecDone(browser, result);
-                break;
             default:
-                this.onSpecDone(browser, result);
+                this.testReporter.onSpecDone(browser, result);
                 break;
         }
-    };
-    Reporter.prototype.onSuiteStart = function (browser, event) {
-        this.output = [];
-    };
-    Reporter.prototype.onSuiteDone = function (browser, event) {
-        this.output = [];
-    };
-    Reporter.prototype.onSpecStart = function (browser, event) {
-        this.output = [];
-    };
-    Reporter.prototype.onSpecDone = function (browser, event) {
-        var _this = this;
-        var spec = this.getSpec(browser, event);
-        var result = {
-            name: browser.name,
-            success: event.success,
-            skipped: event.skipped,
-            output: this.output.join('\n'),
-            time: event.time,
-            startTime: event.startTime,
-            endTime: event.endTime,
-            log: event.log,
-            failures: event.failures ? event.failures.map(function (exp) { return {
-                message: exp.message,
-                stack: _this.sourceUtils.normalizeStack(exp.stack),
-                passed: exp.passed
-            }; }) : undefined
-        };
-        browser.vsBrowser.addResult(spec, result);
-        spec.results.push(result);
-        this.output = [];
     };
     Reporter.name = 'karma-vs-reporter';
     Reporter.$inject = ['config', 'karma-vs-server', 'logger'];

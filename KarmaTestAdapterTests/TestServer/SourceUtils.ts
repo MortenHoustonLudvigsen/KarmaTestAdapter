@@ -7,14 +7,6 @@ import SourceMap = require("source-map");
 var SourceMapResolve = require("source-map-resolve");
 var errorStackParser = require('error-stack-parser');
 
-type ErrorWithStack = {
-    skip?: number;
-    skipFunctions?: string;
-    stack?: string;
-    stacktrace?: string;
-    'opera#sourceloc'?: any;
-};
-
 class SourceUtils {
     constructor(private basePath: string, private logger: Logger, private resolveFilePath: (fileName: string) => string) {
     }
@@ -79,7 +71,7 @@ class SourceUtils {
         return source;
     }
 
-    getSource(error: ErrorWithStack): Specs.Source {
+    getSource(error: Specs.StackInfo): Specs.Source {
         if (!error) return;
         var stack = this.parseStack(error, false);
         if (!stack) return;
@@ -95,7 +87,7 @@ class SourceUtils {
         return stack[0];
     }
 
-    parseStack(error: ErrorWithStack, relative: boolean): Specs.Source[] {
+    parseStack(error: Specs.StackInfo, relative: boolean): Specs.Source[] {
         var self = this;
 
         try {
@@ -118,17 +110,15 @@ class SourceUtils {
         }
     }
 
-    normalizeStack(stack: string): string[] {
+    normalizeStack(stack: Specs.StackInfo): string[] {
         var relative = false;
         var basePath = this.basePath;
 
-        var stackFrames = this.parseStack({ stack: stack }, relative);
+        var stackFrames = this.parseStack(stack, relative);
         if (stackFrames) {
             return stackFrames
                 .filter(frame => !/\/require\.js$/.test(frame.fileName))
                 .map(frame => formatFrame(frame));
-        } else {
-            return stack.split(/\r\n|\n/g);
         }
 
         function formatFrame(frame: Specs.Source): string {

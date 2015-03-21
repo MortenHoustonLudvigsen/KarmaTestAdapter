@@ -26,7 +26,7 @@ var KarmaTestAdapter;
      */
     function isRelevantStackEntry(entry) {
         // discard empty and falsy entries:
-        return (entry ? true : false) && !/[\/\\](jasmine-core)[\/\\]/.test(entry) && !/[\/\\]karma-vs/.test(entry) && !/[\/\\](karma.js|context.html):/.test(entry);
+        return (entry ? true : false) && !/[\/\\](jasmine-core)[\/\\]/.test(entry) && !/[\/\\]karma-jasmine/.test(entry) && !/[\/\\](karma.js|context.html):/.test(entry);
     }
     /**
      * Returns relevant stack entries.
@@ -44,73 +44,38 @@ var KarmaTestAdapter;
         }
         return relevantStack;
     }
-    /**
-     * Custom formatter for a failed step.
-     *
-     * Different browsers report stack trace in different ways. This function
-     * attempts to provide a concise, relevant error message by removing the
-     * unnecessary stack traces coming from the testing framework itself as well
-     * as possible repetition.
-     *
-     * @see    https://github.com/karma-runner/karma-jasmine/issues/60
-     * @param  {Object} step Step object with stack and message properties.
-     * @return {String}      Formatted step.
-     */
-    function formatFailedStep(step) {
-        // Safari seems to have no stack trace,
-        // so we just return the error message:
-        if (!step.stack) {
-            return step.message;
-        }
-        var relevantMessage = [];
-        var relevantStack = [];
-        var dirtyRelevantStack = getRelevantStackFrom(step.stack);
-        for (var i = 0; i < dirtyRelevantStack.length; i += 1) {
-            if (step.message && step.message.indexOf(dirtyRelevantStack[i]) === -1) {
-                // Stack entry is not in the message,
-                // we consider it to be a relevant stack:
-                relevantStack.push(dirtyRelevantStack[i]);
-            }
-            else {
-                // Stack entry is already in the message,
-                // we consider it to be a suitable message alternative:
-                relevantMessage.push(dirtyRelevantStack[i]);
-            }
-        }
-        // In most cases the above will leave us with an empty message...
-        if (relevantMessage.length === 0) {
-            // Let's reuse the original message:
-            relevantMessage.push(step.message);
-            // Now we probably have a repetition case where:
-            // relevantMessage: ["Expected true to be false."]
-            // relevantStack:   ["Error: Expected true to be false.", ...]
-            if (relevantStack[0].indexOf(step.message) !== -1) {
-                // The message seems preferable, so we remove the first value from
-                // the stack to get rid of repetition :
-                relevantStack.shift();
-            }
-        }
-        // Example output:
-        // --------------------
-        // Chrome 40.0.2214 (Mac OS X 10.9.5) xxx should return false 1 FAILED
-        //    Expected true to be false
-        //    at /foo/bar/baz.spec.js:22:13
-        //    at /foo/bar/baz.js:18:29
-        return relevantMessage.concat(relevantStack).join('\n');
-    }
-    function getExpectation(step) {
+    function getFailure(failure) {
         var expectation = {
-            message: step.message,
-            passed: step.passed
+            message: failure.message,
+            passed: failure.passed,
+            stack: {}
         };
-        if (step.stack) {
-            var messageLines = step.message.split(/\r\n|\n/);
-            var messageLineCount = messageLines.length;
-            var stack = getRelevantStackFrom(step.stack).slice(messageLines.length);
+        var messageLines = failure.message.split(/\r\n|\n/);
+        var messageLineCount = messageLines.length;
+        if (failure.stack) {
+            var stack = getRelevantStackFrom(failure.stack).slice(messageLines.length);
             stack.unshift(messageLines[0] || '');
-            expectation.stack = stack.join('\n');
+            expectation.stack = { stack: stack.join('\n') };
+        }
+        else if (failure.stacktrace) {
+            var stack = getRelevantStackFrom(failure.stacktrace).slice(messageLines.length);
+            stack.unshift(messageLines[0] || '');
+            expectation.stack = { stacktrace: stack.join('\n') };
         }
         return expectation;
+    }
+    function skipLines(str, count) {
+        return str.split(/\r\n|\n/).slice(count).join('\n');
+    }
+    function formatFailure(failure) {
+        var result = failure.message;
+        if (failure.stack && failure.stack.stack) {
+            result += '\n' + skipLines(failure.stack.stack, 1);
+        }
+        if (failure.stack && failure.stack.stacktrace) {
+            result += '\n' + skipLines(failure.stack.stacktrace, 1);
+        }
+        return result;
     }
     /**
      * @param suite
@@ -231,22 +196,14 @@ var KarmaTestAdapter;
         };
         KarmaReporter.prototype.specDone = function (spec) {
             spec.endTime = now();
-            var skipped = spec.status === 'disabled' || spec.status === 'pending';
-            var success = spec.failedExpectations.length === 0;
-            var log = [];
-            if (!success) {
-                var steps = spec.failedExpectations;
-                for (var i = 0, l = steps.length; i < l; i++) {
-                    log.push(formatFailedStep(steps[i]));
-                }
-            }
+            var failures = map(spec.failedExpectations, function (exp) { return getFailure(exp); });
             this.karma.result({
                 event: 'spec-done',
                 description: spec.description,
                 id: spec.id,
-                log: log,
-                skipped: skipped,
-                success: success,
+                log: map(failures, function (failure) { return formatFailure(failure); }),
+                skipped: spec.status === 'disabled' || spec.status === 'pending',
+                success: spec.failedExpectations.length === 0,
                 suite: this.getSuiteList(spec),
                 time: spec.endTime - spec.startTime,
                 startTime: spec.startTime,
@@ -254,7 +211,7 @@ var KarmaTestAdapter;
                 uniqueName: spec.uniqueName,
                 source: spec.source,
                 sourceStack: spec.sourceStack,
-                failures: map(spec.failedExpectations, function (exp) { return getExpectation(exp); })
+                failures: failures
             });
         };
         return KarmaReporter;

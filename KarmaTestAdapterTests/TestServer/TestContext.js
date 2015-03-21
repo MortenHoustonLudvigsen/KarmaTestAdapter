@@ -1,6 +1,5 @@
 var TestContext = (function () {
-    function TestContext(context) {
-        this.context = context;
+    function TestContext() {
         this.results = [];
         this.uniqueNames = {};
         this.totalTime = 0;

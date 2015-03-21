@@ -3,7 +3,7 @@ var KarmaTestAdapter;
     function wrapFunctions(env) {
         ['describe', 'xdescribe', 'fdescribe', 'it', 'xit', 'fit'].forEach(function (functionName) {
             var oldFunction = env[functionName];
-            if (typeof oldFunction !== 'function' || oldFunction.__source_wrapped) {
+            if (typeof oldFunction !== 'function' || oldFunction.__karma_test_adapter_source_wrapped) {
                 return;
             }
             var wrapped = {};
@@ -13,7 +13,7 @@ var KarmaTestAdapter;
                     throw new Error();
                 }
                 catch (error) {
-                    item.result.sourceStack = {
+                    item.result.source = {
                         skip: 2,
                         skipFunctions: "^(jasmineInterface|Env)\.",
                         stack: error.stack,
@@ -23,7 +23,7 @@ var KarmaTestAdapter;
                 }
                 return item;
             };
-            wrapped[functionName].__source_wrapped = true;
+            wrapped[functionName].__karma_test_adapter_source_wrapped = true;
             env[functionName] = wrapped[functionName];
         });
     }
