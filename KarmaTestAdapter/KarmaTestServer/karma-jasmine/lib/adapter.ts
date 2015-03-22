@@ -126,7 +126,6 @@ module KarmaTestAdapter {
         suite?: SuiteResult;
         source?: any;
         sourceStack?: any;
-        uniqueName?: string;
         fullName?: string;
         description?: string;
         status?: string;
@@ -149,28 +148,6 @@ module KarmaTestAdapter {
         }
 
         private currentSuite: SuiteResult;
-        private _uniqueNames: { [uniqueNames: string]: boolean } = {};
-
-        private getUniqueName(result: Result) {
-            var uniqueName = '';
-            var name = result.description.replace(/\./g, '-');
-            var seperator = result.isSuite ? ' / ' : '.';
-
-            if (result.suite.root) {
-                uniqueName = result.description;
-            } else {
-                uniqueName = result.suite.uniqueName + seperator + result.description;
-            }
-            if (this._uniqueNames[uniqueName]) {
-                var no = 2;
-                while (this._uniqueNames[uniqueName + '-' + no]) {
-                    no += 1;
-                }
-                uniqueName = uniqueName + '-' + no;
-            }
-            this._uniqueNames[uniqueName] = true;
-            return uniqueName;
-        }
 
         private getSuiteList(result: Result): string[] {
             if (result.root || result.suite.root) {
@@ -195,7 +172,6 @@ module KarmaTestAdapter {
 
         jasmineStarted(suiteInfo: SuiteInfo) {
             // TODO(vojta): Do not send spec names when polling.
-            this._uniqueNames = {};
             this.currentSuite = {
                 root: true,
                 isSuite: true
@@ -218,15 +194,13 @@ module KarmaTestAdapter {
             if (!isTopLevelSuite(suite)) {
                 suite.isSuite = true;
                 suite.suite = this.currentSuite;
-                suite.uniqueName = this.getUniqueName(suite);
                 suite.startTime = now();
                 this.currentSuite = suite;
                 this.karma.result(<KarmaResult>{
                     event: 'suite-start',
                     description: suite.description,
                     id: suite.id,
-                    startTime: suite.startTime,
-                    uniqueName: suite.uniqueName
+                    startTime: suite.startTime
                 });
             }
         }
@@ -248,7 +222,6 @@ module KarmaTestAdapter {
                     time: suite.endTime - suite.startTime,
                     startTime: suite.startTime,
                     endTime: suite.endTime,
-                    uniqueName: suite.uniqueName,
                     source: suite.source
                 });
             }
@@ -257,14 +230,12 @@ module KarmaTestAdapter {
 
         specStarted(spec: SpecResult) {
             spec.suite = this.currentSuite;
-            spec.uniqueName = this.getUniqueName(spec);
             spec.startTime = now();
 
             this.karma.result(<KarmaResult>{
                 event: 'spec-start',
                 description: spec.description,
-                id: spec.id,
-                uniqueName: spec.uniqueName
+                id: spec.id
             });
         }
 
@@ -283,7 +254,6 @@ module KarmaTestAdapter {
                 time: spec.endTime - spec.startTime,
                 startTime: spec.startTime,
                 endTime: spec.endTime,
-                uniqueName: spec.uniqueName,
                 source: spec.source,
                 sourceStack: spec.sourceStack,
                 failures: failures

@@ -2,6 +2,7 @@
 
 GlobalLog.info('starting karma server');
 
+import util = require('util');
 import path = require('path');
 import Karma = require('./Karma');
 import freePort = require('../TestServer/FreePort');
@@ -13,9 +14,10 @@ try {
     var karmaConfigFile = path.resolve(argv.karma);
 
     var config: any = {};
+    var settings: any = {};
 
     if (argv.settings) {
-        var settings = TextFile.readJson(argv.settings);
+        settings = TextFile.readJson(argv.settings);
         if (settings.config) {
             extend(config, settings.config);
         }
@@ -42,10 +44,16 @@ try {
         }
     });
 
+    karmaConfig.vs = {
+        name: argv.name,
+        traits: settings.Traits,
+        extensions: settings.Extensions
+    };
+
     freePort().then(port => {
         karmaConfig.port = port;
     }).then(() => {
-        return freePort(karmaConfig.port + 1).then(p => karmaConfig.vsServerPort = p);
+        return freePort(karmaConfig.port + 1).then(p => karmaConfig.vs.serverPort = p);
     }).then(() => {
         Karma.karma.Server.start(karmaConfig, function (exitCode) {
             GlobalLog.info('exitCode: ' + exitCode);

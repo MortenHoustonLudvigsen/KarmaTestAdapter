@@ -4,16 +4,40 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var path = require('path');
 var TestServer = require('../TestServer/TestServer');
 var Karma = require('./Karma');
 var Server = (function (_super) {
     __extends(Server, _super);
     function Server(config, emitter, logger) {
         var _this = this;
-        _super.call(this, config.vsServerPort || 0);
+        _super.call(this, config.vs.name, config.vs.serverPort || 0);
         this.config = config;
         this.emitter = emitter;
         this.logger = logger.create('VS Server', Karma.karma.Constants.LOG_DEBUG);
+        if (config.vs.extensions) {
+            try {
+                this.loadExtensions(path.resolve(config.vs.extensions));
+            }
+            catch (e) {
+                this.logger.error('Failed to load extensions from ' + config.vs.extensions + ': ' + e.message);
+            }
+        }
+        if (config.vs.traits) {
+            function mapTrait(trait) {
+                if (typeof trait === 'string') {
+                    return {
+                        name: 'Category',
+                        value: trait
+                    };
+                }
+                else {
+                    return trait;
+                }
+            }
+            var traits = config.vs.traits.map(mapTrait);
+            this.loadExtensions({ getTraits: function (spec, server) { return traits; } });
+        }
         this.on('listening', function () { return _this.logger.info('Started - port: ' + _this.address.port); });
         this.start();
     }

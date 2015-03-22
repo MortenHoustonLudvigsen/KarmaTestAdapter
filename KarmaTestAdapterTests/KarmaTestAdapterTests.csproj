@@ -33,26 +33,26 @@
   <ItemGroup>
     <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\JsTestAdapter.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\JsTestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -61,7 +61,7 @@
     </Reference>
     <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.3\lib\net45\NpmProxy.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.4\lib\net45\NpmProxy.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core">
       <HintPath>..\packages\NUnitTestAdapter.1.2\lib\nunit.core.dll</HintPath>
@@ -161,6 +161,9 @@
     <None Include="PathUtils\ReadFileTextFixtures\utf-16BE-bom.json" />
     <None Include="PathUtils\ReadFileTextFixtures\utf-8-bom.json" />
     <None Include="PathUtils\ReadFileTextFixtures\utf-8.json" />
+    <None Include="TestServer\Extensions.js.map">
+      <DependentUpon>Extensions.ts</DependentUpon>
+    </None>
     <None Include="TestServer\FreePort.js.map">
       <DependentUpon>FreePort.ts</DependentUpon>
     </None>
@@ -207,6 +210,9 @@
       <DependentUpon>TestVS.ts</DependentUpon>
     </Content>
     <Content Include="source.extension.vsixmanifest" />
+    <Content Include="TestServer\Extensions.js">
+      <DependentUpon>Extensions.ts</DependentUpon>
+    </Content>
     <Content Include="TestServer\FreePort.js">
       <DependentUpon>FreePort.ts</DependentUpon>
     </Content>
@@ -241,6 +247,7 @@
     <TypeScriptCompile Include="Grunt\GetNodeModules.ts" />
     <TypeScriptCompile Include="Grunt\Index.ts" />
     <TypeScriptCompile Include="Grunt\TestVS.ts" />
+    <TypeScriptCompile Include="TestServer\Extensions.ts" />
     <TypeScriptCompile Include="TestServer\FreePort.ts" />
     <TypeScriptCompile Include="TestServer\JsonServer.ts" />
     <TypeScriptCompile Include="TestServer\Logger.ts" />
@@ -254,6 +261,7 @@
     <TypeScriptCompile Include="typings\jasmine\jasmine.d.ts" />
     <TypeScriptCompile Include="typings\node\node.d.ts" />
     <TypeScriptCompile Include="typings\q\Q.d.ts" />
+    <TypeScriptCompile Include="typings\semver\semver.d.ts" />
     <TypeScriptCompile Include="typings\source-map\source-map.d.ts" />
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿import Specs = require('./Specs');
+﻿import util = require('util');
+import Specs = require('./Specs');
 
 type Event = {
     description?: string;
@@ -6,11 +7,12 @@ type Event = {
 };
 
 class TestContext {
-    constructor() {
+    constructor(private server: Specs.Server) {
     }
 
     results: Specs.SpecResult[] = [];
-    uniqueNames: { [name: string]: boolean } = {};
+    nextErrorId = 0;
+    fullyQualifiedNames: { [name: string]: boolean } = {};
     totalTime: number = 0;
     startTime: number;
     endTime: number;
@@ -32,28 +34,28 @@ class TestContext {
         }
     }
 
-    getUniqueName(suite: string[], description: string): string;
-    getUniqueName(event: Event): string;
-    getUniqueName(eventOrSuite: Event | string[], description?: string): string {
-        if (eventOrSuite instanceof Array) {
-            var suite = <string[]>eventOrSuite;
-            var uniqueName = suite.map(name => {
-                name = name.replace(/\./g, '-');
-            }).join(' / ') + '.' + description;
+    getNewErrorId(): string {
+        return util.format('-error-%d', this.nextErrorId++);
+    }
 
-            if (this.uniqueNames[uniqueName]) {
-                var no = 2;
-                while (this.uniqueNames[uniqueName + '-' + no]) {
-                    no += 1;
-                }
-                uniqueName = uniqueName + '-' + no;
+    getFullyQualifiedName(spec: Specs.Spec): string {
+        var fullyQualifiedName = this.server.extensions.getFullyQualifiedName(spec, this.server);
+        if (this.fullyQualifiedNames[fullyQualifiedName]) {
+            var no = 2;
+            while (this.fullyQualifiedNames[fullyQualifiedName + '-' + no]) {
+                no += 1;
             }
-
-            return uniqueName;
-        } else {
-            var event = <Event>eventOrSuite;
-            return this.getUniqueName(event.suite, event.description);
+            fullyQualifiedName = fullyQualifiedName + '-' + no;
         }
+        return fullyQualifiedName;
+    }
+
+    getDisplayName(spec: Specs.Spec): string {
+        return this.server.extensions.getDisplayName(spec, this.server);
+    }
+
+    getTraits(spec: Specs.Spec): Specs.Trait[] {
+        return this.server.extensions.getTraits(spec, this.server);
     }
 
     adjustResults() {

@@ -19,6 +19,9 @@
     },
     "extend/extend.d.ts": {
       "commit": "95ce1d9e8212be19d36aa8ccecb48303cc5c87f9"
+    },
+    "semver/semver.d.ts": {
+      "commit": "32f0a90dab26f70b206407ac24d4d622d0f0f408"
     }
   }
 }

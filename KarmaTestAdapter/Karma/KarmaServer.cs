@@ -39,6 +39,7 @@ namespace KarmaTestAdapter.Karma
 
         protected override void AddOptions(ProcessOptions options)
         {
+            options.Add("--name", Settings.Name);
             options.Add("--karma", PathUtils.GetRelativePath(WorkingDirectory, Settings.KarmaConfigFile));
             if (Settings.HasSettingsFile && File.Exists(Settings.SettingsFile))
             {

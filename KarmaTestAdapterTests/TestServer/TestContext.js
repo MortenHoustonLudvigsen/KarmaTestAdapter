@@ -1,7 +1,10 @@
+var util = require('util');
 var TestContext = (function () {
-    function TestContext() {
+    function TestContext(server) {
+        this.server = server;
         this.results = [];
-        this.uniqueNames = {};
+        this.nextErrorId = 0;
+        this.fullyQualifiedNames = {};
         this.totalTime = 0;
         this.timesValid = true;
     }
@@ -16,25 +19,25 @@ var TestContext = (function () {
             this.timesValid = false;
         }
     };
-    TestContext.prototype.getUniqueName = function (eventOrSuite, description) {
-        if (eventOrSuite instanceof Array) {
-            var suite = eventOrSuite;
-            var uniqueName = suite.map(function (name) {
-                name = name.replace(/\./g, '-');
-            }).join(' / ') + '.' + description;
-            if (this.uniqueNames[uniqueName]) {
-                var no = 2;
-                while (this.uniqueNames[uniqueName + '-' + no]) {
-                    no += 1;
-                }
-                uniqueName = uniqueName + '-' + no;
+    TestContext.prototype.getNewErrorId = function () {
+        return util.format('-error-%d', this.nextErrorId++);
+    };
+    TestContext.prototype.getFullyQualifiedName = function (spec) {
+        var fullyQualifiedName = this.server.extensions.getFullyQualifiedName(spec, this.server);
+        if (this.fullyQualifiedNames[fullyQualifiedName]) {
+            var no = 2;
+            while (this.fullyQualifiedNames[fullyQualifiedName + '-' + no]) {
+                no += 1;
             }
-            return uniqueName;
+            fullyQualifiedName = fullyQualifiedName + '-' + no;
         }
-        else {
-            var event = eventOrSuite;
-            return this.getUniqueName(event.suite, event.description);
-        }
+        return fullyQualifiedName;
+    };
+    TestContext.prototype.getDisplayName = function (spec) {
+        return this.server.extensions.getDisplayName(spec, this.server);
+    };
+    TestContext.prototype.getTraits = function (spec) {
+        return this.server.extensions.getTraits(spec, this.server);
     };
     TestContext.prototype.adjustResults = function () {
         this.adjustTimes();

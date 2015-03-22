@@ -1,14 +1,20 @@
-﻿import JsonServer = require('./JsonServer'); 
+﻿import JsonServer = require('./JsonServer');
 import Specs = require('./Specs');
+import Extensions = require('./Extensions');
 import Q = require('q');
 
-class TestServer extends JsonServer.Server {
-    constructor(public port: number = 0, public host?: string) {
+class TestServer extends JsonServer.Server implements Specs.Server {
+    constructor(public testContainerName: string, public port: number = 0, public host?: string) {
         super(port, host);
     }
 
+    extensions = new Extensions();
     events: Q.Deferred<void> = Q.defer<void>();
     specs: Q.Deferred<Specs.Spec[]> = Q.defer<Specs.Spec[]>();
+
+    loadExtensions(extensionsModule: string|Specs.Extensions) {
+        this.extensions.load(extensionsModule);
+    }
 
     onError(error: any, connection: JsonServer.Connection) {
     }

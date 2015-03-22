@@ -32,13 +32,13 @@ namespace KarmaTestAdapterTests.Expectations
         public ProjectTestCase(Expected expected)
         {
             Expected = expected;
-            AddCategory(Expected.Name);
+            AddCategory(Expected.ProjectName);
         }
 
         public Expected Expected { get; private set; }
         public override bool IsValid { get { return Expected.IsValid; } }
         public override string InvalidReason { get { return Expected.InvalidReason; } }
-        public override string ProjectName { get { return Expected.Name; } }
+        public override string ProjectName { get { return Expected.ProjectName; } }
 
         public override async Task<string> GetOutput()
         {
@@ -57,7 +57,7 @@ namespace KarmaTestAdapterTests.Expectations
         {
             Expected = expected;
             Spec = spec;
-            AddCategory(Expected.Name);
+            AddCategory(Expected.ProjectName);
         }
 
         public Expected Expected { get; private set; }
@@ -65,7 +65,7 @@ namespace KarmaTestAdapterTests.Expectations
 
         public async Task<Spec> GetKarmaSpec()
         {
-            return await Expected.GetKarmaSpec(Spec.UniqueName);
+            return await Expected.GetKarmaSpec(Spec.FullyQualifiedName);
         }
 
         public override bool IsValid
@@ -83,11 +83,11 @@ namespace KarmaTestAdapterTests.Expectations
             return await Task.FromResult(Spec.InvalidReason);
         }
 
-        public override string ProjectName { get { return Expected.Name; } }
+        public override string ProjectName { get { return Expected.ProjectName; } }
 
         public override SpecTestCase SetDescription(string format, params object[] args)
         {
-            return base.SetDescription("[{0}] {1}", Spec.UniqueName.Replace('.', '-'), string.Format(format, args));
+            return base.SetDescription("[{0}] {1}", Spec.FullyQualifiedName.Replace('.', '-'), string.Format(format, args));
         }
     }
 }

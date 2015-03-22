@@ -88,6 +88,21 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
                 .Select(t => t.SetDescription("should have karma spec"));
         }
 
+        [Test, TestCaseSource("GetShouldHaveDisplayNameData")]
+        public async void ShouldHaveDisplayName(SpecTestCase testCase)
+        {
+            var karmaSpec = await testCase.GetKarmaSpec();
+            Console.WriteLine(karmaSpec.Format());
+            Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
+            Assert.That(karmaSpec.DisplayName, Is.EqualTo(testCase.Spec.DisplayName));
+        }
+
+        private IEnumerable<SpecTestCase> GetShouldHaveDisplayNameData()
+        {
+            return Expectations.GetSpecTestCases()
+                .Select(t => t.SetDescription("should have display name"));
+        }
+
         [Test, TestCaseSource("GetShouldHaveResultsData")]
         public async void ShouldHaveResults(SpecTestCase testCase)
         {

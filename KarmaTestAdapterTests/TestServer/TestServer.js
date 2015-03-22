@@ -5,15 +5,18 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 var JsonServer = require('./JsonServer');
+var Extensions = require('./Extensions');
 var Q = require('q');
 var TestServer = (function (_super) {
     __extends(TestServer, _super);
-    function TestServer(port, host) {
+    function TestServer(testContainerName, port, host) {
         var _this = this;
         if (port === void 0) { port = 0; }
         _super.call(this, port, host);
+        this.testContainerName = testContainerName;
         this.port = port;
         this.host = host;
+        this.extensions = new Extensions();
         this.events = Q.defer();
         this.specs = Q.defer();
         this.testRunStartedCommand = this.addCommand('test run started', function (command, message, connection) {
@@ -62,6 +65,9 @@ var TestServer = (function (_super) {
             return Q.resolve(undefined);
         });
     }
+    TestServer.prototype.loadExtensions = function (extensionsModule) {
+        this.extensions.load(extensionsModule);
+    };
     TestServer.prototype.onError = function (error, connection) {
     };
     TestServer.prototype.onClose = function (had_error, connection) {

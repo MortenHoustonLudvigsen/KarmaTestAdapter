@@ -14,9 +14,10 @@ namespace KarmaTestAdapter.TestAdapter
 {
     public class KarmaSettings
     {
-        public KarmaSettings(string configFile, Func<string, bool> fileExists, string baseDirectory, ITestLogger logger)
+        public KarmaSettings(string name, string configFile, Func<string, bool> fileExists, string baseDirectory, ITestLogger logger)
         {
             HasSettingsFile = false;
+            Name = name;
             Logger = logger;
 
             try
@@ -38,6 +39,8 @@ namespace KarmaTestAdapter.TestAdapter
                     KarmaConfigFile = GetFullPath(configFile);
                     _validator.Validate(fileExists(KarmaConfigFile), "Karma configuration file not found: {0}", PathUtils.GetRelativePath(baseDirectory, KarmaConfigFile));
                 }
+
+                Name = Name ?? name;
 
                 if (AreValid)
                 {
@@ -64,6 +67,16 @@ namespace KarmaTestAdapter.TestAdapter
         /// The Karma configuration file
         /// </summary>
         public string KarmaConfigFile { get; set; }
+
+        /// <summary>
+        /// The name of the test container
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Path to a node.js module implementing extensions
+        /// </summary>
+        public string Extensions { get; set; }
 
         /// <summary>
         /// True if the Karma test adapter should be disabled for this karma configuration file

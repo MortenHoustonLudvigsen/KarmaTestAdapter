@@ -9,8 +9,32 @@
             "format": "uri"
         },
         "KarmaConfigFile": {
-            "description": "Use this if you want to use a karma configuration file not named karma.conf.js.",
+            "description": "Use this if you want to use a karma configuration file not named karma.conf.js or it is not in this directory.",
             "type": "string"
+        },
+        "Name": {
+            "description": "The name of the test container.",
+            "type": "string"
+        },
+        "Extensions": {
+            "description": "Path to a node.js module implementing extensions.",
+            "type": "string"
+        },
+        "Traits": {
+            "description": "Traits to attach to each test.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    { "type": "string" },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "Name": { "type": "string" },
+                            "Value": { "type": "string" }
+                        }
+                    }
+                ]
+            }
         },
         "Disabled": {
             "description": "Set to true, if the Karma test adapter should be disabled for this karma configuration file.",
@@ -30,4 +54,4 @@
             "additionalProperties": true
         }
     }
-}
+    }

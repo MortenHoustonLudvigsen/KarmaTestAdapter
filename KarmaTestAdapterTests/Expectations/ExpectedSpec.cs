@@ -17,7 +17,8 @@ namespace KarmaTestAdapterTests.Expectations
             {
                 BaseDirectory = baseDirectory;
                 Description = (string)spec["Description"];
-                UniqueName = (string)spec["UniqueName"];
+                FullyQualifiedName = (string)spec["FullyQualifiedName"];
+                DisplayName = (string)spec["DisplayName"];
                 FileName = FullPath((string)spec["FileName"]);
                 var lineNumber = spec["LineNumber"];
                 if (lineNumber is JArray)
@@ -51,7 +52,8 @@ namespace KarmaTestAdapterTests.Expectations
 
         public string BaseDirectory { get; private set; }
         public string Description { get; private set; }
-        public string UniqueName { get; private set; }
+        public string FullyQualifiedName { get; private set; }
+        public string DisplayName { get; private set; }
         public string FileName { get; private set; }
         public int? LineNumberFrom { get; private set; }
         public int? LineNumberTo { get; private set; }

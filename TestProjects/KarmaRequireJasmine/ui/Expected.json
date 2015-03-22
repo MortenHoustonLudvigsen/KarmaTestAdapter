@@ -1,23 +1,27 @@
 ﻿{
     "KarmaConfig": "karma.conf.src.js",
+    "Name":  "Test",
     "Specs": [
         {
             "Description": "should return true after start",
-            "UniqueName": "StopWatch / isRunning.should return true after start",
+            "FullyQualifiedName": "Test/StopWatch.isRunning should return true after start",
+            "DisplayName": "StopWatch isRunning should return true after start",
             "FileName": "test/common/scripts/StopWatchTest.js",
             "LineNumber": 9,
             "Success": true
         },
         {
             "Description": "should return false after stop",
-            "UniqueName": "StopWatch / isRunning.should return false after stop",
+            "FullyQualifiedName": "Test/StopWatch.isRunning should return false after stop",
+            "DisplayName": "StopWatch isRunning should return false after stop",
             "FileName": "test/common/scripts/StopWatchTest.js",
             "LineNumber": 14,
             "Success": true
         },
         {
             "Description": "should be greater than zero",
-            "UniqueName": "StopWatch / duration.should be greater than zero",
+            "FullyQualifiedName": "Test/StopWatch.duration should be greater than zero",
+            "DisplayName": "StopWatch duration should be greater than zero",
             "FileName": "test/common/scripts/StopWatchTest.js",
             "LineNumber": 22,
             "Success": true,

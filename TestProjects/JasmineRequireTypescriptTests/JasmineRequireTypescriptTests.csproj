@@ -69,6 +69,7 @@
     <TypeScriptCompile Include="typings\tsd.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Extensions.js" />
     <Content Include="tsd.json" />
   </ItemGroup>
   <ItemGroup>

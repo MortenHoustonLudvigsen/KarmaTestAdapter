@@ -9,8 +9,9 @@ var extend = require('extend');
 try {
     var karmaConfigFile = path.resolve(argv.karma);
     var config = {};
+    var settings = {};
     if (argv.settings) {
-        var settings = TextFile.readJson(argv.settings);
+        settings = TextFile.readJson(argv.settings);
         if (settings.config) {
             extend(config, settings.config);
         }
@@ -32,10 +33,15 @@ try {
                 return framework;
         }
     });
+    karmaConfig.vs = {
+        name: argv.name,
+        traits: settings.Traits,
+        extensions: settings.Extensions
+    };
     freePort().then(function (port) {
         karmaConfig.port = port;
     }).then(function () {
-        return freePort(karmaConfig.port + 1).then(function (p) { return karmaConfig.vsServerPort = p; });
+        return freePort(karmaConfig.port + 1).then(function (p) { return karmaConfig.vs.serverPort = p; });
     }).then(function () {
         Karma.karma.Server.start(karmaConfig, function (exitCode) {
             GlobalLog.info('exitCode: ' + exitCode);

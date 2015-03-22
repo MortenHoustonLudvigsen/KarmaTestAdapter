@@ -3,13 +3,8 @@ import TestContext = require('./TestContext');
 import SourceUtils = require('./SourceUtils');
 import Logger = require('./Logger');
 
-type Server = {
-    testRunStarted(): void;
-    testRunCompleted(specs: Specs.Spec[]): void;
-};
-
 class TestReporter {
-    constructor(private server: Server, private basePath: string, private logger: Logger, private resolveFilePath: (fileName: string) => string) {
+    constructor(private server: Specs.Server, private basePath: string, private logger: Logger, private resolveFilePath: (fileName: string) => string) {
     }
 
     private specMap: { [id: string]: Specs.Spec } = {};
@@ -25,11 +20,13 @@ class TestReporter {
             existingSpec = this.specMap[spec.id] = {
                 id: spec.id,
                 description: spec.description,
-                uniqueName: spec.uniqueName || context.testContext.getUniqueName(spec),
                 suite: spec.suite,
                 source: this.sourceUtils.getSource(spec.source),
                 results: []
             };
+            existingSpec.fullyQualifiedName = context.testContext.getFullyQualifiedName(existingSpec);
+            existingSpec.displayName = context.testContext.getDisplayName(existingSpec);
+            existingSpec.traits = context.testContext.getTraits(existingSpec);
             this.specs.push(existingSpec);
         }
         return existingSpec;
@@ -49,17 +46,17 @@ class TestReporter {
 
     onContextStart(context: Specs.Context): void {
         this.output = [];
-        context.testContext = new TestContext();
+        context.testContext = new TestContext(this.server);
     }
 
     onContextDone(context: Specs.Context): void {
         this.output = [];
-        context.testContext = context.testContext || new TestContext();
+        context.testContext = context.testContext || new TestContext(this.server);
         context.testContext.adjustResults();
     }
 
     onError(context: Specs.Context, error: any): void {
-        context.testContext = context.testContext || new TestContext();
+        context.testContext = context.testContext || new TestContext(this.server);
 
         if (error) {
             var failure: Specs.Failure = { passed: false };
@@ -86,11 +83,10 @@ class TestReporter {
                 failure.message = 'Uncaught error';
             }
 
-            var id = context.testContext.getUniqueName([], 'Uncaught error');
+            var id = context.testContext.getNewErrorId();
 
             this.onSpecDone(context, {
                 id: id,
-                uniqueName: id,
                 description: 'Uncaught error',
                 log: log,
                 skipped: false,

@@ -50,11 +50,12 @@ namespace KarmaTestAdapterTests.Expectations
                 text.AppendLine("=====================================================================");
                 text.AppendLine("Karma spec");
                 text.AppendLine("---------------------------------------------------------------------");
-                text.AppendLine("UniqueName:  {0}", spec.UniqueName.FormatValue());
-                text.AppendLine("Id:          {0}", spec.Id.FormatValue());
-                text.AppendLine("Description: {0}", spec.Description.FormatValue());
-                text.AppendLine("Suite:       {0}", spec.Suite.FormatSuite());
-                text.AppendLine("Source:      {0}", spec.Source.Format());
+                text.AppendLine("FullyQualifiedName: {0}", spec.FullyQualifiedName.FormatValue());
+                text.AppendLine("DisplayName:        {0}", spec.DisplayName.FormatValue());
+                text.AppendLine("Id:                 {0}", spec.Id.FormatValue());
+                text.AppendLine("Description:        {0}", spec.Description.FormatValue());
+                text.AppendLine("Suite:              {0}", spec.Suite.FormatSuite());
+                text.AppendLine("Source:             {0}", spec.Source.Format());
                 if (spec.Results != null)
                 {
                     foreach (var result in spec.Results)
@@ -95,11 +96,11 @@ namespace KarmaTestAdapterTests.Expectations
         public static void Format(this SpecResult result, StringBuilder text)
         {
             text.AppendLine("---------------------------------------------------------------------");
-            text.AppendLine("Result:      {0}", result.Name.FormatValue());
-            text.AppendLine("Success:     {0}", result.Success.FormatValue());
-            text.AppendLine("Skipped:     {0}", result.Skipped.FormatValue());
-            text.AppendLine("Output:      {0}", result.Output.FormatValue());
-            text.AppendLine("Time:        {0}", result.Time.FormatValue());
+            text.AppendLine("Result:             {0}", result.Name.FormatValue());
+            text.AppendLine("Success:            {0}", result.Success.FormatValue());
+            text.AppendLine("Skipped:            {0}", result.Skipped.FormatValue());
+            text.AppendLine("Output:             {0}", result.Output.FormatValue());
+            text.AppendLine("Time:               {0}", result.Time.FormatValue());
         }
 
         public static string GetOutcome(this SpecResult result)

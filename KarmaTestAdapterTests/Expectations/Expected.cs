@@ -21,16 +21,17 @@ namespace KarmaTestAdapterTests.Expectations
 {
     public class Expected
     {
-        public Expected(string name, string file, string baseDirectory)
+        public Expected(string projectName, string file, string baseDirectory)
         {
+            ProjectName = projectName;
             BaseDirectory = baseDirectory;
             Logger = new TestKarmaLogger(message => Console.WriteLine(message));
-            Name = name ?? "";
             try
             {
                 Directory = Path.GetDirectoryName(file);
                 var expected = Json.ParseFile(file);
                 KarmaConfig = (string)expected["KarmaConfig"];
+                Name = (string)expected["Name"];
                 if (string.IsNullOrWhiteSpace(KarmaConfig))
                 {
                     throw new ArgumentNullException("KarmaConfig", "KarmaConfig is null or empty");
@@ -82,6 +83,7 @@ namespace KarmaTestAdapterTests.Expectations
         public string BaseDirectory { get; private set; }
         public string Directory { get; set; }
         public string Name { get; set; }
+        public string ProjectName { get; set; }
         public bool IsValid { get { return _validator.IsValid; } }
         public string InvalidReason { get { return _validator.InvalidReason; } }
 
@@ -100,40 +102,51 @@ namespace KarmaTestAdapterTests.Expectations
             return _karmaSpecs;
         }
 
-        public async Task<Spec> GetKarmaSpec(string uniqueName)
+        public async Task<Spec> GetKarmaSpec(string fullyQualifiedName)
         {
             var karmaSpecs = await GetKarmaSpecs();
-            return karmaSpecs.FirstOrDefault(s => s.UniqueName == uniqueName);
+            return karmaSpecs.FirstOrDefault(s => s.FullyQualifiedName == fullyQualifiedName);
         }
 
         public async Task<IEnumerable<Spec>> GetUnexpectedKarmaSpecs()
         {
             var karmaSpecs = await GetKarmaSpecs();
-            return karmaSpecs.Where(k => !Specs.Any(s => s.UniqueName == k.UniqueName)).ToList();
+            return karmaSpecs.Where(k => !Specs.Any(s => s.FullyQualifiedName == k.FullyQualifiedName)).ToList();
         }
 
         private Validator _validator = new Validator();
 
         public async Task PopulateKarmaSpecs()
         {
-            if (_karmaSpecs == null)
+            if (IsValid && _karmaSpecs == null)
             {
                 Globals.IsTest = true;
                 var karmaSpecs = new List<Spec>();
-                var settings = new KarmaSettings(KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
+                var settings = new KarmaSettings(Name, KarmaConfig, f => File.Exists(f), BaseDirectory, Logger);
                 if (settings.AreValid)
                 {
-                    var server = new KarmaServer(settings, Logger);
-                    server.OutputReceived += line => _karmaOutput.Add(line);
-                    server.ErrorReceived += line => _karmaOutput.Add(line);
-                    var port = await server.StartServer(60000);
-                    var stopCommand = new StopCommand(port);
-                    var discoverCommand = new DiscoverCommand(port);
-                    await discoverCommand.Run(spec => karmaSpecs.Add(spec));
-                    await stopCommand.Run();
-                    await server.Finished;
-                    _karmaSpecs = karmaSpecs;
-                    Logger.Info("{0} specs discovered", _karmaSpecs.Count());
+                    try
+                    {
+                        var server = new KarmaServer(settings, Logger);
+                        server.OutputReceived += line => _karmaOutput.Add(line);
+                        server.ErrorReceived += line => _karmaOutput.Add(line);
+                        var port = await server.StartServer(60000);
+                        var stopCommand = new StopCommand(port);
+                        var discoverCommand = new DiscoverCommand(port);
+                        await discoverCommand.Run(spec => karmaSpecs.Add(spec));
+                        await stopCommand.Run();
+                        await server.Finished;
+                        _karmaSpecs = karmaSpecs;
+                        Logger.Info("{0} specs discovered", _karmaSpecs.Count());
+                    }
+                    catch (AggregateException ex)
+                    {
+                        _validator.Validate(false, ex.InnerExceptions.First().Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        _validator.Validate(false, ex.Message);
+                    }
                 }
                 else
                 {

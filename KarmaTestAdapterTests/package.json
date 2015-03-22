@@ -10,7 +10,7 @@
     "source-map": "^0.4.2",
     "source-map-resolve": "^0.3.1",
     "stackframe": "^0.2.2",
-    "yargs": "^3.5.4"
+    "yargs": "^3.6.0"
   },
   "devDependencies": {
     "extend": "^2.0.0",
@@ -23,7 +23,9 @@
     "grunt-nuget": "^0.1.4",
     "grunt-xmlpoke": "^0.8.0",
     "regedit": "^2.1.0",
+    "semver": "^4.3.1",
     "string-template": "^0.2.0",
-    "xmlbuilder": "^2.6.2"
+    "xmlbuilder": "^2.6.2",
+    "zpad": "^0.5.0"
   }
 }

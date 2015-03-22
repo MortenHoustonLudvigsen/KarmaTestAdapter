@@ -19,11 +19,13 @@ var TestReporter = (function () {
             existingSpec = this.specMap[spec.id] = {
                 id: spec.id,
                 description: spec.description,
-                uniqueName: spec.uniqueName || context.testContext.getUniqueName(spec),
                 suite: spec.suite,
                 source: this.sourceUtils.getSource(spec.source),
                 results: []
             };
+            existingSpec.fullyQualifiedName = context.testContext.getFullyQualifiedName(existingSpec);
+            existingSpec.displayName = context.testContext.getDisplayName(existingSpec);
+            existingSpec.traits = context.testContext.getTraits(existingSpec);
             this.specs.push(existingSpec);
         }
         return existingSpec;
@@ -40,15 +42,15 @@ var TestReporter = (function () {
     };
     TestReporter.prototype.onContextStart = function (context) {
         this.output = [];
-        context.testContext = new TestContext();
+        context.testContext = new TestContext(this.server);
     };
     TestReporter.prototype.onContextDone = function (context) {
         this.output = [];
-        context.testContext = context.testContext || new TestContext();
+        context.testContext = context.testContext || new TestContext(this.server);
         context.testContext.adjustResults();
     };
     TestReporter.prototype.onError = function (context, error) {
-        context.testContext = context.testContext || new TestContext();
+        context.testContext = context.testContext || new TestContext(this.server);
         if (error) {
             var failure = { passed: false };
             var source;
@@ -76,10 +78,9 @@ var TestReporter = (function () {
             else {
                 failure.message = 'Uncaught error';
             }
-            var id = context.testContext.getUniqueName([], 'Uncaught error');
+            var id = context.testContext.getNewErrorId();
             this.onSpecDone(context, {
                 id: id,
-                uniqueName: id,
                 description: 'Uncaught error',
                 log: log,
                 skipped: false,

@@ -18,7 +18,7 @@ namespace KarmaTestAdapterTests.Karma
             {
                 Id = "spec1",
                 Description = "Spec 2",
-                UniqueName = "Suite 1:Suite 2:Spec 2",
+                FullyQualifiedName = "Suite 1:Suite 2:Spec 2",
                 Suite = new[] { "suite1", "suite2" },
                 Source = new JsTestAdapter.TestServerClient.Source
                 {

@@ -27,7 +27,7 @@ namespace KarmaTestAdapter.TestAdapter
 
         protected override void Init()
         {
-            Settings = new KarmaSettings(Source, f => File.Exists(f), BaseDirectory, Logger);
+            Settings = new KarmaSettings(Name, Source, f => File.Exists(f), BaseDirectory, Logger);
             Validate(Settings.AreValid, Settings.InvalidReason);
             if (Settings.AreValid)
             {

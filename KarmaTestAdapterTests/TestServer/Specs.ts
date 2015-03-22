@@ -1,5 +1,22 @@
 ﻿import TestContext = require('./TestContext');
 
+export interface TraitGetter {
+    (spec: Spec, server: Server): Trait[];
+}
+
+export interface Extensions {
+    getDisplayName?(spec: Spec, server: Server): string;
+    getFullyQualifiedName?(spec: Spec, server: Server): string;
+    getTraits?: TraitGetter;
+}
+
+export interface Server {
+    testContainerName: string;
+    extensions: Extensions;
+    testRunStarted(): void;
+    testRunCompleted(specs: Spec[]): void;
+}
+
 export interface StackInfo {
     skip?: number;
     skipFunctions?: string;
@@ -23,7 +40,6 @@ export interface SpecData {
     time?: number;
     startTime?: number;
     endTime?: number;
-    uniqueName?: string;
     failures?: Failure[];
     source?: StackInfo;
 }
@@ -37,10 +53,17 @@ export interface Failure {
 export interface Spec {
     id: string;
     description: string;
-    uniqueName?: string;
+    fullyQualifiedName?: string;
+    displayName?: string;
     suite: string[];
     source: Source;
+    traits?: Trait[];
     results?: SpecResult[];
+}
+
+export interface Trait {
+    name: string;
+    value: string;
 }
 
 export interface SpecResult {
