@@ -27,16 +27,15 @@ var Extensions = (function () {
         return parts.filter(function (p) { return !!p; }).join(' ');
     };
     Extensions.prototype.getFullyQualifiedName = function (spec, server) {
-        var classNameParts = [];
+        var parts = [];
         if (server.testContainerName) {
-            classNameParts.push(server.testContainerName);
+            parts.push(server.testContainerName);
         }
-        var parts = spec.suite.slice(0);
-        if (parts.length > 0) {
-            classNameParts.push(parts.shift());
-        }
-        parts.push(spec.description);
-        return [classNameParts.join('/'), parts.join(' ')].filter(function (p) { return !!p; }).map(function (s) { return s.replace(/\./g, '-'); }).join('.');
+        var suite = spec.suite.slice(0);
+        parts.push(suite.shift());
+        suite.push(spec.description);
+        parts.push(suite.join(' '));
+        return parts.filter(function (p) { return !!p; }).map(function (s) { return s.replace(/\./g, '-'); }).join('.');
     };
     Extensions.prototype.getTraits = function (spec, server) {
         return this.traitGetters.map(function (getTrait) { return getTrait(spec, server); }).reduce(function (previousTraits, currentTraits) { return previousTraits.concat(currentTraits); }, []);

@@ -4,7 +4,7 @@
     "Specs": [
         {
             "Description": "Spec 1",
-            "FullyQualifiedName": "Test/Suite 1.Suite 2 Spec 1",
+            "FullyQualifiedName": "Test.Suite 1.Suite 2 Spec 1",
             "DisplayName": "Suite 1 Suite 2 Spec 1",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": [ 4, 7 ],
@@ -13,7 +13,7 @@
         },
         {
             "Description": "Spec 2",
-            "FullyQualifiedName": "Test/Suite 1.Suite 2 Spec 2",
+            "FullyQualifiedName": "Test.Suite 1.Suite 2 Spec 2",
             "DisplayName": "Suite 1 Suite 2 Spec 2",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 8,
@@ -21,7 +21,7 @@
         },
         {
             "Description": "Spec 3",
-            "FullyQualifiedName": "Test/Suite 1.Suite 2 Spec 3",
+            "FullyQualifiedName": "Test.Suite 1.Suite 2 Spec 3",
             "DisplayName": "Suite 1 Suite 2 Spec 3",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 9,
@@ -32,7 +32,7 @@
         },
         {
             "Description": "Spec 4",
-            "FullyQualifiedName": "Test/Suite 1.Suite 2 Spec 4",
+            "FullyQualifiedName": "Test.Suite 1.Suite 2 Spec 4",
             "DisplayName": "Suite 1 Suite 2 Spec 4",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 10,
@@ -43,7 +43,7 @@
         },
         {
             "Description": "test no 1",
-            "FullyQualifiedName": "Test/Suite 3.test no 1",
+            "FullyQualifiedName": "Test.Suite 3.test no 1",
             "DisplayName": "Suite 3 test no 1",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -51,7 +51,7 @@
         },
         {
             "Description": "test no 2",
-            "FullyQualifiedName": "Test/Suite 3.test no 2",
+            "FullyQualifiedName": "Test.Suite 3.test no 2",
             "DisplayName": "Suite 3 test no 2",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -59,7 +59,7 @@
         },
         {
             "Description": "test no 3",
-            "FullyQualifiedName": "Test/Suite 3.test no 3",
+            "FullyQualifiedName": "Test.Suite 3.test no 3",
             "DisplayName": "Suite 3 test no 3",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -67,7 +67,7 @@
         },
         {
             "Description": "test no 4",
-            "FullyQualifiedName": "Test/Suite 3.test no 4",
+            "FullyQualifiedName": "Test.Suite 3.test no 4",
             "DisplayName": "Suite 3 test no 4",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -75,7 +75,7 @@
         },
         {
             "Description": "test no 5",
-            "FullyQualifiedName": "Test/Suite 3.test no 5",
+            "FullyQualifiedName": "Test.Suite 3.test no 5",
             "DisplayName": "Suite 3 test no 5",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -83,7 +83,7 @@
         },
         {
             "Description": "test no 6",
-            "FullyQualifiedName": "Test/Suite 3.test no 6",
+            "FullyQualifiedName": "Test.Suite 3.test no 6",
             "DisplayName": "Suite 3 test no 6",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -91,7 +91,7 @@
         },
         {
             "Description": "test no 7",
-            "FullyQualifiedName": "Test/Suite 3.test no 7",
+            "FullyQualifiedName": "Test.Suite 3.test no 7",
             "DisplayName": "Suite 3 test no 7",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -99,7 +99,7 @@
         },
         {
             "Description": "test no 8",
-            "FullyQualifiedName": "Test/Suite 3.test no 8",
+            "FullyQualifiedName": "Test.Suite 3.test no 8",
             "DisplayName": "Suite 3 test no 8",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -107,7 +107,7 @@
         },
         {
             "Description": "test no 9",
-            "FullyQualifiedName": "Test/Suite 3.test no 9",
+            "FullyQualifiedName": "Test.Suite 3.test no 9",
             "DisplayName": "Suite 3 test no 9",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -115,7 +115,7 @@
         },
         {
             "Description": "test no 10",
-            "FullyQualifiedName": "Test/Suite 3.test no 10",
+            "FullyQualifiedName": "Test.Suite 3.test no 10",
             "DisplayName": "Suite 3 test no 10",
             "FileName": "specs\\singleSpec.ts",
             "LineNumber": 15,
@@ -123,7 +123,7 @@
         },
         {
             "Description": "(3, 3) should return 6",
-            "FullyQualifiedName": "Test/Adder.add (3, 3) should return 6",
+            "FullyQualifiedName": "Test.Adder.add (3, 3) should return 6",
             "DisplayName": "Adder add (3, 3) should return 6",
             "FileName": "specs\\AdderSpec.ts",
             "LineNumber": 6,
@@ -135,7 +135,7 @@
         },
         {
             "Description": "(3, 6) should return 9",
-            "FullyQualifiedName": "Test/Adder.add (3, 6) should return 9",
+            "FullyQualifiedName": "Test.Adder.add (3, 6) should return 9",
             "DisplayName": "Adder add (3, 6) should return 9",
             "FileName": "specs\\AdderSpec.ts",
             "LineNumber": 6,
