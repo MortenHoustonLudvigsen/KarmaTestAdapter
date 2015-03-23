@@ -1,9 +1,10 @@
-﻿import JsonServer = require('./JsonServer');
+﻿import JsonConnection = require('./JsonConnection');
+import JsonServer = require('./JsonServer');
 import Specs = require('./Specs');
 import Extensions = require('./Extensions');
 import Q = require('q');
 
-class TestServer extends JsonServer.Server implements Specs.Server {
+class TestServer extends JsonServer implements Specs.Server {
     constructor(public testContainerName: string, public port: number = 0, public host?: string) {
         super(port, host);
     }
@@ -16,10 +17,10 @@ class TestServer extends JsonServer.Server implements Specs.Server {
         this.extensions.load(extensionsModule);
     }
 
-    onError(error: any, connection: JsonServer.Connection) {
+    onError(error: any, connection: JsonConnection) {
     }
 
-    onClose(had_error: boolean, connection: JsonServer.Connection) {
+    onClose(had_error: boolean, connection: JsonConnection) {
     }
 
     testRunStarted(): void {

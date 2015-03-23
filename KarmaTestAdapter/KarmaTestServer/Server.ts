@@ -1,6 +1,6 @@
 ﻿import path = require('path');
 import TestServer = require('../TestServer/TestServer');
-import JsonServer = require('../TestServer/JsonServer');
+import JsonConnection = require('../TestServer/JsonConnection');
 import Specs = require('../TestServer/Specs');
 import Karma = require('./Karma');
 import Q = require('q');
@@ -41,7 +41,7 @@ class Server extends TestServer {
 
     logger: Karma.Logger;
 
-    onError(error: any, connection: JsonServer.Connection) {
+    onError(error: any, connection: JsonConnection) {
         this.logger.error(error);
     }
 

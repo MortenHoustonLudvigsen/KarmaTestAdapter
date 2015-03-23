@@ -115,11 +115,15 @@
     <TypeScriptCompile Include="KarmaTestServer\Start.ts" />
     <TypeScriptCompile Include="TestServer\Extensions.ts" />
     <TypeScriptCompile Include="TestServer\FreePort.ts" />
+    <TypeScriptCompile Include="TestServer\JsonClient.ts" />
+    <TypeScriptCompile Include="TestServer\JsonConnection.ts" />
     <TypeScriptCompile Include="TestServer\JsonServer.ts" />
+    <TypeScriptCompile Include="TestServer\JsonServerCommand.ts" />
     <TypeScriptCompile Include="TestServer\Logger.ts" />
     <TypeScriptCompile Include="TestServer\SourceUtils.ts" />
     <TypeScriptCompile Include="TestServer\Specs.ts" />
     <TypeScriptCompile Include="TestServer\TestContext.ts" />
+    <TypeScriptCompile Include="TestServer\TestNetServer.ts" />
     <TypeScriptCompile Include="TestServer\TestReporter.ts" />
     <TypeScriptCompile Include="TestServer\TestServer.ts" />
     <TypeScriptCompile Include="TestServer\TextFile.ts" />
@@ -138,8 +142,17 @@
     <Content Include="TestServer\FreePort.js">
       <DependentUpon>FreePort.ts</DependentUpon>
     </Content>
+    <Content Include="TestServer\JsonClient.js">
+      <DependentUpon>JsonClient.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\JsonConnection.js">
+      <DependentUpon>JsonConnection.ts</DependentUpon>
+    </Content>
     <Content Include="TestServer\JsonServer.js">
       <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\JsonServerCommand.js">
+      <DependentUpon>JsonServerCommand.ts</DependentUpon>
     </Content>
     <Content Include="TestServer\Logger.js">
       <DependentUpon>Logger.ts</DependentUpon>
@@ -152,6 +165,9 @@
     </Content>
     <Content Include="TestServer\TestContext.js">
       <DependentUpon>TestContext.ts</DependentUpon>
+    </Content>
+    <Content Include="TestServer\TestNetServer.js">
+      <DependentUpon>TestNetServer.ts</DependentUpon>
     </Content>
     <Content Include="TestServer\TestReporter.js">
       <DependentUpon>TestReporter.ts</DependentUpon>
@@ -185,27 +201,27 @@
   <ItemGroup>
     <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\JsTestAdapter.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\JsTestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -214,7 +230,7 @@
     </Reference>
     <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.7\lib\net45\NpmProxy.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\NpmProxy.dll</HintPath>
     </Reference>
     <Reference Include="ProcessRunner">
       <HintPath>..\packages\ProcessRunner.1.0.8\lib\net40\ProcessRunner.dll</HintPath>
@@ -297,6 +313,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestServer\TestNetServer.js.map">
+      <DependentUpon>TestNetServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="TestServer\TestContext.js.map">
       <DependentUpon>TestContext.ts</DependentUpon>
     </Content>
@@ -317,8 +338,23 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestServer\JsonServerCommand.js.map">
+      <DependentUpon>JsonServerCommand.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="TestServer\JsonServer.js.map">
       <DependentUpon>JsonServer.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\JsonConnection.js.map">
+      <DependentUpon>JsonConnection.ts</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestServer\JsonClient.js.map">
+      <DependentUpon>JsonClient.ts</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

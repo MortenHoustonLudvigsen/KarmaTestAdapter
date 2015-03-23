@@ -83,6 +83,6 @@ var TestServer = (function (_super) {
         this.specs.resolve(specs);
     };
     return TestServer;
-})(JsonServer.Server);
+})(JsonServer);
 module.exports = TestServer;
 //# sourceMappingURL=TestServer.js.map
