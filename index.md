@@ -5,6 +5,9 @@ title:
 
 This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.
 
+This extension is built using [JsTestAdapter](https://github.com/MortenHoustonLudvigsen/JsTestAdapter).
+
+
 # Features
 
 * Karma is started in the background with `autoWatch` set to `true`, so tests are run immediately when files change.

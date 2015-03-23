@@ -19,6 +19,8 @@ permalink: /changes/
 
 * Logging to the output window is significantly less chatty.
 
+* The code in the Karma Test Adapter has been refactored to enable sharing code with other test adapters. A lot of the code has moved to [JsTestAdapter](https://github.com/MortenHoustonLudvigsen/JsTestAdapter), which can be install as a NuGet package.
+
 These changes resolve the following issues:
 
 * [Concatenate a test's suites in front of the test description](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/24).
