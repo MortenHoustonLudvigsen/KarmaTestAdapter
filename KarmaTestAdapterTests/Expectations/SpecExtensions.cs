@@ -41,6 +41,34 @@ namespace KarmaTestAdapterTests.Expectations
             return string.Join("", specs.Select(s => s.Format()));
         }
 
+        public static string Format(this ExpectedSpec spec)
+        {
+            var text = new StringBuilder();
+
+            if (spec != null)
+            {
+                text.AppendLine("=====================================================================");
+                text.AppendLine("Expected spec");
+                text.AppendLine("---------------------------------------------------------------------");
+                text.AppendLine("FullyQualifiedName: {0}", spec.FullyQualifiedName.FormatValue());
+                text.AppendLine("DisplayName:        {0}", spec.DisplayName.FormatValue());
+                text.AppendLine("Description:        {0}", spec.Description.FormatValue());
+                text.AppendLine("FileName:           {0}", spec.FileName.FormatValue());
+                text.AppendLine("LineNumberFrom:     {0}", spec.LineNumberFrom.FormatValue());
+                text.AppendLine("LineNumberTo:       {0}", spec.LineNumberTo.FormatValue());
+                text.AppendLine("Success:            {0}", spec.Success.FormatValue());
+                text.AppendLine("Skipped:            {0}", spec.Skipped.FormatValue());
+                text.AppendLine("Output:             {0}", spec.Output.FormatValue());
+                text.AppendLine("StackTrace:         {0}", spec.StackTrace.FormatValue());
+                text.AppendLine("IsValid:            {0}", spec.IsValid.FormatValue());
+                text.AppendLine("InvalidReason:      {0}", spec.InvalidReason.FormatValue());
+                text.AppendLine("=====================================================================");
+                text.AppendLine();
+            }
+
+            return text.ToString();
+        }
+
         public static string Format(this Spec spec)
         {
             var text = new StringBuilder();

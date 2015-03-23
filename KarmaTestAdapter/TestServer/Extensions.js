@@ -38,7 +38,9 @@ var Extensions = (function () {
         return parts.filter(function (p) { return !!p; }).map(function (s) { return s.replace(/\./g, '-'); }).join('.');
     };
     Extensions.prototype.getTraits = function (spec, server) {
-        return this.traitGetters.map(function (getTrait) { return getTrait(spec, server); }).reduce(function (previousTraits, currentTraits) { return previousTraits.concat(currentTraits); }, []);
+        spec.traits = [];
+        this.traitGetters.forEach(function (getTrait) { return spec.traits = getTrait(spec, server); });
+        return spec.traits;
     };
     return Extensions;
 })();

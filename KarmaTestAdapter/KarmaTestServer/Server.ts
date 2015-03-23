@@ -12,14 +12,6 @@ class Server extends TestServer {
         super(config.vs.name, config.vs.serverPort || 0);
         this.logger = logger.create('VS Server', Karma.karma.Constants.LOG_DEBUG);
 
-        if (config.vs.extensions) {
-            try {
-                this.loadExtensions(path.resolve(config.vs.extensions));
-            } catch (e) {
-                this.logger.error('Failed to load extensions from ' + config.vs.extensions + ': ' + e.message);
-            }
-        }
-
         if (config.vs.traits) {
             function mapTrait(trait: string|Specs.Trait): Specs.Trait {
                 if (typeof trait === 'string') {
@@ -33,6 +25,14 @@ class Server extends TestServer {
             }
             var traits = config.vs.traits.map(mapTrait);
             this.loadExtensions({ getTraits: (spec, server) => traits });
+        }
+
+        if (config.vs.extensions) {
+            try {
+                this.loadExtensions(path.resolve(config.vs.extensions));
+            } catch (e) {
+                this.logger.error('Failed to load extensions from ' + config.vs.extensions + ': ' + e.message);
+            }
         }
 
         this.on('listening',() => this.logger.info('Started - port: ' + this.address.port));

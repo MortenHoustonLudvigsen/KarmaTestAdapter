@@ -28,16 +28,16 @@ namespace KarmaTestAdapter.Logging
                 switch (match.Groups[1].Value)
                 {
                     case "INFO":
-                        this.Info(match.Groups[2].Value);
+                        this.Debug(message);
                         break;
                     case "WARN":
-                        this.Warn(match.Groups[2].Value);
+                        this.Warn(message);
                         break;
                     case "ERROR":
-                        this.Error(match.Groups[2].Value);
+                        this.Error(message);
                         break;
                     case "DEBUG":
-                        this.Debug(match.Groups[2].Value);
+                        this.Debug(message);
                         break;
                     default:
                         this.Debug(message);

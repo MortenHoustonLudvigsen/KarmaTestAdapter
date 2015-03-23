@@ -47,10 +47,10 @@ class Extensions implements Specs.Extensions {
     }
 
     private traitGetters: Specs.TraitGetter[] = [];
-    getTraits(spec: Specs.Spec, server: Specs.Server): Specs.Trait[] {
-        return this.traitGetters
-            .map(getTrait => getTrait(spec, server))
-            .reduce((previousTraits, currentTraits) => previousTraits.concat(currentTraits), []);
+    getTraits(spec: Specs.Spec, server: Specs.Server): Specs.Trait[]{
+        spec.traits = [];
+        this.traitGetters.forEach(getTrait => spec.traits = getTrait(spec, server));
+        return spec.traits;
     }
 } 
 

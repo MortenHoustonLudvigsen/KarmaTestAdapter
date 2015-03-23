@@ -65,6 +65,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetSpecShouldBeValidData")]
         public void SpecShouldBeValid(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             Assert.That(testCase.IsValid, testCase.InvalidReason);
         }
 
@@ -77,6 +78,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveKarmaSpecData")]
         public async void ShouldHaveKarmaSpec(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -91,6 +93,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveDisplayNameData")]
         public async void ShouldHaveDisplayName(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -106,6 +109,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveResultsData")]
         public async void ShouldHaveResults(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -121,6 +125,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveFileNameData")]
         public async void ShouldHaveFileName(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -138,6 +143,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveLineNumberData")]
         public async void ShouldHaveLineNumber(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -155,6 +161,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldSucceedData")]
         public async void ShouldSucceed(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -172,6 +179,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldFailData")]
         public async void ShouldFail(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -189,6 +197,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveStackTraceData")]
         public async void ShouldHaveStackTrace(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
@@ -214,6 +223,7 @@ namespace KarmaTestAdapterTests.Expectations.ExpectationsTests
         [Test, TestCaseSource("GetShouldHaveOutputData")]
         public async void ShouldHaveOutput(SpecTestCase testCase)
         {
+            Console.WriteLine(testCase.Spec.Format());
             var karmaSpec = await testCase.GetKarmaSpec();
             Console.WriteLine(karmaSpec.Format());
             Assert.That(karmaSpec, Is.Not.Null, "Karma spec missing");
