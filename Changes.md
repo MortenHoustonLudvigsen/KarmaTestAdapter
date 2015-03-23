@@ -4,6 +4,31 @@ title: Changes
 permalink: /changes/
 ---
 
+## Version 1.1.0
+
+### Extensions and traits
+
+* The name of the outermost suite is now used as the class name for a test. This can be customized using new properties `Name` and `Extensions` in `KarmaTestAdapter.json`.
+
+* The display name of each test now includes the suites separated by a space. This can be customized using new properties `Name` and `Extensions` in `KarmaTestAdapter.json`.
+
+* New properties in `KarmaTestAdapter.json`:
+  * `Name` The name of the test container. Used in the default generation of the fully qualified name for each test.
+  * `Traits` An array of traits to be attached to each test. A trait can be a string or an object containing properties `Name` and `Value`. For traits specified by a string the string is the trait value and the trait name is "Category".
+  * `Extensions` Path to a node.js module implementing extensions.
+
+* Logging to the output window is significantly less chatty.
+
+These changes resolve the following issues:
+
+* [Concatenate a test's suites in front of the test description](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/24).
+
+* [configure test entries so that they behave as expected in Test Explorer's grouping and sorting](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/25).
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.0/KarmaTestAdapter.vsix)
+ 
 ## Version 1.0.3
 
 ### Bug fixes
