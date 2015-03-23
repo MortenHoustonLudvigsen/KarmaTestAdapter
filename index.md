@@ -344,8 +344,3 @@ Test containers specify which Karma configuration files to use when running test
 * If there is a `KarmaTestAdapter.json` file in a project, then any `karma.conf.js` file in the same directory is not used as a test container.
 
 * If there is a `KarmaTestAdapter.json` in a project in the current solution, that specifies a Karma configuration file in a different directory or project, then that Karma configuration file is not used as a test container.
-
-# Changes
-
-See <http://mortenhoustonludvigsen.github.io/KarmaTestAdapter/changes/>
-
