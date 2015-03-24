@@ -201,27 +201,27 @@
   <ItemGroup>
     <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\JsTestAdapter.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\JsTestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -230,7 +230,7 @@
     </Reference>
     <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.8\lib\net45\NpmProxy.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.9\lib\net45\NpmProxy.dll</HintPath>
     </Reference>
     <Reference Include="ProcessRunner">
       <HintPath>..\packages\ProcessRunner.1.0.8\lib\net40\ProcessRunner.dll</HintPath>
@@ -290,9 +290,6 @@
     <Content Include="KarmaTestServer\Start.js.map">
       <DependentUpon>Start.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BuildConfig.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="JsTestAdapter.json" />

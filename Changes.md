@@ -1,3 +1,15 @@
+## Version 1.1.1
+
+### Extensions and traits
+
+* A trait specified as a string or with only a name will be shown in the Test Explorer as just the string or name.
+
+* Traits with only a value are ignored
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.1/KarmaTestAdapter.vsix)
+ 
 ## Version 1.1.0
 
 ### Extensions and traits

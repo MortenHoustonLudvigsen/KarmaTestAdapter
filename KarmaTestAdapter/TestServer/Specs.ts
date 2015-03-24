@@ -63,7 +63,7 @@ export interface Spec {
 
 export interface Trait {
     name: string;
-    value: string;
+    value?: string;
 }
 
 export interface SpecResult {

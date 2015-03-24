@@ -77,7 +77,7 @@ These are the possible properties (all properties are optional):
 
 * `Name` The name of the test container. Used in the default generation of the fully qualified name for each test.
 
-* `Traits` An array of traits to be attached to each test. A trait can be a string or an object containing properties `Name` and `Value`. For traits specified by a string the string is the trait value and the trait name is "Category".
+* `Traits` An array of traits to be attached to each test. A trait can be a string or an object containing properties `Name` and `Value`. A trait specified as a string or with only a name will be shown in the Test Explorer as just the string or name.
 
 * `Extensions` Path to a node.js module implementing extensions. See below.
 
@@ -105,7 +105,7 @@ To customize generation of fully qualified names, display names and traits for e
 
 The following module implemented in typescript implements the default functions:
 
-````typescript
+````JavaScript
 interface Spec {
     description: string;
     suite: string[];
@@ -184,7 +184,7 @@ Let's say the suites for a project represent classes and methods. In this case o
 
 Typescript:
 
-````typescript
+````JavaScript
 export function getDisplayName(spec: Spec, server: Server): string {
     return spec.suite.join('.') + ' ' + spec.description;
 }
@@ -204,7 +204,7 @@ Let's say the suites for a project represent classes and methods. In the class v
 
 Typescript:
 
-````typescript
+````JavaScript
 export function getFullyQualifiedName(spec: Spec, server: Server): string {
     var parts = [];
 
@@ -258,7 +258,7 @@ Let's say we want to add the outer most suite as a trait for each test, while ke
 
 Typescript:
 
-````typescript
+````JavaScript
 export function getTraits(spec: Spec, server: Server): Trait[]{
     var traits = spec.traits;
     var outerSuite = spec.suite[0];
@@ -292,7 +292,7 @@ If we do not want to keep any traits specified in `KarmaTestAdapter.json`, we ca
 
 Typescript:
 
-````typescript
+````JavaScript
 export function getTraits(spec: Spec, server: Server): Trait[]{
     var traits: Trait[] = [];
     var outerSuite = spec.suite[0];

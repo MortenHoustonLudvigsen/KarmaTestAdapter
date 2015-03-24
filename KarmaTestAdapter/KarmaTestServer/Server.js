@@ -19,8 +19,7 @@ var Server = (function (_super) {
             function mapTrait(trait) {
                 if (typeof trait === 'string') {
                     return {
-                        name: 'Category',
-                        value: trait
+                        name: trait
                     };
                 }
                 else {

@@ -16,8 +16,7 @@ class Server extends TestServer {
             function mapTrait(trait: string|Specs.Trait): Specs.Trait {
                 if (typeof trait === 'string') {
                     return {
-                        name: 'Category',
-                        value: trait
+                        name: trait
                     };
                 } else {
                     return trait;
