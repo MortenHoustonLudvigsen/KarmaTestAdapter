@@ -31,7 +31,8 @@
                         "properties": {
                             "Name": { "type": "string" },
                             "Value": { "type": "string" }
-                        }
+                        },
+                        "required": ["Name"]
                     }
                 ]
             }
