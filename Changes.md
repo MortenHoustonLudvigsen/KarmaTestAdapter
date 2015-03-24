@@ -1,6 +1,6 @@
 ## Version 1.1.1
 
-### Extensions and traits
+### Traits
 
 * A trait specified as a string or with only a name will be shown in the Test Explorer as just the string or name.
 
