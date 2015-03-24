@@ -109,7 +109,7 @@ To customize generation of fully qualified names, display names and traits for e
 
 The following module implemented in typescript implements the default functions:
 
-````typescript
+````javascript
 interface Spec {
     description: string;
     suite: string[];
@@ -188,7 +188,7 @@ Let's say the suites for a project represent classes and methods. In this case o
 
 Typescript:
 
-````typescript
+````javascript
 export function getDisplayName(spec: Spec, server: Server): string {
     return spec.suite.join('.') + ' ' + spec.description;
 }
@@ -208,7 +208,7 @@ Let's say the suites for a project represent classes and methods. In the class v
 
 Typescript:
 
-````typescript
+````javascript
 export function getFullyQualifiedName(spec: Spec, server: Server): string {
     var parts = [];
 
@@ -262,7 +262,7 @@ Let's say we want to add the outer most suite as a trait for each test, while ke
 
 Typescript:
 
-````typescript
+````javascript
 export function getTraits(spec: Spec, server: Server): Trait[]{
     var traits = spec.traits;
     var outerSuite = spec.suite[0];
@@ -296,7 +296,7 @@ If we do not want to keep any traits specified in `KarmaTestAdapter.json`, we ca
 
 Typescript:
 
-````typescript
+````javascript
 export function getTraits(spec: Spec, server: Server): Trait[]{
     var traits: Trait[] = [];
     var outerSuite = spec.suite[0];
