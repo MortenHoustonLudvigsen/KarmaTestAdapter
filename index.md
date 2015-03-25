@@ -3,7 +3,7 @@ layout: page
 title:
 ---
 
-This extension integrates [Karma - Spectacular Test Runner for Javascript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.
+This extension integrates [Karma - Spectacular Test Runner for JavaScript](http://karma-runner.github.io/) with the test explorer in Visual Studio 2013 and Visual Studio 2015 Preview / CTP.
 
 This extension is built using [JsTestAdapter](https://github.com/MortenHoustonLudvigsen/JsTestAdapter).
 
@@ -23,7 +23,7 @@ This extension is built using [JsTestAdapter](https://github.com/MortenHoustonLu
 
 * The file and position of each test is registered, so that the Test Explorer in Visual Studio can link to the source code for the test.
 
-* Source maps in test files are used to find the position of tests. So if, for example, a test is written in Typescript and the compiled javascript file contains a source map the test explorer will link to the typescript file.
+* Source maps in test files are used to find the position of tests. So if, for example, a test is written in Typescript and the compiled JavaScript file contains a source map the test explorer will link to the typescript file.
 
 * The stack trace of a failed test is shown as a list of function names that link to the relevant line and file. As with the position of of tests, source maps are used to link to the original source.
 
@@ -152,9 +152,9 @@ export function getTraits(spec: Spec, server: Server): Trait[] {
 }
 ````
 
-The same module implemented in javascript:
+The same module implemented in JavaScript:
 
-````javascript
+````JavaScript
 exports.getDisplayName = function (spec, server) {
     var parts = spec.suite.slice(0);
     parts.push(spec.description);
@@ -183,7 +183,7 @@ exports.getTraits = function (spec, server) {
 
 ## Example: `getDisplayName`
 
-Let's say the suites for a project represent classes and methods. In this case one might want the suites to be displayed seperated by full stops. This can be implemted in an extension module.
+Let's say the suites for a project represent classes and methods. In this case one might want the suites to be displayed separated by full stops. This can be implemented in an extension module.
 
 Typescript:
 
@@ -193,9 +193,9 @@ export function getDisplayName(spec: Spec, server: Server): string {
 }
 ````
 
-Javascript:
+JavaScript:
 
-````javascript
+````JavaScript
 exports.getDisplayName = function (spec, server) {
     return spec.suite.join('.') + ' ' + spec.description;
 };
@@ -231,9 +231,9 @@ export function getFullyQualifiedName(spec: Spec, server: Server): string {
 }
 ````
 
-Javascript:
+JavaScript:
 
-````javascript
+````JavaScript
 exports.getFullyQualifiedName = function (spec, server) {
     var parts = [];
 
@@ -275,9 +275,9 @@ export function getTraits(spec: Spec, server: Server): Trait[]{
 }
 ````
 
-Javascript:
+JavaScript:
 
-````javascript
+````JavaScript
 exports.getTraits = function (spec, server) {
     var traits = spec.traits;
     var outerSuite = spec.suite[0];
@@ -309,9 +309,9 @@ export function getTraits(spec: Spec, server: Server): Trait[]{
 }
 ````
 
-Javascript:
+JavaScript:
 
-````javascript
+````JavaScript
 exports.getTraits = function (spec, server) {
     var traits = [];
     var outerSuite = spec.suite[0];

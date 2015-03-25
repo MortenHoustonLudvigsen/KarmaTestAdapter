@@ -52,7 +52,7 @@ These changes resolve the following issues:
 ### Download
 
 [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.3/KarmaTestAdapter.vsix)
-
+ 
 ## Version 1.0.2
 
 ### Bug fixes
@@ -69,7 +69,7 @@ These changes resolve the following issues:
 ### Download
 
 [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.2/KarmaTestAdapter.vsix)
-
+ 
 ## Version 1.0.1
 
 ### Improved identification of test containers:
@@ -105,6 +105,7 @@ These changes resolve the following issues:
 ### Download
 
 [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.1/KarmaTestAdapter.vsix)
+ 
 
 ## Version 1.0.0
 
@@ -121,7 +122,7 @@ Some of the major changes are:
 * Deciding when to run tests is now left up to Karma. The adapter only watches configuration files.
  
 * Test results are shown in the Test Explorer as soon as Karma has completed a test run.
- 
+
 ### Download
 
 [KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.0.0/KarmaTestAdapter.vsix)
@@ -237,7 +238,7 @@ npm install karma-vs-reporter
 
 * Version 0.6.0 needs at least version 0.6.0 of karma-vs-reporter to work
 
-* I have made a number of tweeks to logging
+* I have made a number of tweaks to logging
 
 * `karma-vs-reporter.json` has new optional properties:
 
