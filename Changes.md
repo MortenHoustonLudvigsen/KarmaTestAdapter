@@ -232,7 +232,7 @@ npm install karma-vs-reporter
 
 * Version 0.6.0 needs at least version 0.6.0 of karma-vs-reporter to work
 
-* I have made a number of tweeks to logging
+* I have made a number of tweaks to logging
 
 * `karma-vs-reporter.json` has new optional properties:
 
