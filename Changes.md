@@ -1,4 +1,4 @@
-## Version 1.1.2-alpha1
+## Version 1.1.2
 
 ### Bug fixes
 
@@ -10,7 +10,7 @@ This change should resolve the following issue:
 
 ### Download
 
-[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.2-alpha1/KarmaTestAdapter.vsix)
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.2/KarmaTestAdapter.vsix)
  
 ## Version 1.1.1
 
