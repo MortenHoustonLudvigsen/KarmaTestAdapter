@@ -1,3 +1,17 @@
+## Version 1.1.2-alpha1
+
+### Bug fixes
+
+* Improved "discovery" of node.exe and npm.cmd paths.
+
+This change should resolve the following issue:
+
+* [Test Adapter error - "Could not start Karma"](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/29).
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.2-alpha1/KarmaTestAdapter.vsix)
+ 
 ## Version 1.1.1
 
 ### Traits
