@@ -30,6 +30,7 @@ var TestContext = (function () {
                 no += 1;
             }
             fullyQualifiedName = fullyQualifiedName + '-' + no;
+            this.fullyQualifiedNames[fullyQualifiedName] = true;
         }
         return fullyQualifiedName;
     };

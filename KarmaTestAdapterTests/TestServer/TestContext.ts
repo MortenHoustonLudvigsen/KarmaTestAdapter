@@ -46,6 +46,7 @@ class TestContext {
                 no += 1;
             }
             fullyQualifiedName = fullyQualifiedName + '-' + no;
+            this.fullyQualifiedNames[fullyQualifiedName] = true;
         }
         return fullyQualifiedName;
     }
