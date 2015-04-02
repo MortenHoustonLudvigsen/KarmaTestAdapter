@@ -4,6 +4,8 @@ This extension integrates [Karma - Spectacular Test Runner for JavaScript](http:
 
 This extension is built using [JsTestAdapter](https://github.com/MortenHoustonLudvigsen/JsTestAdapter).
 
+This test adapter runs tests in browsers using [Karma](http://karma-runner.github.io/). If you need to run tests in [Node.js](https://nodejs.org/) you might be interested in the [Jasmine Node Test Adapter](https://github.com/MortenHoustonLudvigsen/JasmineNodeTestAdapter).
+
 # Features
 
 * Karma is started in the background with `autoWatch` set to `true`, so tests are run immediately when files change.
