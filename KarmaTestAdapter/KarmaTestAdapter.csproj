@@ -201,27 +201,27 @@
   <ItemGroup>
     <Reference Include="JsTestAdapter, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\JsTestAdapter.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\JsTestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>False</Private>
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestWindow.Interfaces">
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\Microsoft.VisualStudio.TestWindow.Interfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -230,7 +230,7 @@
     </Reference>
     <Reference Include="NpmProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JsTestAdapter.1.0.13\lib\net45\NpmProxy.dll</HintPath>
+      <HintPath>..\packages\JsTestAdapter.1.0.14\lib\net45\NpmProxy.dll</HintPath>
     </Reference>
     <Reference Include="ProcessRunner">
       <HintPath>..\packages\ProcessRunner.1.0.8\lib\net40\ProcessRunner.dll</HintPath>
@@ -295,94 +295,67 @@
     <Content Include="JsTestAdapter.json" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web.config" />
     <Content Include="TestServer\TextFile.js.map">
       <DependentUpon>TextFile.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\TestServer.js.map">
       <DependentUpon>TestServer.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\TestReporter.js.map">
       <DependentUpon>TestReporter.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\TestNetServer.js.map">
       <DependentUpon>TestNetServer.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\TestContext.js.map">
       <DependentUpon>TestContext.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\Specs.js.map">
       <DependentUpon>Specs.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\SourceUtils.js.map">
       <DependentUpon>SourceUtils.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\Logger.js.map">
       <DependentUpon>Logger.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\JsonServerCommand.js.map">
       <DependentUpon>JsonServerCommand.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\JsonServer.js.map">
       <DependentUpon>JsonServer.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\JsonConnection.js.map">
       <DependentUpon>JsonConnection.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\JsonClient.js.map">
       <DependentUpon>JsonClient.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\FreePort.js.map">
       <DependentUpon>FreePort.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="TestServer\Extensions.js.map">
       <DependentUpon>Extensions.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Grunt\TestVS.js.map">
       <DependentUpon>TestVS.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Grunt\Index.js.map">
       <DependentUpon>Index.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Grunt\GetNodeModules.js.map">
       <DependentUpon>GetNodeModules.ts</DependentUpon>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Grunt\CreateContentTypes.js.map">
       <DependentUpon>CreateContentTypes.ts</DependentUpon>
     </Content>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>

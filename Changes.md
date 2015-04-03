@@ -1,3 +1,17 @@
+## Version 1.1.3
+
+### Bug fixes
+
+* Improved handling of configuration file changes.
+
+This change should resolve the following issue:
+
+* [Tests "disappear" after changing config files](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/issues/30).
+
+### Download
+
+[KarmaTestAdapter.vsix](https://github.com/MortenHoustonLudvigsen/KarmaTestAdapter/releases/download/v1.1.3/KarmaTestAdapter.vsix)
+ 
 ## Version 1.1.2
 
 ### Bug fixes
