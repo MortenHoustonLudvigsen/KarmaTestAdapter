@@ -4,7 +4,7 @@ export var karma = {
     Constants: <KarmaConstants>require('karma/lib/constants'),
     Logger: <LoggerModule>require('karma/lib/logger'),
     Config: <Config>require('karma/lib/config'),
-    Server: <Server>require('karma').server
+    Server: <Server>require('karma').Server
 };
 
 export interface Config {
