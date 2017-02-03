@@ -55,10 +55,11 @@ try {
     }).then(() => {
         return freePort(karmaConfig.port + 1).then(p => karmaConfig.vs.serverPort = p);
     }).then(() => {
-        Karma.karma.Server.start(karmaConfig, function (exitCode) {
+        let server = Karma.karma.Server(karmaConfig, function (exitCode) {
             GlobalLog.info('exitCode: ' + exitCode);
             process.exit(exitCode);
         });
+        server.start();
     });
 }
 catch (e) {
