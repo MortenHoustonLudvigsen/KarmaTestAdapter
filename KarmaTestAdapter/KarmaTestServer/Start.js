@@ -43,10 +43,11 @@ try {
     }).then(function () {
         return freePort(karmaConfig.port + 1).then(function (p) { return karmaConfig.vs.serverPort = p; });
     }).then(function () {
-        Karma.karma.Server.start(karmaConfig, function (exitCode) {
+        var server = Karma.karma.Server(karmaConfig, function (exitCode) {
             GlobalLog.info('exitCode: ' + exitCode);
             process.exit(exitCode);
         });
+        server.start();
     });
 }
 catch (e) {
